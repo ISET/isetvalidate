@@ -1,6 +1,8 @@
-% v_Assets
+% v_iset3d_assets
 %
-% Validate merging assets into recipes
+% Validate merging assets into recipes. 
+%
+% July 2023, a lot are failing.  Let's fix! BW.
 %
 % This checks that we can merge the pre-computed assets into a simple
 % scene, in this case the Cornell Box
@@ -15,8 +17,7 @@ ieInit;
 if ~piDockerExists, piDockerConfig; end
 
 %% Render each asset using the Cornell box scene as the base scene
-%  
-
+  
 parentRecipe = piRecipeDefault('scene name','cornell_box');
 lightName = 'from camera';
 ourLight = piLightCreate(lightName,...
@@ -34,7 +35,7 @@ fprintf('Found %d assets\n',numel(assetFiles));
 
 % Return a report
 report = '';
-
+status = false(1,numel(assetFiles));
 for ii = 1:numel(assetFiles)
 
     % I think we need to reload to avoid issues
@@ -63,15 +64,31 @@ for ii = 1:numel(assetFiles)
         
         % Render it
         piWRS(combinedR);
+        status(ii) = true;
         report = [report sprintf("Asset: %s Succeeded.\n", assetName)]; %#ok<AGROW>
     catch
         % If it failed, we report that.
         % dockerWrapper.reset;
+        status(ii) = false;
         report = [report sprintf("Asset: %s failed \n", assetName)]; %#ok<AGROW>
     end
 
 end
-fprintf("Asset Validation Results: \n");
-fprintf("%s", report);
 
+%%
+fprintf("Asset Validation Results: \n");
+assetNames = cell(size(assetFiles));
+for ii=1:numel(assetFiles), assetNames{ii} = assetFiles(ii).name; end
+
+cprintf('Green','Succeeded\n')
+tmp = assetNames(status);
+for ii=1:numel(tmp)
+    fprintf('%s\n',tmp{ii});
+end
+
+cprintf('Red','\nFailed\n')
+tmp = assetNames(~status);
+for ii=1:numel(tmp)
+    fprintf('%s\n',tmp{ii});
+end
 %%

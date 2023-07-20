@@ -2,6 +2,7 @@
 %% Initialization
 ieInit;
 if ~piDockerExists, piDockerConfig; end
+
 %%
 thisR = piRecipeDefault('scene name', 'simple scene');
 

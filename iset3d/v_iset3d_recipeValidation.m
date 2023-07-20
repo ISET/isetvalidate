@@ -15,6 +15,8 @@ validNames = piRecipeCreate('list');
 
 %% This loop should work.
 
+status = zeros(1,numel(validNames));
+
 fprintf('Testing %d different scenes\n',numel(validNames));
 for ii=1:numel(validNames)
     fprintf('\n-----------\n');
@@ -22,10 +24,26 @@ for ii=1:numel(validNames)
     try
         thisR = piRecipeCreate(validNames{ii});
         piWRS(thisR);
-        fprintf('Succeeded on %s -- \n',validNames{ii});
+        status(ii) = 1;
     catch
-        fprintf('Failed on %s -- \n',validNames{ii});
+        status(ii) = 0;
     end
+end
+
+%% List the summary
+
+status = logical(status);
+
+cprintf([0.2 0.6 0.2],'\nSucceeded:\n')
+tmp = validNames(status);
+for ii=1:numel(tmp)
+    fprintf('%s\n',tmp{ii});
+end
+
+cprintf([0.7 0.2 0.2],'\n\nFailed:\n')
+tmp = validNames(~status);
+for ii=1:numel(tmp)
+    fprintf('%s\n',tmp{ii});
 end
 
 %% END
