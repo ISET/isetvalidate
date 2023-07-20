@@ -1,4 +1,4 @@
-%% Testing material insertion
+%% A shorter version to test material insertion
 %
 % This is already done, I think in v_Materials.
 %
