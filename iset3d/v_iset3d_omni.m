@@ -14,7 +14,7 @@ ieInit;
 if ~piDockerExists, piDockerConfig; end
 
 %%  Scene and light
-thisR = piRecipeDefault('scene name','cornell box');
+thisR = piRecipeCreate('Cornell_Box');
 
 lightName = 'from camera';
 ourLight = piLightCreate(lightName,...
@@ -24,20 +24,21 @@ ourLight = piLightCreate(lightName,...
 thisR.set('lights', ourLight,'add');
 thisR.set('skymap','room.exr');
 
-%% No lens or omnni camera. Just a pinhole to render a scene radiance
+% No lens or omnni camera. Just a pinhole to render a scene radiance
 
-thisR.set('object distance',1);
+thisR.set('object distance',0.5);
 thisR.camera = piCameraCreate('pinhole'); 
-scene = piWRS(thisR);
+scene = piWRS(thisR,'name','pinhole test');
 
-%% Omni with a standard lens
+%% Omni with a standard double Gauss lens
 
-thisR.set('object distance',1);
+thisR.set('object distance',3);
 thisR.camera = piCameraCreate('omni','lens file','dgauss.22deg.12.5mm.json');
 
 thisR.set('film diagonal',5); % mm
 thisR.get('film distance','mm');
-piWRS(thisR);
+piWRS(thisR,'name','dgauss test');
+
 
 %% Omni with a fisheye lens
 
@@ -52,11 +53,14 @@ lList = lensList('quiet',true);
 ll = 18;    % fisheye.87deg.50.0mm.json
 
 % Move the camera back a bit to capture more of the scene
-thisR.set('object distance',8);
+thisR.set('object distance',10);
 thisR.camera = piCameraCreate('omni', 'lens file',lList(ll).name);
 thisR.set('skymap','sky-cathedral_interior.exr');
-oi = piWRS(thisR);oi = piAIdenoise(oi); 
-ieReplaceObject(oi); oiWindow;
+oi = piWRS(thisR,'name','fisheye test');
+oi = piAIdenoise(oi);
+oi = oiSet(oi,'name','fisheye denoised test');
+ieReplaceObject(oi); 
+oiWindow;
 
 %% END
 

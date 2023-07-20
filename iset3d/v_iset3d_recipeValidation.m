@@ -1,7 +1,12 @@
-%% v_recipeValidation
+%% v_iset3d_recipeValidation
 %
-% Try most of the recipes in data/scenes.  Some need a little help to
-% render.  Say a skymap or some materials.
+% Validating the piRecipeCreate reads all the recipes in data/scenes.
+% Some need a little help to render. Say a skymap or some materials.
+%
+% This can take a while.
+%
+% See also
+%
 
 %%
 ieInit;
@@ -9,6 +14,8 @@ if ~piDockerExists, piDockerConfig; end
 validNames = piRecipeCreate('list');
 
 %% This loop should work.
+
+fprintf('Testing %d different scenes\n',numel(validNames));
 for ii=1:numel(validNames)
     fprintf('\n-----------\n');
     fprintf('Scene:  %s\n',validNames{ii})

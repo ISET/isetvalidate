@@ -1,12 +1,15 @@
 %% A shorter version to test material insertion
 %
-% This is already done, I think in v_Materials.
+%   v_iset3d_materials
 %
 % See also
-%
+%   v_iset3d_materialsAll
 
 %% 
 ieInit
+if ~piDockerExists, piDockerConfig; end
+
+fprintf('Testing four materials\n');
 
 %% Red
 thisR = piRecipeDefault('scene name','bunny');

@@ -8,6 +8,7 @@
 
 %% Starting code from the MaterialInsert test:
 ieInit;
+if ~piDockerExists, piDockerConfig; end
 
 %% Load the bunny scene
 thisR = piRecipeDefault('scene name','bunny');
