@@ -31,7 +31,7 @@ if notDefined('repo'), repo = 'isetcam'; end
 p = inputParser;
 p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio','iset3d'})));
 p.addParameter('select','all',@(x)(ismember(ieParamFormat(x),{'all','one'})));
-p.parse;
+p.parse(repo,varargin{:});
 select = p.Results.select;
 
 switch ieParamFormat(repo)
