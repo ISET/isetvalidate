@@ -75,7 +75,7 @@ piObjectInstance(thisR);
 thisR.show;
 piWRS(thisR);
 
-%%  
+%%  This fails.  
 
 % Maybe this should be thisR.get('asset',idx,'top branch')
 thisLetter = piAssetSearch(thisR,'object name','_L_uc');

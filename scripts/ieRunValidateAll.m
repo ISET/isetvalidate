@@ -1,6 +1,10 @@
 function ieRunValidateAll
 %ieRunValidateAll
 %
+% DEPRECATED
+% 
+% Use ieRunValidationsAll
+%
 % Syntax
 %    ieRunValidateAll
 %
@@ -13,13 +17,11 @@ function ieRunValidateAll
 %
 % 07/26/17  dhb  Wrote this, because we care.
 
-% User/project specific preferences
+warning("Deprecated");
+
+end
 %{
-p = struct(...
-    'rootDirectory',           fullfile(isetRootPath, 'validate'), ...
-    'tutorialsSourceDir',      fullfile(isetRootPath, 'validate') ...                % local directory where tutorial scripts are located
-    );
-%}
+% User/project specific preferences
 p = struct(...
     'rootDirectory',           isetValidatePath, ...
     'tutorialsSourceDir',      isetValidatePath ...                % local directory where tutorial scripts are located
@@ -46,3 +48,4 @@ UnitTest.runProjectTutorials(p, scriptsToSkip, 'All');
 fprintf('*** We suggest running v_manualViewer from time to time.***\n');
 
 end
+%}
