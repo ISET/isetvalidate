@@ -1,8 +1,13 @@
-# isetcamvalidate
-Separating the validation code and data into their own separate repository.
+# isetvalidate
+In July 2023, we started to (a) remove the validation code and data from individual repositories, and (b) merge them into this repository (isetvalidate).
 
-We write a lot of unit and system tests for ISETCam. Historically, we kept the validation scripts and data in ISETCam itself.
+The advantages of this approach are
 
-By moving the code and data for validation into a separate repository, we believe we will feel librated to expand the validation. We will not have to touch ISETCam itself, and we will be able to see the whole set of validation scripts and data more clearly. 
+  ** individual repositories are simpler, so we can focus on just tutorials and scripts.
+  ** changes to validation scripts, do not show up in the main repo
+  ** we can share the same validation control scripts across many different repos
 
-At least, that's the hope and why this repository exists.
+The disadvantage is that people who want to create or use validations need to download this additional repo and include it in their path.
+
+By moving the code and data for validation into this repository, we believe we will feel librated to expand the validations, including more testing of the Examples. 
+
