@@ -1,7 +1,7 @@
 % Run all the examples in the isetbio tree
 %
 % Syntax:
-%     ieRunExamplesAll
+%     ieExamplesAll
 %
 % Description:
 %     Run all the examples in the isetbio tree,
@@ -9,9 +9,11 @@
 %     "% ETTBSkip"
 %
 % See also:
-%   ieValidateFullAll, ieRunTutorialsAll
+%   ieValidate, ieRunTutorialsAll
 
 % History:
 %   01/17/18  dhb  Wrote it.
 
 ExecuteExamplesInDirectory(isetbioRootPath,'verbose',false);
+
+%% END

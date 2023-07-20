@@ -1,6 +1,6 @@
 function vScriptsList = ieValidateListAllValidationDirs
 %
-% This encapsulates a vull list of our validation directories, so we only
+% This encapsulates a full list of our validation directories, so we only
 % need to update it in one place.
 % 
 % Doesn't list the example scripts, and doesn't override any default prefs.
