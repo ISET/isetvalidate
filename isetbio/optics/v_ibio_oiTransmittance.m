@@ -30,8 +30,8 @@ oiShowImage(oi);  % Faster than oiWindow()
 transmittance = oiGet(oi,'optics transmittance',wave);
 assert( numel(transmittance) == numel(oiGet(oi,'wave')) );
 
+%% Diffraction optics has a flat transmittance
 
-%% Diffraction optics
 scene = sceneCreate;
 wave = 550;
 scene = sceneSet(scene,'wavelength',wave);
@@ -42,7 +42,8 @@ oiShowImage(oi);
 transmittance = oiGet(oi,'optics transmittance',wave);
 assert( numel(transmittance) == numel(oiGet(oi,'wave')) );
 
-%% We still have the transmittance data stored in the optics
+%% We store the full transmittance data stored in the optics
+
 wave = 400:10:500;
 transmittance = oiGet(oi,'optics transmittance',wave);
 

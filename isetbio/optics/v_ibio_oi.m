@@ -1,4 +1,4 @@
-function varargout = v_oi(varargin)
+function varargout = v_ibio_oi(varargin)
 %
 % Test optical image creating functions
 %
@@ -12,9 +12,6 @@ end
 
 %% Function implementing the isetbio validation code
 function ValidationFunction(runTimeParams)
-
-    %% Initialize ISETBIO
-    % ieInit;
 
     %% Diffraction limited simulation properties
     oi = oiCreate('diffraction limited');
@@ -60,10 +57,9 @@ function ValidationFunction(runTimeParams)
 
 
     %% Check GUI control
-    if (runTimeParams.generatePlots)
-        vcAddAndSelectObject(oi);
-        oiWindow;
-        oiSet([],'gamma',1);
+    if (runTimeParams.generatePlots)        
+        oiWindow(oi);
+        oiSet(oi,'gamma',1);
     end
 
 end
