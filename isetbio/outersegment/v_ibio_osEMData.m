@@ -143,7 +143,7 @@ function [time, measuredOuterSegmentCurrent, stimulusPhotonRate] = loadMeasuredO
 
 dataSource = {'cones', 'eyeMovementExample'};
 
-validD = fullfile(isetbioRootPath,'data','validation',dataSource{1});
+validD = fullfile(isetvalidateRootPath,'data','isetbio',dataSource{1});
 filename = fullfile(validD,dataSource{2});
 eyeMovementExample = load(filename,'data');
 

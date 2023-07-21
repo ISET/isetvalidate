@@ -155,7 +155,7 @@ end
 function [time, measuredOuterSegmentCurrents, stimulusPhotonRates] = loadMeasuredOuterSegmentResponses()
 
 dataSource = {'cones', 'stepExample'};
-validD = fullfile(isetbioRootPath,'data','validation',dataSource{1});
+validD = fullfile(isetvalidateRootPath, 'data','isetbio',dataSource{1});
 filename = fullfile(validD,dataSource{2});
 stepExample = load(filename,'data');
 
