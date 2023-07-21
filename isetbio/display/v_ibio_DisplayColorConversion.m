@@ -1,16 +1,13 @@
-% v_ibio_DisplayColorConversion(varargin)
+% v_ibio_DisplayColorConversion
 %
-% This is way too complicated for a simple test.
+% This is complicated for a simple test.  But it runs quickly and
+% things now seem to match.
 %
 % Create a uniform field corresponding to specified display and rgb
-% values.  Use isetbio to calculate cone isomerization rates.
-% Then do the same calculation for the same display, cone
-% fundamentals, and rgb values in PTB.  We start with the isetbio
-% calculation.
+% values.  Use isetbio to calculate cone isomerization rates. Then do
+% the same calculation for the same display, cone fundamentals, and
+% rgb values in PTB.  We start with the isetbio calculation.
 %
-% BW:  There is a factor of 2 off here somewhere.  Also, we aren't
-% comparing the simple physical quantities along the way. To check
-% with DHB.
 % See also
 %  
 
@@ -166,7 +163,6 @@ PTBcal = ptb.GeneratePsychToolboxCalStruct(...
     'dotsPerMeter', dotsPerMeter ...
     );
 
-% BW:  These do not match the display primaries.  Why?
 energy = Quanta2Energy(wave,ptbPrimarySpdMagCorrectIrradiancePhotons');
 plotRadiance(wave,energy);
 title('PTB Primaries.')

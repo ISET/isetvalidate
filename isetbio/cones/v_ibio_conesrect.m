@@ -1,8 +1,6 @@
-function varargout = v_ibio_Cones(varargin)
+function varargout = v_ibio_conesrect(varargin)
 %
 % Test cone, lens and macular function calls.  Compare against PTB answers.
-%
-% See also v_ibio_IrradianceIsomerizations.
 %
 % Issues:
 %
@@ -14,12 +12,12 @@ function varargout = v_ibio_Cones(varargin)
 % quantal efficiencies expect, and figure out how on earth these match the
 % PTB given that we didn't do any work to match the inner segment diameter.
 %
-% ISETBIO Team Copyright 2013-14
-
-% 12/10/2016  dhb  Modernized for cMosaic rather than sensor.  Actually
-%                  managed to get validation to pass without needing to rewrite the
-%                  validation file.
-
+% There are these v_calibrationPugh and v_calibrationPTB files
+% somewhere.  BW to find.
+%
+% See also 
+%    v_ibio_IrradianceIsomerizations.
+%
     varargout = UnitTest.runValidationRun(@ValidationFunction, nargout, varargin);
 end
 

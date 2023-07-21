@@ -1,4 +1,6 @@
-%%v_statsPoisson  Test the iePoisson random number generator calls
+%%v_ibio_statsPoisson  
+% 
+% Test the iePoisson random number generator calls
 %
 % Description:
 %     Exercise the Poisson random number generator
@@ -18,8 +20,8 @@ lambda = 1;
 v = iePoisson(lambda,'nSamp',nSamp);
 % fprintf('Mean %.2f and variance %.2f\n',mean(v(:)), var(v));
 
-vcNewGraphWin;
-hist(v,20);
+ieNewGraphWin;
+histogram(v,20);
 
 %% A slightly larger number
 nSamp = 1000;
@@ -27,13 +29,14 @@ lambda = 25;
 v = iePoisson(lambda,'nSamp',nSamp);
 % fprintf('Mean %.2f and variance %.2f\n',mean(v(:)), var(v));
 
-vcNewGraphWin;
-hist(v,20);
+ieNewGraphWin;
+histogram(v,20);
 
 %%  Now try a big lambda, which should be gaussian
 lambda = 1000;
 v = iePoisson(lambda,'nSamp',nSamp);
 % fprintf('Mean %.2f and variance %.2f\n',mean(v(:)), var(v));
-vcNewGraphWin;
-hist(v,20);
+ieNewGraphWin;
+histogram(v,20);
 
+%% END

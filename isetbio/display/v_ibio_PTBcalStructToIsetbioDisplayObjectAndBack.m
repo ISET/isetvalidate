@@ -6,7 +6,7 @@ function v_ibio_PTBcalStructToIsetbioDisplayObjectAndBack(varargin)
 % back with the originally read PTB cal stucture.
 %
 % See also 
-%    v_IrradianceIsomerizations, v_DisplayColorConversion
+%    v_ibio_IrradianceIsomerizations, v__ibio_DisplayColorConversion
 %
 
 %% Load PTB calibration data for the SONY PVM2541 display

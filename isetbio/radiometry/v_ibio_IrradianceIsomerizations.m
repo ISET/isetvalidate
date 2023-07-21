@@ -1,8 +1,9 @@
-function varargout = v_ibio_IrradianceIsomerizations(varargin)
+function varargout = v_ibio_irradianceIsomerizations(varargin)
 %
-% Validate ISETBIO-based irradiance/isomerization computations by comparing to PTB-based irradiance/isomerization computations.
+% Validate ISETBIO-based irradiance/isomerization computations by
+% comparing to PTB-based irradiance/isomerization computations. 
 %
-% See also: v_Cones
+% See also: v_ibio_conesrect
 %
 % Minor issues:
 %
