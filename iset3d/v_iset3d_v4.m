@@ -23,7 +23,7 @@ if ~piDockerExists, piDockerConfig; end
 disp('*** DOCKER -- v_DockerWrapper');
 setpref('ISET3d', 'tvdockerStart', tic);
 try
-    v_DockerWrapper('length','short');
+    v_iset3d_DockerWrapper('length','short');
     setpref('ISET3d', 'tvdockerTime', toc(getpref('ISET3d', 'tvdockerStart', 0)));
 catch
     warning('Docker Wrapper test failed');
@@ -44,10 +44,10 @@ catch ME
 end
 
 %% Omni camera (e.g. one with a lens)
-disp('v_omni')
+disp('v_iset3d_omni')
 setpref('ISET3d', 'tvomniStart', tic);
 try
-    v_omni;          
+    v_iset3d_omni;          
     setpref('ISET3d', 'tvomniTime', toc(getpref('ISET3d', 'tvomniStart', 0)));
 catch ME
     warning('Omni failed.\n');
@@ -55,10 +55,10 @@ catch ME
     setpref('ISET3d', 'tvomniTime', -1);
 end
 %% Assets
-disp('t_assets')
+disp('v_iset3d_assets')
 setpref('ISET3d', 'tvassetsStart', tic);
 try
-    t_assets;          % Get the zmap
+    v_iset3d_assets;          % Get the zmap
     setpref('ISET3d', 'tvassetsTime', toc(getpref('ISET3d', 'tvassetsStart', 0)));
 catch ME
     warning('Macbeth failed.\n');
@@ -68,9 +68,9 @@ end
 
 
 %% Demo working with materials
-disp('*** MATERIALS -- t_piIntro_material')
+disp('*** MATERIALS -- v_iset3d_materials')
 setpref('ISET3d', 'tvmaterialStart', tic);
-t_piIntro_material;
+v_iset3d_materials;
 setpref('ISET3d', 'tvmaterialTime', toc(getpref('ISET3d', 'tvmaterialStart', 0)));
 
 %% Demo working with lights
@@ -115,10 +115,10 @@ catch ME
 end
 
 %% Validate some recipes
-disp('*** RECIPES -- v_recipeValidation')
+disp('*** RECIPES -- v_iset3d_recipeValidation')
 setpref('ISET3d', 'tvrecipeStart', tic);
 try
-    v_recipeValidation;
+    v_iset3d_recipeValidation;
     setpref('ISET3d', 'tvrecipeTime', toc(getpref('ISET3d', 'tvrecipeStart', 0)));
 catch ME
     warning('recipe validation failed');
@@ -128,10 +128,10 @@ end
 
 %% Check objectBegin/End implementation
 
-disp('*** RECIPES -- v_ObjectInstance')
+disp('*** RECIPES -- v_iset3d_objectInstance')
 setpref('ISET3d', 'tvrecipeStart', tic);
 try
-    v_ObjectInstance;
+    v_iset3d_objectInstance;
     setpref('ISET3d', 'tvrecipeTime', toc(getpref('ISET3d', 'tvrecipeStart', 0)));
 catch ME
     warning('recipe validation failed');
@@ -147,9 +147,9 @@ t_piIntro_meshLabel
 %}
 
 %%  test our skymap specific API
-disp('*** SKYMAPS -- t_skymapDaylight')
+disp('*** SKYMAPS -- v_iset3d_skymap')
 setpref('ISET3d', 'tvskymapStart', tic);
-v_skymap;
+v_iset3d_skymap;
 setpref('ISET3d', 'tvskymapTime', toc(getpref('ISET3d', 'tvskymapStart', 0)));
 
 % TEST Line used FOR DEBUGGING COLOR OUTPUT
@@ -166,6 +166,9 @@ catch ME
     warning(ME.identifier,'%s',ME.message);
     setpref('ISET3d','tvtextureTime', -1);
 end
+
+%% Need to add other new validation scripts
+% scenedepth, sceneEye, text, worldCoordinates, (recipeValidation?)
 
 %% Summary
 tTotal = toc(getpref('ISET3d','tStart'));
