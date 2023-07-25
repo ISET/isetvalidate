@@ -2,31 +2,42 @@ function result = ieExamples(repo,varargin)
 % Run all the examples in the specified repo
 %
 % Syntax:
-%     result = ieExamples(repo,'select',['all','one')
-%
-% Input
-%   repo - name of repository ('isetcam','isetbio')
-%
-% Optional key/val
-%    select - 'all' or 'one' (one not yet implemented)
-%    print  - Print the results to the command line, showing the successes
-%             and failures separately
-%
-% Output
-%  result - describing the outcome
-%      result.names   Names of the functions
-%      result.status  What happened
+%     result = ieExamples(repo)
 %
 % Description:
 %     Run all the examples in the repository tree, excep those that contain
 %     a line of the form 
 %          "% ETTBSkip"
 %
-% ieExamples('isetbio');
-% ieExamples('isetcam','select','all','print',true);
+% Inputs:
+%   repo - name of repository ('isetcam','isetbio')
+%
+% Outputs:
+%  result - describing the outcome
+%      result.names   Names of the functions
+%      result.status  What happened
+%
+% Optional key/value pairs
+%    'select' - 'all' or 'one' (one not yet implemented).  Default 'all'.
+%    'print'  - Boolean. Print the results to the command line, showing the successes
+%               and failures separately. Default true.
+%
+% Examples:
+%   The source file contains examples.
 %
 % See also:
 %   ieValidate, ieRunTutorialsAll
+
+% Examples: % ETTBSkip
+%{
+    ieExamples('isetbio');
+%}
+%{
+    ieExamples('isetcam','select','all','print',true);
+%}
+
+% History:
+%   07/25/23  dhb  Make header comment consistent with isetbio style.
 
 p = inputParser;
 p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio'})));
