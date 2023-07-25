@@ -20,10 +20,10 @@ ieInit;
 if ~piDockerExists, piDockerConfig; end
 
 %% Quick version of DockerWrapper tests
-disp('*** DOCKER -- v_DockerWrapper');
+disp('*** DOCKER -- v_iset3d_dockerWrapper');
 setpref('ISET3d', 'tvdockerStart', tic);
 try
-    v_iset3d_DockerWrapper('length','short');
+    v_iset3d_dockerWrapper('length','short');
     setpref('ISET3d', 'tvdockerTime', toc(getpref('ISET3d', 'tvdockerStart', 0)));
 catch
     warning('Docker Wrapper test failed');
@@ -31,14 +31,14 @@ catch
     setpref('ISET3d', 'tvdockerTime', -1);
 end
 
-%% Depth in x,y,z dimensions
-disp('*** DEPTH -- t_piIntro_macbeth')
+%% Depth validation
+disp('*** DEPTH -- v_iset3d_scenedepth')
 setpref('ISET3d', 'tvdepthStart', tic);
 try
-    t_piIntro_macbeth;               % Gets the depth map
+    v_iset3d_scenedepth;               % Gets the depth map
     setpref('ISET3d', 'tvdepthTime', toc(getpref('ISET3d', 'tvdepthStart', 0)));
 catch ME
-    warning('Macbeth failed.\n');
+    warning('Depth failed.\n');
     warning(ME.identifier,'%s',ME.message);
     setpref('ISET3d', 'tvdepthTime', -1);
 end
@@ -54,6 +54,7 @@ catch ME
     warning(ME.identifier,'%s',ME.message);
     setpref('ISET3d', 'tvomniTime', -1);
 end
+
 %% Assets
 disp('v_iset3d_assets')
 setpref('ISET3d', 'tvassetsStart', tic);
@@ -65,7 +66,6 @@ catch ME
     warning(ME.identifier,'%s',ME.message);
     setpref('ISET3d', 'tvassetsTime', -1);
 end
-
 
 %% Demo working with materials
 disp('*** MATERIALS -- v_iset3d_materials')
@@ -96,6 +96,7 @@ catch ME
     warning(ME.identifier,'%s',ME.message);
     setpref('ISET3d', 'tvpbrtTime', -1);
 end
+
 %%  Translate and Rotate the camera
 disp('*** CAMERA POSITION -- t_cameraPosition')
 setpref('ISET3d', 'tvcampositionStart', tic);
@@ -127,24 +128,27 @@ catch ME
 end
 
 %% Check objectBegin/End implementation
-
 disp('*** RECIPES -- v_iset3d_objectInstance')
-setpref('ISET3d', 'tvrecipeStart', tic);
+setpref('ISET3d', 'tvobjectStart', tic);
 try
     v_iset3d_objectInstance;
+    setpref('ISET3d', 'tvobjectTime', toc(getpref('ISET3d', 'tvobjectStart', 0)));
+catch ME
+    warning('object instance validation failed');
+    warning(ME.identifier,'%s',ME.message);
+    setpref('ISET3d','tvobjectTime', -1);
+end
+
+disp('*** RECIPES -- v_iset3d_recipeValidation')
+setpref('ISET3d', 'tvrecipeStart', tic);
+try
+    v_iset3d_recipeValidation;
     setpref('ISET3d', 'tvrecipeTime', toc(getpref('ISET3d', 'tvrecipeStart', 0)));
 catch ME
     warning('recipe validation failed');
     warning(ME.identifier,'%s',ME.message);
     setpref('ISET3d','tvrecipeTime', -1);
 end
-
-
-%% This does not run in v4 yet
-%{
-disp('t_piIntro_meshLabel')
-t_piIntro_meshLabel
-%}
 
 %%  test our skymap specific API
 disp('*** SKYMAPS -- v_iset3d_skymap')
@@ -155,7 +159,7 @@ setpref('ISET3d', 'tvskymapTime', toc(getpref('ISET3d', 'tvskymapStart', 0)));
 % TEST Line used FOR DEBUGGING COLOR OUTPUT
 % setpref('ISET3d', 'tvskymapTime', -1);
 
-%% Textures (re-inserted, Aug 10 2022)
+%% Textures 
 disp('*** TEXTURES -- t_piIntro_texture')
 setpref('ISET3d', 'tvtextureStart', tic);
 try
@@ -167,8 +171,32 @@ catch ME
     setpref('ISET3d','tvtextureTime', -1);
 end
 
+%% Eye 
+disp('*** SCENE_EYE -- v_iset3d_sceneEye')
+setpref('ISET3d', 'tveyeStart', tic);
+try
+    v_iset3d_sceneEye;
+    setpref('ISET3d', 'tveyeTime', toc(getpref('ISET3d', 'tveyeStart', 0)));
+catch ME
+    warning('sceneEye validation failed');
+    warning(ME.identifier,'%s',ME.message);
+    setpref('ISET3d','tveyeTime', -1);
+end
+
+%% Text 
+disp('*** TEXT -- v_iset3d_text')
+setpref('ISET3d', 'tvtextStart', tic);
+try
+    v_iset3d_text;
+    setpref('ISET3d', 'tvtextTime', toc(getpref('ISET3d', 'tvtextStart', 0)));
+catch ME
+    warning('Text validation failed');
+    warning(ME.identifier,'%s',ME.message);
+    setpref('ISET3d','tvtextTime', -1);
+end
+
 %% Need to add other new validation scripts
-% scenedepth, sceneEye, text, worldCoordinates, (recipeValidation?)
+% sceneEye, text, worldCoordinates
 
 %% Summary
 tTotal = toc(getpref('ISET3d','tStart'));
@@ -184,12 +212,15 @@ vprintf('Depth:      ', getpref('ISET3d','tvdepthTime'));
 vprintf('Omni:       ', getpref('ISET3d','tvomniTime'));
 vprintf('Assets:     ', getpref('ISET3d','tvassetsTime'));
 vprintf('Material:   ', getpref('ISET3d','tvmaterialTime'));
+vprintf('Object:     ', getpref('ISET3d','tvobjectTime'));
 vprintf('Light:      ', getpref('ISET3d','tvlightTime'));
 vprintf('Cam Pos.:   ', getpref('ISET3d','tvcampositionTime'));
 vprintf('Chess Set:  ', getpref('ISET3d','tvchessTime'));
 vprintf('Skymap:     ', getpref('ISET3d','tvskymapTime'));
 vprintf('Texture:    ', getpref('ISET3d','tvtextureTime'));
 vprintf('Recipes:    ', getpref('ISET3d','tvrecipeTime'));
+vprintf('Scene Eye:  ', getpref('ISET3d','tveyeTime'));
+vprintf('Text:       ', getpref('ISET3d','tvtextTime'));
 
 %% END
 
