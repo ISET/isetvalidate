@@ -52,21 +52,6 @@ runTest('t_piIntro','pbrt','*** INTRO -- t_piIntro', ...
 runTest('t_cameraPosition','camposition','*** CAMERA POSITION -- t_cameraPosition', ...
     'Camera Position failed.\n');
 
-%{
-% I'm not sure we need this as it is rendered by others?
-%% Various renders of the Chess Set
-disp('*** CHESS SET -- t_piIntro_chess')
-setpref('ISET3d', 'tvchessStart', tic);
-try
-    t_piIntro_chess;
-    setpref('ISET3d', 'tvchessTime', toc(getpref('ISET3d', 'tvchessStart', 0)));
-catch ME
-    warning('chess set failed')
-    warning(ME.identifier,'%s',ME.message);
-    setpref('ISET3d', 'tvchessTime', -1);
-end
-%}
-
 %% Validate some recipes
 runTest('v_iset3d_recipeValidation','recipe','*** RECIPES -- v_iset3d_recipeValidation', ...
     'recipe validation failed');
