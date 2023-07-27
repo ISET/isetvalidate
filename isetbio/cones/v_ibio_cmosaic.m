@@ -25,12 +25,12 @@ rng('default'); rng(1);
 scene = sceneCreate('uniform ee');
 scene = sceneSet(scene,'fov',1);
 scene = sceneAdjustLuminance(scene,200);
-oi = oiCreate('human');
+oi = oiCreate('humanmw');
 oi = oiCompute(oi,scene);
 
 %% Creat the mosaic and compute isomerizations (which are sometimes called absorptions)
+%
 % This doesn't use the default integration time.
-
 cMosaic = coneMosaicRect;
 cMosaic.setSizeToFOV(0.5*sceneGet(scene,'fov'));
 cMosaic.integrationTime = 0.050;    
