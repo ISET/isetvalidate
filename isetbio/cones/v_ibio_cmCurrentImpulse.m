@@ -22,6 +22,7 @@ function ValidationFunction(runTimeParams)
 
 %% Initialize
 % ieInit;
+runTimeParams.generatePlots = true;
 
 %% Reproduce identical random numbers
 rng('default'); rng(3);
@@ -40,7 +41,8 @@ modulation(10:11) = 1;
 sceneParams.fov       = 0.5;   % Half a degree
 sceneParams.meanluminance = 50;    % Uniform scene luminance (cd/m2)
 
-% Creates the impulse.  Steady background of 50 cd/m2, then a flash at 100
+% Creates the impulse.  Steady background of 50 cd/m2, then a flash at
+% 100tbUse
 % cd/m2 for 5 ms, then back to 50.
 oiImpulse = oisCreate('impulse','add',modulation,...
     'sceneParameters',sceneParams,...
