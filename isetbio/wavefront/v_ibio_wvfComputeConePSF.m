@@ -1,9 +1,6 @@
-% v_ibio_wvfComputeConePSF
+function varargout = v_wvfComputeConePSF(varargin)
 %
-% DHB and NC to test and clarify.
-%
-% Test the routines that compute L, M, and S cone PSFs from Zernike
-% coefficients.
+% Test the routines that compute L, M, and S cone PSFs from Zernike coefficients.
 %
 % Replicates figures from 
 %  Autrusseau et al., 2011, Vision Research, 51, 2282-2294.
@@ -21,7 +18,7 @@
 % between what's calculated here and Figure 4A/B checks relies on
 % many things being done in the same way.
 %
-% See also: wvfComputeConePSF, wvfCompute, wvfComputePupilFunction,
+% See also: wvfComputeConePSF, wvfComputePSF, wvfComputePupilFunction,
 %   sceGetParams, wvfGetDefocusFromWavelengthDifference
 
 % History:
@@ -34,6 +31,17 @@
 % 12/20/17 dhb  Use wvfLoadThibosVirtualEyes to load, rather than directly
 %               loading the file.
 % 01/16/18 dhb  Use create/set to make conePsfInfo structure.
+
+    varargout = UnitTest.runValidationRun(@ValidationFunction, nargout, varargin);
+end
+
+%% Function implementing the isetbio validation code
+function ValidationFunction(runTimeParams)
+
+%% Initialize
+close all; ieInit;
+%% Some informative text
+UnitTest.validationRecord('SIMPLE_MESSAGE', 'Check L, M, S cone PSFs.');
 
 %% Parameters
 %
@@ -125,12 +133,12 @@ newSamples = 497;
 wvf0 = wvfSet(wvf0,'number spatial samples',newSamples);
 fprintf('Sampling pupil plane/psf with %d pixels\n',wvfGet(wvf0,'number spatial samples'));
 fprintf('Pupil plane info\n');
-for wavelength = [400 500 600 700]
+for wavelength = [400 500 600 700];
     fprintf('\t%d nm, %0.1f mm, %0.3f mm/pixel\n',...
         wavelength,wvfGet(wvf0,'pupil plane size','mm',wavelength),wvfGet(wvf0,'pupil plane size','mm',wavelength)/wvfGet(wvf0,'number spatial samples'));
 end
 fprintf('PSF plane info\n');
-for wavelength = [400 500 600 700]
+for wavelength = [400 500 600 700];
     fprintf('\t%d nm, %0.1f minutes, %0.3f min/pixel\n',...
         wavelength,wvfGet(wvf0,'psf angle per sample','min',wavelength)*wvfGet(wvf0,'number spatial samples'),wvfGet(wvf0,'psf angle per sample','min',wavelength));
 end
@@ -146,12 +154,12 @@ end
 
 %% Compute LMS psfs both for a subject and diffraction limited
 wvfParams1 = wvf0;
-wvfParams1 = wvfCompute(wvfParams1);
+wvfParams1 = wvfComputePSF(wvfParams1);
 conePsf1 = wvfGet(wvfParams1,'cone psf');
 
 wvfParams2 = wvf0;
 wvfParams2 = wvfSet(wvfParams2,'zcoeffs',0);
-wvfParams2 = wvfCompute(wvfParams2);
+wvfParams2 = wvfComputePSF(wvfParams2);
 conePsf2 = wvfGet(wvfParams2,'cone psf');
 
 % This bit is a sanity check that our code yields constant sampling in the psf domain.
@@ -215,38 +223,37 @@ UnitTest.validationData('spsfd', spsfd);
 
 % Diffraction limited (Figure 2)
 wavelengths = [400 550 700];
-ieNewGraphWin([],'wide');
+vcNewGraphWin([],'wide');
 % position = get(gcf,'Position');
 % position(3) = 1600; position(4) = 800;
 % set(gcf,'Position',position);
-for i = 1:length(wavelengths)
+for i = 1:length(wavelengths);
     wavelength = wavelengths(i);
     
     subplot(2,length(wavelengths),i); hold on
-
-    [~,p] = wvfPlot(wvfParams2,'image pupil phase','mm',wavelength,'no window');    
+    [nil,p] = wvfPlot(wvfParams2,'image pupil phase','mm',wavelength,'no window');
+    
     focusWl = wvfGet(wvfParams2,'measured wavelength');
     subplot(2,length(wavelengths),i+length(wavelengths)); hold on
     psf = wvfGet(wvfParams2,'psf',wavelength);
     maxVal = max(psf(:));
-
     % [nil,p] = wvfPlot(wvfParams2,'2d psf angle','min',wavelength,'no window');
-    [~,p] = wvfPlot(wvfParams2,'image psf angle','min',wavelength,'no window');
+    [nil,p] = wvfPlot(wvfParams2,'image psf angle','min',wavelength,'no window');
     h = get(p,'Parent');
     view([0 90]); ylim([-30 30]); xlim([-30 30]); axis('square');
     title(sprintf('%d nm, focus %d nm, max = %0.5f',wavelength,focusWl,maxVal));
 end
 
 % With aberrations (Figure 4)
-ieNewGraphWin([],'wide');
+vcNewGraphWin([],'wide');
 % position = get(gcf,'Position');
 % position(3) = 1600; position(4) = 800;
 % set(gcf,'Position',position);
-for i = 1:length(wavelengths)
+for i = 1:length(wavelengths);
     wavelength = wavelengths(i);
     
     subplot(2,length(wavelengths),i); hold on
-    [~,p] = wvfPlot(wvfParams1,'image pupil phase','mm',wavelength,'no window');
+    [nil,p] = wvfPlot(wvfParams1,'image pupil phase','mm',wavelength,'no window');
     %h = get(p,'Parent');
     %view([0 90]); ylim([-30 30]); xlim([-30 30]); axis('square');
     %title(sprintf('%d nm, focus %d nm, max = %0.5f',wavelength,focusWl,maxVal));
@@ -255,7 +262,7 @@ for i = 1:length(wavelengths)
     psf = wvfGet(wvfParams1,'psf',wavelength);
     maxVal = max(psf(:));
     %[nil,p] = wvfPlot(wvfParams1,'2d psf angle','min',wavelength,'no window');
-    [~,p] = wvfPlot(wvfParams1,'image psf angle','min',wavelength,'no window');
+    [nil,p] = wvfPlot(wvfParams1,'image psf angle','min',wavelength,'no window');
     h = get(p,'Parent');
     view([0 90]); ylim([-30 30]); xlim([-30 30]); axis('square');
     title(sprintf('%d nm, focus %d nm, max = %0.5f',wavelength,focusWl,maxVal));
@@ -265,8 +272,8 @@ end
 % Compare with diffraction limited + defocus
 
 % The position setting was a bit specific to some monitor.  I tried to make
-% ieNewGraphWin do the right thing.
-ieNewGraphWin([],'wide'); 
+% vcNewGraphWin do the right thing.
+vcNewGraphWin([],'wide'); 
 % position = get(gcf,'Position');
 % position(3) = 1600;
 % set(gcf,'Position',position);
@@ -353,7 +360,7 @@ autrusseauFigure11 = ReadStructsFromText('autrusseauFigure11.txt');
 % middle row of full MTFs) that we get, and compare to what Autrusseau et al. got.
 % Dashed colord line is horizontal grating MTFs.  Black lines are MTFs for 
 % diffraction plus defocus 
-theFig = ieNewGraphWin([],'wide'); clf;
+theFig = vcNewGraphWin([],'wide'); clf;
 subplot(1,3,1); hold on
 onedLOTFH = abs(lotf(whichRow,:));
 onedLOTFV = abs(lotf(:,whichRow));
@@ -412,6 +419,7 @@ else
 end
 drawnow;
 
+end
 
 %% Need to come back to this code and get it working.
 %
@@ -430,8 +438,7 @@ drawnow;
 % % This takes a long time and produces an error that could be fixed by BW,
 % % but he is too lazy.
 % %  Error using wvfGet (line 590)
-% %   Must explicitly compute PSF on wvf structure before getting it.  Use
-%     wvfCompute 
+% %   Must explicitly compute PSF on wvf structure before getting it.  Use wvfComputePSF
 % 
 % wvfParams3 = wvfComputeOptimizedConePSF(wvfParams3);
 % 
