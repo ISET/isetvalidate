@@ -78,7 +78,7 @@ piWRS(thisR);
 %%  This fails.  
 
 % Maybe this should be thisR.get('asset',idx,'top branch')
-thisLetter = piAssetSearch(thisR,'object name','_L_uc');
+thisLetter = piAssetSearch(thisR,'object name','_l_uc');
 p2Root = thisR.get('asset',thisLetter,'pathtoroot');
 idx = p2Root(end);
 
