@@ -1,4 +1,4 @@
-%% v_piText
+%% v_iset3d_text
 % 
 % Validation for inserting text into a recipe
 % 
@@ -83,6 +83,7 @@ p2Root = thisR.get('asset',thisLetter,'pathtoroot');
 idx = p2Root(end);
 
 % The 'position' seems to be a translation
+% DJC -- Here is where things currently break with "l_uc_m" not definted
 [thisR, foo] = piObjectInstanceCreate(thisR, idx, 'position',[-0.1 0 0.0]);
 thisR = piObjectInstanceCreate(thisR, idx, 'position',[0 0.1 0.0]);
 
