@@ -4,6 +4,10 @@
 % 
 % Make the double character instance work
 
+%%
+ieInit;
+if ~piDockerExists, piDockerConfig; end
+
 %% Original way with textRender
 
 thisR = piRecipeCreate('macbeth checker');
