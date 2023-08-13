@@ -8,7 +8,7 @@ function varargout = v_wvfSpatialSampling(varargin)
 % psf's so that they integrate to 1 by simple summing, or take spatial
 % sampling into account when normalizing?
 %
-% See also: wvfCreate, wvfGet, wvfSet, wvfComputePSF,
+% See also: wvfCreate, wvfGet, wvfSet, wvfCompute,
 % wvfComputePupilFucntion
 %
 % 7/4/12  dhb  Wrote it.
@@ -33,14 +33,14 @@ UnitTest.validationRecord('SIMPLE_MESSAGE', 'Check wavefront spatial sampling.')
 
 %% Set up parameters structure
 wvf0 = wvfCreate;
-wvf0 = wvfComputePSF(wvf0);
+wvf0 = wvfCompute(wvf0);
 w = wvfGet(wvf0,'calc wave');
 
 %% Change psf sampling and recompute
 wvf3 = wvf0;
 arcminpersample3 = wvfGet(wvf3,'psf angle per sample','min',w);
 wvf3 = wvfSet(wvf3,'ref psf sample interval',arcminpersample3/2);
-wvf3 = wvfComputePSF(wvf3);
+wvf3 = wvfCompute(wvf3);
 
 %% Change pupil plane sampling and number of pixels, and recompute
 wvf4 = wvf0;
@@ -48,15 +48,15 @@ wvf4 = wvfSet(wvf4,'sample interval domain','pupil');
 pupilPlaneSize4 = wvfGet(wvf4,'ref pupil plane size');
 wvf4 = wvfSet(wvf4,'ref pupil plane size',0.75*pupilPlaneSize4);
 wvf4 = wvfSet(wvf4,'spatial samples',185);
-wvf4 = wvfComputePSF(wvf4);
+wvf4 = wvfCompute(wvf4);
 
 %% Prepare for plotting.  We don't use wvfPlot because we
 % want to see sampling and don't want to normalize.
 psfLine0 = wvfGet(wvf0,'1d psf',w);
-arcmin0 = wvfGet(wvf0,'psf angular samples','min',w);
+arcmin0  = wvfGet(wvf0,'psf angular samples','min',w);
 psfLine3 = wvfGet(wvf3,'1d psf',w);
-arcmin3 = wvfGet(wvf3,'psf angular samples','min',w);
-arcmin4 = wvfGet(wvf4,'psf angular samples','min',w);
+arcmin3  = wvfGet(wvf3,'psf angular samples','min',w);
+arcmin4  = wvfGet(wvf4,'psf angular samples','min',w);
 psfLine4 = wvfGet(wvf4,'1d psf',w);
 
 %% Compare to what we get from PTB AiryPattern function -- should match

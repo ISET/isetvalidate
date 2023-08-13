@@ -1,4 +1,4 @@
-function varargout = v_wvfComputeConePSF(varargin)
+function varargout = v_ibio_wvfComputeConePSF(varargin)
 %
 % Test the routines that compute L, M, and S cone PSFs from Zernike coefficients.
 %
@@ -18,7 +18,7 @@ function varargout = v_wvfComputeConePSF(varargin)
 % between what's calculated here and Figure 4A/B checks relies on
 % many things being done in the same way.
 %
-% See also: wvfComputeConePSF, wvfComputePSF, wvfComputePupilFunction,
+% See also: wvfComputeConePSF, wvfCompute, wvfComputePupilFunction,
 %   sceGetParams, wvfGetDefocusFromWavelengthDifference
 
 % History:
@@ -154,13 +154,13 @@ end
 
 %% Compute LMS psfs both for a subject and diffraction limited
 wvfParams1 = wvf0;
-wvfParams1 = wvfComputePSF(wvfParams1);
-conePsf1 = wvfGet(wvfParams1,'cone psf');
+wvfParams1 = wvfCompute(wvfParams1);
+conePsf1   = wvfGet(wvfParams1,'cone psf');
 
 wvfParams2 = wvf0;
 wvfParams2 = wvfSet(wvfParams2,'zcoeffs',0);
-wvfParams2 = wvfComputePSF(wvfParams2);
-conePsf2 = wvfGet(wvfParams2,'cone psf');
+wvfParams2 = wvfCompute(wvfParams2);
+conePsf2   = wvfGet(wvfParams2,'cone psf');
 
 % This bit is a sanity check that our code yields constant sampling in the psf domain.
 % Also compute arcminutes per pixel.
@@ -227,18 +227,18 @@ vcNewGraphWin([],'wide');
 % position = get(gcf,'Position');
 % position(3) = 1600; position(4) = 800;
 % set(gcf,'Position',position);
-for i = 1:length(wavelengths);
+for i = 1:length(wavelengths)
     wavelength = wavelengths(i);
     
     subplot(2,length(wavelengths),i); hold on
-    [nil,p] = wvfPlot(wvfParams2,'image pupil phase','mm',wavelength,'no window');
+    [~,p] = wvfPlot(wvfParams2,'image pupil phase','unit','mm','wave',wavelength,'window', false);
     
     focusWl = wvfGet(wvfParams2,'measured wavelength');
     subplot(2,length(wavelengths),i+length(wavelengths)); hold on
     psf = wvfGet(wvfParams2,'psf',wavelength);
     maxVal = max(psf(:));
-    % [nil,p] = wvfPlot(wvfParams2,'2d psf angle','min',wavelength,'no window');
-    [nil,p] = wvfPlot(wvfParams2,'image psf angle','min',wavelength,'no window');
+    % [nil,p] = wvfPlot(wvfParams2,'2d psf angle','min',wavelength,'window',false);
+    [~,p] = wvfPlot(wvfParams2,'image psf angle','unit','min','wave',wavelength,'window', false);
     h = get(p,'Parent');
     view([0 90]); ylim([-30 30]); xlim([-30 30]); axis('square');
     title(sprintf('%d nm, focus %d nm, max = %0.5f',wavelength,focusWl,maxVal));
@@ -249,11 +249,11 @@ vcNewGraphWin([],'wide');
 % position = get(gcf,'Position');
 % position(3) = 1600; position(4) = 800;
 % set(gcf,'Position',position);
-for i = 1:length(wavelengths);
+for i = 1:length(wavelengths)
     wavelength = wavelengths(i);
     
     subplot(2,length(wavelengths),i); hold on
-    [nil,p] = wvfPlot(wvfParams1,'image pupil phase','mm',wavelength,'no window');
+    [nil,p] = wvfPlot(wvfParams1,'image pupil phase','wave',wavelength,'window', false);
     %h = get(p,'Parent');
     %view([0 90]); ylim([-30 30]); xlim([-30 30]); axis('square');
     %title(sprintf('%d nm, focus %d nm, max = %0.5f',wavelength,focusWl,maxVal));
@@ -261,8 +261,8 @@ for i = 1:length(wavelengths);
     subplot(2,length(wavelengths),i+length(wavelengths)); hold on
     psf = wvfGet(wvfParams1,'psf',wavelength);
     maxVal = max(psf(:));
-    %[nil,p] = wvfPlot(wvfParams1,'2d psf angle','min',wavelength,'no window');
-    [nil,p] = wvfPlot(wvfParams1,'image psf angle','min',wavelength,'no window');
+    %[nil,p] = wvfPlot(wvfParams1,'2d psf angle','min',wavelength,'window',false);
+    [nil,p] = wvfPlot(wvfParams1,'image psf angle','unit','min','wave',wavelength,'window',false);
     h = get(p,'Parent');
     view([0 90]); ylim([-30 30]); xlim([-30 30]); axis('square');
     title(sprintf('%d nm, focus %d nm, max = %0.5f',wavelength,focusWl,maxVal));
@@ -438,7 +438,8 @@ end
 % % This takes a long time and produces an error that could be fixed by BW,
 % % but he is too lazy.
 % %  Error using wvfGet (line 590)
-% %   Must explicitly compute PSF on wvf structure before getting it.  Use wvfComputePSF
+% %   Must explicitly compute PSF on wvf structure before getting it.  Use
+%    wvfCompute 
 % 
 % wvfParams3 = wvfComputeOptimizedConePSF(wvfParams3);
 % 

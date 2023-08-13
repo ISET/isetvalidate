@@ -38,17 +38,17 @@ UnitTest.validationData('sceP', sceP);
 
 %% No Stiles Crawford effect
 wvf = wvfSet(wvf,'sce params',[]);
-wvf = wvfComputePSF(wvf);
+wvf = wvfCompute(wvf);
 sce1DFig2 = vcNewGraphWin; hold on
-wvfPlot(wvf,'1d psf angle','min',[],maxMIN,'no window');
+wvfPlot(wvf,'1d psf angle','unit','min','plot range',maxMIN,'window',false);
 
 UnitTest.validationData('wvfNoSCE', wvf);
 
 
 %% Include the SCE in place
 wvf = wvfSet(wvf,'sce params',sceP);
-wvf = wvfComputePSF(wvf);
-[f,p] = wvfPlot(wvf,'1d psf angle','min',[],maxMIN,'no window');
+wvf = wvfCompute(wvf);
+[f,p] = wvfPlot(wvf,'1d psf angle','unit','min','plot range',maxMIN,'window',false);
 set(p,'color','b')
 hold on
 

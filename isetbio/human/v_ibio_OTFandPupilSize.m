@@ -51,7 +51,7 @@ function ValidationFunction(runTimeParams)
         scene = sceneSet(scene,'distance', sceneDistanceInMeters);
         
         %% Compute optical image
-        oi = oiCompute(scene,oi); 
+        oi = oiCompute(oi,scene); 
         
         %% Retrieve the full OTF
         optics = oiGet(oi, 'optics');
@@ -62,8 +62,8 @@ function ValidationFunction(runTimeParams)
         
         %% Retrieve the spatial frequency support in cycles/micron
         OTFsupport = opticsGet(optics,'otf support', 'um');
-        otf_sfXInCyclesPerMicron = OTFsupport{1};
-        otf_sfYInCyclesPerMicron = OTFsupport{2};
+        otf_sfXInCyclesPerMicron = OTFsupport.fx;
+        otf_sfYInCyclesPerMicron = OTFsupport.fy;
         
         %% Convert spatial frequency to cycles/deg.
         % In human retina, 1 deg of visual angle is about 288 microns

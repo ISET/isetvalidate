@@ -1,4 +1,4 @@
-function varargout = v_wvfZernkePolynomials(varargin)
+function varargout = v_ibio_wvfZernikePolynomials(varargin)
 %
 % Test that single Zernike coeffs produce correct wavefront aberrations.
 %
@@ -61,19 +61,19 @@ for ii = jindices
     vcNewGraphWin([],'tall');
     insertCoeff = 1;
     wvf = wvfSet(wvf0,'zcoeffs',insertCoeff,ii);
-    wvf = wvfComputePSF(wvf);
+    wvf = wvfCompute(wvf);
     [n,m] = wvfOSAIndexToZernikeNM(ii);
 
     subplot(3,1,1);
-    wvfPlot(wvf,'2d wavefront aberrations space','mm',[],pupilfuncrangeMM,'no window');
+    wvfPlot(wvf,'2d wavefront aberrations space','unit','mm','plot range',pupilfuncrangeMM,'window',false);
     title(sprintf('Wavefront aberrations for j = %d (n = %d, m = %d)',ii,n,m));
 
     subplot(3,1,2);
-    wvfPlot(wvf,'2d pupil phase space','mm',wList,pupilfuncrangeMM,'no window');
+    wvfPlot(wvf,'2d pupil phase space','unit','mm','plot range',pupilfuncrangeMM,'window',false);
     title(sprintf('Pupil function phase for j = %d (n = %d, m = %d)',ii,n,m));
 
     subplot(3,1,3);
-    wvfPlot(wvf,'2d psf space','mm',wList,maxMM,'no window');
+    wvfPlot(wvf,'psf','unit','mm','plot range',pupilfuncrangeMM,'window',false);
     
     % Save out what it does today
     %
