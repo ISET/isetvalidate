@@ -34,12 +34,12 @@ aperture = wvfAperture(wvf,'nsides',nsides,...
 % This does not yet work.
 wvf = wvfCompute(wvf,'aperture',aperture);
 
-wvfPlot(wvf,'psf','um',550,20,'airy disk');
+wvfPlot(wvf,'psf','unit','um','plot range',20,'airy disk',true);
 
 ieNewGraphWin([], 'wide');
-subplot(1,3,1); wvfPlot(wvf,'image pupil amp','um',550,'no window');
-subplot(1,3,2); wvfPlot(wvf,'image pupil phase','um',550,'no window');
-subplot(1,3,3); wvfPlot(wvf,'image wavefront aberrations','um',550,'no window');
+subplot(1,3,1); wvfPlot(wvf,'image pupil amp','unit','um','window',false);
+subplot(1,3,2); wvfPlot(wvf,'image pupil phase','unit','um','window',false);
+subplot(1,3,3); wvfPlot(wvf,'image wavefront aberrations','unit','um','window',false);
 
 %% Convert to an OI
 
