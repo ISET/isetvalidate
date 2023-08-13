@@ -45,12 +45,12 @@ wvf = wvfSet(wvf,'focal length',fLengthM);
 wvf  = wvfCompute(wvf,'human lca', false);
 
 pRange = 10;  % Microns
-wvfPlot(wvf,'2d psf space','um',thisWave,pRange,'airy disk',true);
+wvfPlot(wvf,'psf','unit','um','plot range',pRange,'airy disk',true);
 title(sprintf('Calculated pupil diameter %.1f mm',pupilMM));
 
 %% Compare wvf and oi methods directly
 
-wvfData = wvfPlot(wvf,'psf xaxis','um',thisWave,10);
+wvfData = wvfPlot(wvf,'psf xaxis','unit','um','plot range',10);
 
 % Convert to OI and plot the same slice.
 % except for a small scale factor.  Which I don't understand
@@ -151,7 +151,7 @@ wvfD = wvfSet(wvf,'zcoeff',defocus,'defocus');
 
 wvfD = wvfCompute(wvfD,'human lca',false);
 pRange = 20;
-wvfPlot(wvfD,'2d psf space','um',thisWave,pRange);
+wvfPlot(wvfD,'psf','unit','um','wave',thisWave,'plot range',pRange);
 title(sprintf('Defocus %.1f D',defocus));
 
 %% Convert to an OI and render
