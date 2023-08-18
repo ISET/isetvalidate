@@ -64,6 +64,8 @@ for ii = 1:numel(assetFiles)
         
         % Render it
         piWRS(combinedR);
+        % ii = 1 error [1m[31mError[0m: cornell_box_materials.pbrt:2:0: EIA1956-300dpi-center.png: file not found.
+
         status(ii) = true;
         report = [report sprintf("Asset: %s Succeeded.\n", assetName)]; %#ok<AGROW>
     catch
