@@ -1,7 +1,13 @@
 %% ISET3d (v4) validation script
 %
-%    v_iset3d_v4
+%    v_iset3d
 %
+% This is a direct validation script, intended to run separately from
+% ieValidate('iset3d').  In the long run, we expect ieValidate to replace
+% this.  But we are maintaining it because it does many things that we like
+% that have not been implemented in ieValidate (e.g., timing, systematic
+% tests of certain things).
+% 
 % Validation and Tutorial scripts.  When these all run, it is a partial
 % validation of the code.  More specific unit tests are still needed.
 %

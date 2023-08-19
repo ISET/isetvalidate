@@ -30,6 +30,9 @@ piWRS(parentRecipe);
 
 assetFiles = dir([fullfile(piDirGet('assets'),filesep(),'*.mat')]);
 fprintf('Found %d assets\n',numel(assetFiles));
+for ii=1:numel(assetFiles)
+    fprintf('%d %s\n',ii,assetFiles(ii).name);
+end
 
 %% Loop over each asset
 
