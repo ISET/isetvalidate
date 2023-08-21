@@ -1,16 +1,10 @@
 % v_iset3d_assets
 %
-% Validate merging assets into recipes. 
-%
-% July 2023, a lot are failing.  Let's fix! BW.
-%
-% This checks that we can merge the pre-computed assets into a simple
+% Check that we can merge the pre-computed assets into a simple
 % scene, in this case the Cornell Box
 %
-% DJC and others
-%
 % See also
-%   piAssetLoad, piRecipeMerge, piDirGet
+%   s_assetsRecipe, piAssetLoad, piRecipeMerge, piDirGet
 
 %% Initialize ISETCam and ISET3d-V4
 ieInit;
@@ -24,7 +18,7 @@ ourLight = piLightCreate(lightName,...
     'type','distant',...
     'cameracoordinate', true);
 recipeSet(parentRecipe,'lights', ourLight,'add');
-piWRS(parentRecipe);
+% piWRS(parentRecipe);
 
 %% The pre-computed assets
 
@@ -55,7 +49,7 @@ for ii = 1:numel(assetFiles)
     try
         % Load the asset
         ourAsset  = piAssetLoad(assetName);
-        
+
         % Scale its size to be good for the Cornell Box
         thisID = ourAsset.thisR.get('objects');   % Object id
         sz = ourAsset.thisR.get('asset',thisID(1),'size');
@@ -65,10 +59,11 @@ for ii = 1:numel(assetFiles)
         combinedR = piRecipeMerge(parentRecipe, ourAsset.thisR, 'node name',ourAsset.mergeNode);
         % piAssetGeometry(combinedR);
         
+        combinedR.show('textures');
+        
         % Render it
         piWRS(combinedR);
-        % ii = 1 error [1m[31mError[0m: cornell_box_materials.pbrt:2:0: EIA1956-300dpi-center.png: file not found.
-
+        
         status(ii) = true;
         report = [report sprintf("Asset: %s Succeeded.\n", assetName)]; %#ok<AGROW>
     catch
