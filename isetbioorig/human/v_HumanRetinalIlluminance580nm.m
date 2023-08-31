@@ -32,7 +32,7 @@ end
 function ValidationFunction(runTimeParams)
 
     %% Initialize ISETBIO
-    ieInit;
+    close all;
     
     %% Set run parameters
     sceneFOV                = 20;      % 20 degrees scene
@@ -47,25 +47,31 @@ function ValidationFunction(runTimeParams)
     
     %% Create human optics with desired pupil size
     pupilRadiusInMeters = pupilDiameterInMM / 2 / 1000;
-    optics  = opticsCreate('human', pupilRadiusInMeters);
-    oi      = oiCreate('human');
+    optics  = opticsCreate('humanmw', pupilRadiusInMeters);
+    oi      = oiCreate('humanmw');
     oi      = oiSet(oi,'optics',optics);
     
     %% Compute optical image from the scene
-    oi = oiCompute(scene,oi);
+    oi = oiCompute(oi,scene);
     
     %% Get irradiance in the center
     roi = oiGet(oi,'size') ./2; 
     photonIrradiance = oiGet(oi,'roi mean photons',roi);
     
-    % divide by lens transmittance, to agree with old validations
+    % Divide by lens transmittance, to agree with old validations.
+    %
+    % At some point, lens went from inherting the wavelength of the
+    % oi to not, so for now we find and pull out the right value
+    % of the transmittance.
     lens = oiGet(oi,'lens');
+    lensWave = lens.wave;
     lensTransmittance = lens.transmittance;
-    photonIrradiance = photonIrradiance ./ lensTransmittance';
+    lensWaveIndex = monoChromaticWavelength == lensWave;
+    photonIrradianceLensCorrected = photonIrradiance ./ lensTransmittance(lensWaveIndex);
     
     %% Compute difference from expected value
     expectedPhotonIrradiance = 10^19;
-    percentDifference = (photonIrradiance - expectedPhotonIrradiance)/expectedPhotonIrradiance;
+    percentDifference = (photonIrradianceLensCorrected - expectedPhotonIrradiance)/expectedPhotonIrradiance;
     
     %% Validate against a 3 percent tolerance
     tolerance = 0.03;  % 3 percent error
@@ -77,8 +83,15 @@ function ValidationFunction(runTimeParams)
     % Append to validationData
     UnitTest.validationData('fov', sceneFOV);
     UnitTest.validationData('tolerance', tolerance);
-    UnitTest.validationData('scene', scene);
-    UnitTest.validationData('oi', oi);
+
+    % 08/31/23. The problem with storing entire structs is that the structure
+    % is allowed to change but that breaks the validations. So
+    % I (DHB) changed the below to store the photons.
+    %
+    % UnitTest.validationData('scene', scene);
+    % UnitTest.validationData('oi', oi);
+    UnitTest.validationData('scenePhotons', sceneGet(scene,'photons'));
+    UnitTest.validationData('oiPhotons', oiGet(oi,'photons'));
     
     %% Plotting
     if (runTimeParams.generatePlots)
