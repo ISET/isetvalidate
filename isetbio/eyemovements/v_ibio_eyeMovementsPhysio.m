@@ -1,12 +1,22 @@
-function varargout = v_eyeMovementsPhysio(varargin)
+function varargout = v_ibio_eyeMovementsPhysio(varargin)
 % Deprecated
 %
 % This tests the HJ eye movement model, not the new fixational eye movement
 % model.
 
 disp('*** v_eyeMovementsPhysio needs to be re-written for fixational EM ***');
-return;
+varargout = UnitTest.runValidationRun(@ValidationFunction, nargout, varargin);
+
 end
+
+function ValidationFunction(runTimeParams)
+
+fprintf('This validation is deprecated and does not currently do anything\n')
+
+return;
+
+end
+
 %{
 % Parameters to examine.
 params = struct(...
