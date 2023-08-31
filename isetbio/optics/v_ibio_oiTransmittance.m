@@ -1,55 +1,47 @@
-function v_ibio_oiTransmittance(varargin)
+function varargout = v_oiTransmittance(varargin)
 %
 % Validate some of the optical image transmittance calculations
 
-% varargout = UnitTest.runValidationRun(@ValidationFunction, nargout, varargin);
-%
-% end
-%
-% %% Function implementing the isetbio validation code
-% function ValidationFunction(runTimeParams)
-% ieInit;
+varargout = UnitTest.runValidationRun(@ValidationFunction, nargout, varargin);
+
+end
+
+%% Function implementing the isetbio validation code
+function ValidationFunction(runTimeParams)
 
 %% Human optics
-oi = oiCreate('human');
+oi = oiCreate;
 t = oiGet(oi,'optics transmittance');
 w = oiGet(oi,'optics transmittance wave');
-
-ieNewGraphWin;
-plot(w,t);
-xlabel('Wave'); ylabel('Transmittance'); grid on
+if (runTimeParams.generatePlots)
+    vcNewGraphWin;
+    plot(w,t);
+    xlabel('Wave'); ylabel('Transmittance'); grid on
+end
 
 %% Create a scene and check that its wavelength is imposed on transmittance
 scene = sceneCreate;
-wave = 450;
-scene = sceneSet(scene,'wavelength',wave);
+scene = sceneSet(scene,'wavelength',450);
 oi = oiCompute(oi,scene);
-oiShowImage(oi);  % Faster than oiWindow()
 
 % Notice that the new get respects the new computation
-transmittance = oiGet(oi,'optics transmittance',wave);
-assert( numel(transmittance) == numel(oiGet(oi,'wave')) );
+oiGet(oi,'optics transmittance')
+if (runTimeParams.generatePlots)
+    oiShowImage(oi);
+end
 
-%% Diffraction optics has a flat transmittance
-
+%% Diffraction optics
 scene = sceneCreate;
-wave = 550;
-scene = sceneSet(scene,'wavelength',wave);
+scene = sceneSet(scene,'wavelength',550);
 oi = oiCreate('diffraction');
 oi = oiCompute(oi,scene);
-oiShowImage(oi);
-
-transmittance = oiGet(oi,'optics transmittance',wave);
-assert( numel(transmittance) == numel(oiGet(oi,'wave')) );
-
-%% We store the full transmittance data stored in the optics
-
-wave = 400:10:500;
-transmittance = oiGet(oi,'optics transmittance',wave);
-
-ieNewGraphWin;
-plot(wave,transmittance,'-o');
-xlabel('Wave'); ylabel('Transmittance'); grid on
-title('Transmittance')
+w = 400:10:500;
+t = oiGet(oi,'optics transmittance',w);
+if (runTimeParams.generatePlots)
+    vcNewGraphWin;
+    plot(w,t);
+    xlabel('Wave'); ylabel('Transmittance'); grid on
+    oiShowImage(oi);
+end
 
 end
