@@ -17,7 +17,7 @@ function ValidationFunction(runTimeParams)
     
     %% Some informative text
     UnitTest.validationRecord('SIMPLE_MESSAGE', 'Conversion of PTB cal struct to isetbio display object.');
-    
+    ß
     %% Load PTB calibration data for the SONY PVM2541 display
     calDir = fullfile(isetbioDataPath, 'ptbcal');
     calFile = 'SonyPVM2541';
