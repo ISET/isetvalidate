@@ -1,4 +1,4 @@
-function varargout = v_wvfZernkePolynomials(varargin)
+function varargout = v_ibio_wvfZernikePolynomials(varargin)
 %
 % Test that single Zernike coeffs produce correct wavefront aberrations.
 %
@@ -59,23 +59,23 @@ wList = wvfGet(wvf0,'calc wave');
 jindices = 0:9;
 maxMM = 4; 
 for ii = jindices
-    vcNewGraphWin([],'tall');
     insertCoeff = 1;
     wvf = wvfSet(wvf0,'zcoeffs',insertCoeff,ii);
     wvf = wvfComputePupilFunction(wvf);
     wvf = wvfComputePSF(wvf);
     [n,m] = wvfOSAIndexToZernikeNM(ii);
 
-    subplot(3,1,1);
-    %wvfPlot(wvf,'2d wavefront aberrations space','mm',[],pupilfuncrangeMM,'no window');
-    %title(sprintf('Wavefront aberrations for j = %d (n = %d, m = %d)',ii,n,m));
-
-    subplot(3,1,2);
-    %wvfPlot(wvf,'2d pupil phase space','mm',wList,pupilfuncrangeMM,'no window');
-    %title(sprintf('Pupil function phase for j = %d (n = %d, m = %d)',ii,n,m));
-
-    subplot(3,1,3);
-    %wvfPlot(wvf,'2d psf space','mm',wList,maxMM,'no window');
+    % vcNewGraphWin([],'tall');
+    % subplot(3,1,1);
+    % wvfPlot(wvf,'2d wavefront aberrations space','mm',[],pupilfuncrangeMM,'no window');
+    % title(sprintf('Wavefront aberrations for j = %d (n = %d, m = %d)',ii,n,m));
+    % 
+    % subplot(3,1,2);
+    % wvfPlot(wvf,'2d pupil phase space','mm',wList,pupilfuncrangeMM,'no window');
+    % title(sprintf('Pupil function phase for j = %d (n = %d, m = %d)',ii,n,m));
+    % 
+    % subplot(3,1,3);
+    % wvfPlot(wvf,'2d psf space','mm',wList,maxMM,'no window');
     
     % Save out what it does today
     %
@@ -99,7 +99,7 @@ for ii = jindices
         'UsingTheFollowingVariableTolerancePairs', ...
         sprintf('zcoeffs_wvf_%s_%s',mStr,nStr), theTolerance); 
 
-    pupilFunction = wvfGet(wvf,'pupil function');
+    pupilFunction = abs(wvfGet(wvf,'pupil function'));
     theTolerance = mean(pupilFunction(:))*toleranceFraction;
     UnitTest.validationData(sprintf('pupilfunction_wvf_%s_%s',mStr,nStr), pupilFunction, ...
         'UsingTheFollowingVariableTolerancePairs', ...

@@ -9,7 +9,7 @@ function varargout = v_ibio_oi(varargin)
 % History:
 %    08/31/23  dhb  This was passing but storing full structures.  I
 %                   changed to do more computes and save the photons.  This will
-%                   generalize better
+%                   generalize better.
 
     varargout = UnitTest.runValidationRun(@ValidationFunction, nargout, varargin);
     
@@ -72,7 +72,7 @@ function ValidationFunction(runTimeParams)
         'unifromEEFromScenePhotons', theTolerance);    
 
     %% Make a scene and show some oiGets and oiCompute work
-    oi = oiCreate('human');
+    oi = oiCreate('humanmw');
     oi = oiCompute(oi,scene);
     if (runTimeParams.generatePlots)
         oiPlot(oi,'illuminance mesh linear');
