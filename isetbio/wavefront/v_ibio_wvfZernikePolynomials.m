@@ -1,4 +1,4 @@
-function varargout = v_ibio_wvfZernikePolynomials(varargin)
+function varargout = v_wvfZernkePolynomials(varargin)
 %
 % Test that single Zernike coeffs produce correct wavefront aberrations.
 %
@@ -25,16 +25,17 @@ function varargout = v_ibio_wvfZernikePolynomials(varargin)
 %
 % 7/31/12  dhb  Wrote it.
 % 8/12/15  dhb  UnitTestToolbox'ize
+% 09/21/23 dhb  Don't store full structures; use fractional tolerance
 
     varargout = UnitTest.runValidationRun(@ValidationFunction, nargout, varargin);
 end
 
 %% Function implementing the isetbio validation code
 function ValidationFunction(runTimeParams)
-% 
 
 %% Initialize
-close all; ieInit;
+close all;
+toleranceFraction = 0.001;
 
 %% Some informative text
 UnitTest.validationRecord('SIMPLE_MESSAGE', 'Validate wavefront individual Zernike coefficients.');
@@ -61,19 +62,20 @@ for ii = jindices
     vcNewGraphWin([],'tall');
     insertCoeff = 1;
     wvf = wvfSet(wvf0,'zcoeffs',insertCoeff,ii);
-    wvf = wvfCompute(wvf);
+    wvf = wvfComputePupilFunction(wvf);
+    wvf = wvfComputePSF(wvf);
     [n,m] = wvfOSAIndexToZernikeNM(ii);
 
     subplot(3,1,1);
-    wvfPlot(wvf,'2d wavefront aberrations space','unit','mm','plot range',pupilfuncrangeMM,'window',false);
-    title(sprintf('Wavefront aberrations for j = %d (n = %d, m = %d)',ii,n,m));
+    %wvfPlot(wvf,'2d wavefront aberrations space','mm',[],pupilfuncrangeMM,'no window');
+    %title(sprintf('Wavefront aberrations for j = %d (n = %d, m = %d)',ii,n,m));
 
     subplot(3,1,2);
-    wvfPlot(wvf,'2d pupil phase space','unit','mm','plot range',pupilfuncrangeMM,'window',false);
-    title(sprintf('Pupil function phase for j = %d (n = %d, m = %d)',ii,n,m));
+    %wvfPlot(wvf,'2d pupil phase space','mm',wList,pupilfuncrangeMM,'no window');
+    %title(sprintf('Pupil function phase for j = %d (n = %d, m = %d)',ii,n,m));
 
     subplot(3,1,3);
-    wvfPlot(wvf,'psf','unit','mm','plot range',pupilfuncrangeMM,'window',false);
+    %wvfPlot(wvf,'2d psf space','mm',wList,maxMM,'no window');
     
     % Save out what it does today
     %
@@ -89,8 +91,25 @@ for ii = jindices
     else
         nStr = num2str(n);
     end
-    
-    UnitTest.validationData(sprintf('wvf_%s_%s',mStr,nStr), wvf);
+
+    % Get variables to validate
+    zCoeffs = wvfGet(wvf,'zcoeffs');
+    theTolerance = mean(zCoeffs(:))*toleranceFraction;
+    UnitTest.validationData(sprintf('zcoeffs_wvf_%s_%s',mStr,nStr), zCoeffs, ...
+        'UsingTheFollowingVariableTolerancePairs', ...
+        sprintf('zcoeffs_wvf_%s_%s',mStr,nStr), theTolerance); 
+
+    pupilFunction = wvfGet(wvf,'pupil function');
+    theTolerance = mean(pupilFunction(:))*toleranceFraction;
+    UnitTest.validationData(sprintf('pupilfunction_wvf_%s_%s',mStr,nStr), pupilFunction, ...
+        'UsingTheFollowingVariableTolerancePairs', ...
+        sprintf('pupilfunction_wvf_%s_%s',mStr,nStr), theTolerance); 
+
+    PSF = wvfGet(wvf,'PSF');
+    theTolerance = mean(PSF(:))*toleranceFraction;
+    UnitTest.validationData(sprintf('PSF_wvf_%s_%s',mStr,nStr), pupilFunction, ...
+        'UsingTheFollowingVariableTolerancePairs', ...
+        sprintf('PSF_wvf_%s_%s',mStr,nStr), theTolerance); 
 end
 
 end
