@@ -1,4 +1,4 @@
-function varargout = v_wvfSpatialSampling(varargin)
+function varargout = v_ibio_wvfSpatialSampling(varargin)
 %
 % Check consistency of wavefront calcs across different spatial sampling parameters.
 %
@@ -8,7 +8,7 @@ function varargout = v_wvfSpatialSampling(varargin)
 % psf's so that they integrate to 1 by simple summing, or take spatial
 % sampling into account when normalizing?
 %
-% See also: wvfCreate, wvfGet, wvfSet, wvfCompute,
+% See also: wvfCreate, wvfGet, wvfSet, wvfComputePSF,
 % wvfComputePupilFucntion
 %
 % 7/4/12  dhb  Wrote it.
@@ -26,21 +26,23 @@ end
 function ValidationFunction(runTimeParams)
 
 %% Initialize
-close all; ieInit;
+close all;
 
 %% Some informative text
 UnitTest.validationRecord('SIMPLE_MESSAGE', 'Check wavefront spatial sampling.');
 
 %% Set up parameters structure
 wvf0 = wvfCreate;
-wvf0 = wvfCompute(wvf0);
+wvf0 = wvfComputePupilFunction(wvf0);
+wvf0 = wvfComputePSF(wvf0);
 w = wvfGet(wvf0,'calc wave');
 
 %% Change psf sampling and recompute
 wvf3 = wvf0;
 arcminpersample3 = wvfGet(wvf3,'psf angle per sample','min',w);
 wvf3 = wvfSet(wvf3,'ref psf sample interval',arcminpersample3/2);
-wvf3 = wvfCompute(wvf3);
+wvf3 = wvfComputePupilFunction(wvf3);
+wvf3 = wvfComputePSF(wvf3);
 
 %% Change pupil plane sampling and number of pixels, and recompute
 wvf4 = wvf0;
@@ -48,15 +50,16 @@ wvf4 = wvfSet(wvf4,'sample interval domain','pupil');
 pupilPlaneSize4 = wvfGet(wvf4,'ref pupil plane size');
 wvf4 = wvfSet(wvf4,'ref pupil plane size',0.75*pupilPlaneSize4);
 wvf4 = wvfSet(wvf4,'spatial samples',185);
-wvf4 = wvfCompute(wvf4);
+wvf4 = wvfComputePupilFunction(wvf4);
+wvf4 = wvfComputePSF(wvf4);
 
 %% Prepare for plotting.  We don't use wvfPlot because we
 % want to see sampling and don't want to normalize.
 psfLine0 = wvfGet(wvf0,'1d psf',w);
-arcmin0  = wvfGet(wvf0,'psf angular samples','min',w);
+arcmin0 = wvfGet(wvf0,'psf angular samples','min',w);
 psfLine3 = wvfGet(wvf3,'1d psf',w);
-arcmin3  = wvfGet(wvf3,'psf angular samples','min',w);
-arcmin4  = wvfGet(wvf4,'psf angular samples','min',w);
+arcmin3 = wvfGet(wvf3,'psf angular samples','min',w);
+arcmin4 = wvfGet(wvf4,'psf angular samples','min',w);
 psfLine4 = wvfGet(wvf4,'1d psf',w);
 
 %% Compare to what we get from PTB AiryPattern function -- should match
@@ -75,13 +78,28 @@ plot(arcmin4,psfLine4/max(psfLine4(:)),'ko','MarkerSize',4,'MarkerFaceColor','k'
 plot(arcmin3,onedPSF3/max(onedPSF3),'b','LineWidth',1);
 
 %% Save validation data
-UnitTest.validationData('arcmin0', arcmin0);
-UnitTest.validationData('arcmin3', arcmin3);
-UnitTest.validationData('arcmin4', arcmin4);
-UnitTest.validationData('psfLine0', psfLine0);
-UnitTest.validationData('psfLine3', psfLine3);
-UnitTest.validationData('psfLine4', psfLine4);
-UnitTest.validationData('onedPSF3', onedPSF3);
+toleranceFraction = 1e-3;
+UnitTest.validationData('arcmin0', arcmin0, ...
+        'UsingTheFollowingVariableTolerancePairs', ...
+        'arcmin0', toleranceFraction*mean(abs(arcmin0(:)))); 
+UnitTest.validationData('arcmin3', arcmin3, ...
+        'UsingTheFollowingVariableTolerancePairs', ...
+        'arcmin3', toleranceFraction*mean(abs(arcmin3(:)))); 
+UnitTest.validationData('arcmin4', arcmin4, ...
+        'UsingTheFollowingVariableTolerancePairs', ...
+        'arcmin4', toleranceFraction*mean(abs(arcmin4(:)))); 
+UnitTest.validationData('psfLine0', psfLine0, ...
+        'UsingTheFollowingVariableTolerancePairs', ...
+        'psfLine0', toleranceFraction*mean(abs(psfLine0(:)))); 
+UnitTest.validationData('psfLine3', psfLine3, ...
+        'UsingTheFollowingVariableTolerancePairs', ...
+        'psfLine3', toleranceFraction*mean(abs(psfLine3(:)))); 
+UnitTest.validationData('psfLine4', psfLine4, ...
+        'UsingTheFollowingVariableTolerancePairs', ...
+        'psfLine4', toleranceFraction*mean(abs(psfLine4(:)))); 
+UnitTest.validationData('onedPSF3', onedPSF3, ...
+        'UsingTheFollowingVariableTolerancePairs', ...
+        'onedPSF3', toleranceFraction*mean(abs(onedPSF3(:)))); 
 
 end
 

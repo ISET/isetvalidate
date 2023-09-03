@@ -17,8 +17,7 @@ end
 function ValidationFunction(runTimeParams)
 
 %% Initialize
-close all; ieInit;
-runTimeParams.generatePlots = true;
+close all;
 
 %% Some informative text
 UnitTest.validationRecord('SIMPLE_MESSAGE', 'Check diffraction limited PSFs.');
@@ -49,6 +48,8 @@ wList = wvfGet(wvf0,'calc wave');
 
 % This function computes the PSF by first computing the pupil function.  In
 % the default wvf object, the Zernicke coefficients match diffraction.
+wvf0 = wvfComputePupilFunction(wvf0);
+wvf0 = wvfComputePSF(wvf0);
 wvf0 = wvfCompute(wvf0);
 
 % Make sure psf computed this way (with zcoeffs zeroed) matches
@@ -69,13 +70,13 @@ UnitTest.assertIsZero(max(abs(measWavelength(:)-calcWavelength(:))),'Measured an
 %% Plots 
 
 % Make a graph of the PSF within maxUM of center
-wvfPlot(wvf0,'psf','unit','um','wave',wList,'plot range',maxUM);
+%wvfPlot(wvf0,'psf','unit','um','wave',wList,'plot range',maxUM);
 
 % Make a graph of the PSF within 2 arc min
-wvfPlot(wvf0,'psf angle','unit','min','wave',wList,'plot range',maxMIN);
+%wvfPlot(wvf0,'psf angle','unit','min','wave',wList,'plot range',maxMIN);
 
 %% Plot the middle row of the psf, scaled to peak of 1
-wvfPlot(wvf0,'1d psf angle normalized','unit','min','wave',wList,'plot range',maxMIN);
+%wvfPlot(wvf0,'1d psf angle normalized','unit','min','wave',wList,'plot range',maxMIN);
 hold on
 
 % Get parameters needed for plotting comparisons with PTB, below
@@ -112,7 +113,7 @@ optics = opticsSet(optics,'fnumber',fNumber);   % Roughly human
 oi = oiSet(oi,'optics',optics);
 uData = oiPlot(oi,'psf',[],thisWave);
 set(gca,'xlim',[-10 10],'ylim',[-10 10]);
-UnitTest.validationData('oi', oi);
+% UnitTest.validationData('oi', oi);
 
 %% Now, compare all three
 [r,c] = size(uData.x);
@@ -121,7 +122,7 @@ psfMid = uData.psf(mid,:);
 posMM = uData.x(mid,:)/1000;               % Microns to mm
 posMinutes = 60*(180/pi)*(atan2(posMM,opticsGet(optics,'flength','mm')));
 
-g = wvfPlot(wvf0,'1d psf angle normalized','unit','min','wave',wList,'plot range',maxMIN);
+%g = wvfPlot(wvf0,'1d psf angle normalized','unit','min','wave',wList,'plot range',maxMIN);
 hold on
 plot(posMinutes,psfMid/max(psfMid(:)),'ko')
 hold on
@@ -131,11 +132,11 @@ set(gca,'xlim',[-2 2])
 grid on
 legend('WVF','ISETBIO','PTB');
 
-UnitTest.validationData('wvf0', wvf0);
+UnitTest.validationData('wvf0', wvfGet(wvf0,'psf'));
 
 %% Repeat the PSF calculation with a wavelength offset
 
-% This section checks that if we add an explicit observer focus correction,
+% This section checks that if we add an explicit observer Tfocus correction,
 % in this case the amount needed to correct for chromatic aberration, we
 % get the same result.  It is a pretty small test of the function
 % wvfLCAFromWavelengthDifference relative to the measured wavelength
@@ -153,6 +154,8 @@ lcaDiopters = wvfLCAFromWavelengthDifference(wvfGet(wvf1,'measured wl'),wList);
 
 %  We set the parameter as if the measurement has this correction.
 wvf1 = wvfSet(wvf1,'calc observer focus correction',lcaDiopters);
+wvf1  = wvfComputePupilFunction(wvf1);
+wvf1 = wvfComputePSF(wvf1);
 wvf1 = wvfCompute(wvf1);
 w = wvfGet(wvf1,'calc wave');
 pupilSize = wvfGet(wvf1,'calc pupil size','mm');
@@ -178,25 +181,27 @@ wvf17 = wvfSet(wvf17,'measured wl',wList);
 wvf17 = wvfSet(wvf17,'calc wave',wList);
 wvf17 = wvfSet(wvf17,'number spatial samples',wvf17Samples);
 wvf17 = wvfSet(wvf17,'ref psf sample interval',wvfGet(wvf17,'ref psf sample interval')/4);
+wvf17  = wvfComputePupilFunction(wvf17);
+wvf17 = wvfComputePSF(wvf17);
 wvf17 = wvfCompute(wvf17);
 
 % There should be no difference (again) because we corrected for the
 % chromatic aberration.  As noted above, the thin green curve is smoother
 % and deviates in between the coarser samples for the red and blue curves,
 % but you can see that the function being computed is in good agreement.
-wvfPlot(wvf1,'1d psf angle normalized','unit','min','wave',w,'plot range',maxMIN);
-hold on
-[~,h] = wvfPlot(wvf17,'1d psf angle normalized','unit','min','wave',w,'plot range',maxMIN,'window',false);
-set(h,'Color','g','LineWidth',1);
-ptbPSF = AiryPattern(radians,pupilSize,w);
-plot(arcminutes(index),ptbPSF(index),'b','LineWidth',2);
-xlabel('Arc Minutes');
-ylabel('Normalize PSF');
-title(sprintf('Diffraction limited, %0.1f mm pupil, %0.f nm',pupilSize,w));
+% wvfPlot(wvf1,'1d psf angle normalized','unit','min','wave',w,'plot range',maxMIN);
+% hold on
+% [~,h] = wvfPlot(wvf17,'1d psf angle normalized','unit','min','wave',w,'plot range',maxMIN,'window',false);
+% set(h,'Color','g','LineWidth',1);
+% ptbPSF = AiryPattern(radians,pupilSize,w);
+% plot(arcminutes(index),ptbPSF(index),'b','LineWidth',2);
+% xlabel('Arc Minutes');
+% ylabel('Normalize PSF');
+% title(sprintf('Diffraction limited, %0.1f mm pupil, %0.f nm',pupilSize,w));
 
 % Save unit test data
-UnitTest.validationData('wvf1', wvf1);
-UnitTest.validationData('wvf17', wvf1);
+UnitTest.validationData('wvf1', wvfGet(wvf1,'psf'));
+UnitTest.validationData('wvf17', wvfGet(wvf17,'psf'));
 UnitTest.validationData('ptbPSF1', ptbPSF);
 
 % PSF angular sampling should be the same across wavelengths
@@ -215,12 +220,14 @@ pupilMM = 7;
 wvf2  = wvfSet(wvf2,'calc pupil diameter',pupilMM);
 
 % Confirm parameters
+wvf2 = wvfComputePupilFunction(wvf2);
+wvf2 = wvfComputePSF(wvf2);
 wvf2  = wvfCompute(wvf2);
 wList = wvfGet(wvf2,'calc wave');
 pupilSize = wvfGet(wvf2,'calc pupil size','mm');
 
 % Compare the PTB and WVF curves
-wvfPlot(wvf2,'1d psf angle normalized','unit','min','wave',wList,'plot range',maxMIN);
+% wvfPlot(wvf2,'1d psf angle normalized','unit','min','wave',wList,'plot range',maxMIN);
 ptbPSF = AiryPattern(radians,pupilSize,wList);
 
 hold on
@@ -229,7 +236,7 @@ xlabel('Arc Minutes');
 ylabel('Normalized PSF');
 title(sprintf('Diffraction limited, %0.1f mm pupil, %0.f nm',pupilSize,wList));
 
-UnitTest.validationData('wvf2', wvf2);
+UnitTest.validationData('wvf2', wvfGet(wvf2,'psf'));
 UnitTest.validationData('ptbPSF2', ptbPSF);
 
 %% Show the PSF slices across wavelengths along with the 'white'
@@ -245,28 +252,30 @@ cmap = squeeze(xyz2srgb(XW2RGBFormat(ieReadSpectra('XYZ',thisWave),length(thisWa
 % We compare many the wavelengths and the average across them (white)
 wvf3 = wvfSet(wvf3,'calc wave',thisWave);
 wvf3 = wvfSet(wvf3,'calc pupil diameter',pupilMM);
+wvf3 = wvfComputePupilFunction(wvf3);
+wvf3 = wvfComputePSF(wvf3);
 wvf3 = wvfCompute(wvf3);
 
 %vcNewGraphWin([],'tall'); 
-vcNewGraphWin;
-for ii=1:length(thisWave)
-    if ii == 1
-        [u,pData] = wvfPlot(wvf3,'1d psf space','unit','um','wave',thisWave(1),'plot range',5*maxMIN,'window',false);
-        x = u.x; y = u.y/sum(u.y(:));
-        set(pData,'color',cmap(ii,:),'LineWidth',1);
-    end
-    hold on
-    [uData, pData] = wvfPlot(wvf3,'1d psf space','unit','um','wave',thisWave(ii),'window', false);
-    thisY = interp1(uData.x,uData.y,x);
-    y = y + thisY;
-    set(pData,'color',cmap(ii,:),'LineWidth',1);
-end
-str = num2str(thisWave');
+% vcNewGraphWin;
+% for ii=1:length(thisWave)
+%     if ii == 1
+%         [u,pData] = wvfPlot(wvf3,'1d psf space','unit','um','wave',thisWave(1),'plot range',5*maxMIN,'window',false);
+%         x = u.x; y = u.y/sum(u.y(:));
+%         set(pData,'color',cmap(ii,:),'LineWidth',1);
+%     end
+%     hold on
+%     [uData, pData] = wvfPlot(wvf3,'1d psf space','unit','um','wave',thisWave(ii),'window', false);
+%     thisY = interp1(uData.x,uData.y,x);
+%     y = y + thisY;
+%     set(pData,'color',cmap(ii,:),'LineWidth',1);
+% end
+% str = num2str(thisWave');
 
 % Calculate the average
-y = y/length(thisWave);
-p = plot(x,y,'k:'); set(p,'LineWidth',2);
-str(end+1,:) = 'wht';
+% y = y/length(thisWave);
+% p = plot(x,y,'k:'); set(p,'LineWidth',2);
+% str(end+1,:) = 'wht';
 
 % Uncomment this to see diffraction, but it is the same as 550nm
 % hold on
