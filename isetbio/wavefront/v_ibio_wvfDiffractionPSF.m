@@ -193,8 +193,8 @@ wvf17 = wvfCompute(wvf17);
 % hold on
 % [~,h] = wvfPlot(wvf17,'1d psf angle normalized','unit','min','wave',w,'plot range',maxMIN,'window',false);
 % set(h,'Color','g','LineWidth',1);
-% ptbPSF = AiryPattern(radians,pupilSize,w);
-% plot(arcminutes(index),ptbPSF(index),'b','LineWidth',2);
+ptbPSF1 = AiryPattern(radians,pupilSize,w);
+% plot(arcminutes(index),ptbPSF1(index),'b','LineWidth',2);
 % xlabel('Arc Minutes');
 % ylabel('Normalize PSF');
 % title(sprintf('Diffraction limited, %0.1f mm pupil, %0.f nm',pupilSize,w));
@@ -202,7 +202,7 @@ wvf17 = wvfCompute(wvf17);
 % Save unit test data
 UnitTest.validationData('wvf1', wvfGet(wvf1,'psf'));
 UnitTest.validationData('wvf17', wvfGet(wvf17,'psf'));
-UnitTest.validationData('ptbPSF1', ptbPSF);
+UnitTest.validationData('ptbPSF1', ptbPSF1);
 
 % PSF angular sampling should be the same across wavelengths
 arcminpersample2 = wvfGet(wvf1,'psf angle per sample','min',w);
@@ -228,16 +228,16 @@ pupilSize = wvfGet(wvf2,'calc pupil size','mm');
 
 % Compare the PTB and WVF curves
 % wvfPlot(wvf2,'1d psf angle normalized','unit','min','wave',wList,'plot range',maxMIN);
-ptbPSF = AiryPattern(radians,pupilSize,wList);
+ptbPSF2 = AiryPattern(radians,pupilSize,wList);
 
 hold on
-plot(arcminutes(index),ptbPSF(index),'b','LineWidth',2);
+plot(arcminutes(index),ptbPSF2(index),'b','LineWidth',2);
 xlabel('Arc Minutes');
 ylabel('Normalized PSF');
 title(sprintf('Diffraction limited, %0.1f mm pupil, %0.f nm',pupilSize,wList));
 
 UnitTest.validationData('wvf2', wvfGet(wvf2,'psf'));
-UnitTest.validationData('ptbPSF2', ptbPSF);
+UnitTest.validationData('ptbPSF2', ptbPSF2);
 
 %% Show the PSF slices across wavelengths along with the 'white'
 
@@ -279,7 +279,7 @@ wvf3 = wvfCompute(wvf3);
 
 % Uncomment this to see diffraction, but it is the same as 550nm
 % hold on
-% ptbPSF = AiryPattern(radians,pupilSize,w);
+% ptbPSF3 = AiryPattern(radians,pupilSize,w);
 % plot(arcminutes(index),ptbPSF(index),'k:','LineWidth',1);
 % str(end+1,:) = 'dfl';
 
