@@ -1,4 +1,4 @@
-function varargout = v_wvfStilesCrawford(varargin)
+function varargout = v_ibio_wvfStilesCrawford(varargin)
 %
 % Valide Stiles-Crawford effect object.
 %
@@ -38,8 +38,8 @@ sceP = sceCreate(theWavelength,'berendschot_data','centered');
 wvf = wvfSet(wvf,'sce params',[]);
 wvf = wvfComputePupilFunction(wvf);
 wvf = wvfComputePSF(wvf);
-sce1DFig2 = vcNewGraphWin; hold on
-wvfPlot(wvf,'1d psf angle','min',[],maxMIN,'no window');
+%sce1DFig2 = vcNewGraphWin; hold on
+%wvfPlot(wvf,'1d psf angle','min',[],maxMIN,'no window');
 
 % Get variables to validate
 zCoeffs = wvfGet(wvf,'zcoeffs');
@@ -62,10 +62,11 @@ UnitTest.validationData('PSFNoSCE', pupilFunction, ...
 
 %% Include the SCE in place
 wvf = wvfSet(wvf,'sce params',sceP);
+wvf = wvfComputePupilFunction(wvf);
 wvf = wvfComputePSF(wvf);
-[f,p] = wvfPlot(wvf,'1d psf angle','min',[],maxMIN,'no window');
-set(p,'color','b')
-hold on
+% [f,p] = wvfPlot(wvf,'1d psf angle','min',[],maxMIN,'no window');
+% set(p,'color','b')
+% hold on
 
 % Get variables to validate
 zCoeffs = wvfGet(wvf,'zcoeffs');
