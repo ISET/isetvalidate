@@ -14,7 +14,7 @@ function ValidationFunction(runTimeParams)
 toleranceFraction = 0.005;
 
 %% Human optics
-oi = oiCreate;
+oi = oiCreate('human');
 transmittance1 = oiGet(oi,'optics transmittance');
 wavelenghts1 = oiGet(oi,'optics transmittance wave');
 theTolerance = mean(transmittance1(:))*toleranceFraction;
