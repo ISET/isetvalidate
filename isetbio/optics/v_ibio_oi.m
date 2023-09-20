@@ -33,6 +33,10 @@ function ValidationFunction(runTimeParams)
         'theScenePhotons', theTolerance);
 
     %% Diffraction limited simulation properties
+    % 
+    % This fails because (probably) because the oiCreate for diffraction
+    % limited does not include the human lens in the ISETBio/ISETCam
+    % configuration.
     oi = oiCreate('diffraction limited');
     oi = oiCompute(oi,scene);
     if (runTimeParams.generatePlots)
