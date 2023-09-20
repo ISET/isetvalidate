@@ -52,7 +52,7 @@ function ValidationFunction(runTimeParams)
     oi      = oiSet(oi,'optics',optics);
     
     %% Compute optical image from the scene
-    oi = oiCompute(scene,oi);
+    oi = oiCompute(oi,scene);
     
     %% Get irradiance in the center
     roi = oiGet(oi,'size') ./2; 
@@ -60,12 +60,12 @@ function ValidationFunction(runTimeParams)
     
     % Divide by lens transmittance, to agree with old validations.
     % 08/21/23 - DHB. This fails because on the isetcam branch
-    % the retinal irradiance returned by oiGet above has not    
-    % been multiplied by the lens transmittance.  Emailing Brian.
-    %
-    % At some point, lens went from inherting the wavelength of the
-    % oi to not, so for now we find and pull out the right value
-    % of the transmittance.
+    % there is no lens object.  If you comment out the next three
+    % lines, the internal validation passes, but older code will break elsewhere
+    % so we need to think about the problem and are leaving this in
+    % to remind us. In addition, we're not getting the same photons in the
+    % retinal image.  That is probably image padding for the convolution,
+    % which is different in ISETBio and ISETCam.
     lens = oiGet(oi,'lens');
     lensTransmittance = lens.transmittance;
     photonIrradiance = photonIrradiance ./ lensTransmittance';
