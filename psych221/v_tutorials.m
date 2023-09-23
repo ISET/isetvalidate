@@ -39,8 +39,10 @@ Printing_01a
 hwISETCam
 photonsElectrons
 
-%% Advanced: Requires other repos, so commented by default
-TransferLearning_08a
+%% Advanced: Requires other repos, so commented out by default
+%
+% TransferLearning_08a
+%
 
 %% Prior approach just looped through .mlx
 %  which would also be fine, but doesn't allow for checking
