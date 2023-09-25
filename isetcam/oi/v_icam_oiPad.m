@@ -4,6 +4,9 @@
 % just the size of the oi data.  This is tested for the diffraction
 % limited, shift-invariant and ray trace models.
 %
+% Then compute with different pad values at the border (zero, mean,
+% border).
+%
 % BW, SCIEN Stanford, 2018
 
 %%
@@ -67,4 +70,23 @@ end
 disp('v_oiPad succeeds for ray trace');
 ieDeleteObject(s);
 
+%%  Different pad values
+scene = sceneCreate('ringsrays');
+oi = oiCreate('wvf');
+oi = oiCompute(oi,scene,'pad value','zero','crop',false);
+oiWindow(oi);
+
 %%
+oi = oiCompute(oi,scene,'pad value','mean','crop',false);
+oiWindow(oi);
+
+%%
+oi = oiCompute(oi,scene,'pad value','border','crop',false);
+oiWindow(oi);
+%%
+oi = oiCompute(oi,scene,'pad value','zero','crop',true);
+oiWindow(oi);
+%%
+oi = oiCompute(oi,scene,'pad value','mean','crop',true);
+oiWindow(oi);
+%% END
