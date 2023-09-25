@@ -24,45 +24,39 @@ setpref('ISET', 'tStart', tic);
 %% Scene tests
 disp('*** Scenes')
 setpref('ISET', 'tvsceneStart', tic);
-v_scene
+v_icam_scene
 setpref('ISET', 'tvsceneTime', toc(getpref('ISET', 'tvsceneStart', 0)));
 %% Optics tests
 disp('*** Optics')
 setpref('ISET', 'tvopticsStart', tic);
-v_oi
-v_diffuser
-v_opticsSI
-v_opticsWVF
+v_icam_oi
+v_icam_diffuser
+v_icam_opticsSI
+v_icam_opticsWVF
 setpref('ISET', 'tvopticsTime', toc(getpref('ISET', 'tvopticsStart')));
 
 %% Sensor tests
 disp('*** Sensor')
 setpref('ISET', 'tvsensorStart', tic);
-v_sensor
+v_icam_sensor
 setpref('ISET', 'tvsensorTime', toc(getpref('ISET', 'tvsensorStart')));
 
 %% Pixel tests
 disp('*** Pixel')
 setpref('ISET', 'tvpixelStart', tic);
-v_pixel
+v_icam_pixel
 setpref('ISET', 'tvpixelTime', toc(getpref('ISET', 'tvpixelStart')));
-
-%% Human visual system tests
-disp('*** Human');
-setpref('ISET', 'tvhumanStart', tic);
-v_human
-setpref('ISET', 'tvhumanTime', toc(getpref('ISET', 'tvhumanStart')));
 
 %% Image processing
 disp('*** IP');
 setpref('ISET', 'tvipStart', tic);
-v_imageProcessor
+v_icam_imageProcessor
 setpref('ISET', 'tvipTime', toc(getpref('ISET', 'tvipStart')));
 
 %% Metrics tests
 disp('*** Metrics');
 setpref('ISET', 'tvmetricsStart', tic);
-v_metrics
+v_icam_metrics
 setpref('ISET', 'tvmetricsTime', toc(getpref('ISET', 'tvmetricsStart')));
 
 %% Computational Imaging tests
