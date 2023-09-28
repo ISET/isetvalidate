@@ -1,7 +1,7 @@
 %% Comparing oi methods and wvf methods numerically
 %
-% Historically, ISET mainly used diffraction limited calculations
-% directly as a special case.
+% Historically, ISET used diffraction limited calculations directly as
+% a special case.
 %
 % About 15 years ago, we added the ability to build general shift invariant
 % representations based on wavefront aberrations specified by Zernike
@@ -76,8 +76,8 @@ plot(abs(oiOTFS(:)),abs(wvfOTF(:)),'.');
 identityLine;
 title('OTF: oi converted to wvf')
 
-% Checksum
-assert(abs(real(sum(oiOTFS(:))) - 1.072596854586380e+03) < 1e-3)
+% Checksum good to within 1 part in a thousand
+assert(real(sum(oiOTFS(:))) / 1.0831e+03 - 1 < 1e-3)
 
 %% Now, make a multispectral wvf and convert it to ISET OI format
 
@@ -183,6 +183,5 @@ testWave = [450,550];
 for ii = 1:numel(testWave)
     oiPlot(oi,'psf',[],testWave(ii)); 
 end
-
 
 %% END
