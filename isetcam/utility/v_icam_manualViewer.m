@@ -6,15 +6,18 @@
 ieInit;
 
 %%
-ieManualViewer('iset functons');
+ieManualViewer('isetcam wiki')
 
-ieManualViewer('imageval')
-ieManualViewer('imageval code');
+disp('Try the individual pages that are in v_icam_manualViewer')
 
+%{
+% Tutorials
 ieManualViewer('iset functions')
 
+% Scene
 ieManualViewer('scene functions')
 
+% OI/optics
 ieManualViewer('oi functions')
 ieManualViewer('optics functions')
 
@@ -23,5 +26,5 @@ ieManualViewer('pixel functions')
 
 ieManualViewer('ip functions')
 ieManualViewer('metrics functions')
-
+%}
 %%
