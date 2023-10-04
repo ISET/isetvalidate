@@ -1,5 +1,8 @@
-%% v_ObjectInstance
+%% v_iset3d_ObjectInstance
+%
 % Test ObjectInstance creation
+%
+%
 
 % Read a simple car scene.  One car.  Skymap. Ground plane.  The car has a
 % lot of parts, though.
@@ -15,6 +18,10 @@ thisR.show('lights');
 % created.  Right now they are used as a reference object.  I think the
 % objects have the slot isObjectInstance set to 0. Also, we are using the
 % string '_I_' in the node name to indicate an instance.
+%
+% I have also implemented another (better?) method in recipeGet (BW)
+%   idx = thisR.get('instances');
+%
 
 % The object is called taxi, but it does not show up in the object list.
 % Here we add an instance of the taxi object, which references all of the

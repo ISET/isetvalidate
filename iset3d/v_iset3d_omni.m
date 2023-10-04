@@ -16,17 +16,19 @@ if ~piDockerExists, piDockerConfig; end
 %%  Scene and light
 thisR = piRecipeCreate('Cornell_Box');
 
+% There is a distant light by default.
+thisR.set('lights','all','delete');
+
 lightName = 'from camera';
 ourLight = piLightCreate(lightName,...
                         'type','distant',...
-                        'cameracoordinate', true, ...
-                        'specscale',50);
+                        'specscale',10);
 thisR.set('lights', ourLight,'add');
 thisR.set('skymap','room.exr');
 
-% No lens or omnni camera. Just a pinhole to render a scene radiance
-
 thisR.set('object distance',0.5);
+
+% No lens or omnni camera. Just a pinhole to render a scene radiance
 thisR.camera = piCameraCreate('pinhole'); 
 scene = piWRS(thisR,'name','pinhole test');
 

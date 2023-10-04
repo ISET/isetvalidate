@@ -17,6 +17,7 @@ delta = [0.15 0 0];
 str = 'Lorem';
 pos = zeros(numel(str),3);
 for ii=1:numel(str), pos(ii,:) = to + ii*delta; end
+
 pos(end,:) = pos(end,:) + delta/2;  % Move the 'm' a bit
 thisR = textRender(thisR, str,'letterSize',[0.15,0.1,0.15],'letterRotation',[0,15,15],...
     'letterPosition',pos,'letterMaterial','wood-light-large-grain');
@@ -43,7 +44,6 @@ delta = [0.15 0 0];
 pos = zeros(numel(str),3);
 for ii=1:numel(str), pos(ii,:) = to + ii*delta; end
 pos(end,:) = pos(end,:) + delta/2;  % Move the 'm' a bit
-%}
 
 % Letter sizes as in textRender
 characterAssetSize = [.88 .25 1.23];
@@ -60,13 +60,6 @@ for ii=1:numel(str)
     thisR.set('asset',idx, 'translate',pos(ii,:));
     thisR.set('asset',idx, 'scale', letterScale);
 end
-% thisR.show('objects');
-
-% Need to understand this.  It renders with this, but I do not yet
-% understand what all the different branch and instances are doing and how
-% they know about one another.
-%
-% piObjectInstance(thisR);
 
 piWRS(thisR);
 
@@ -74,23 +67,22 @@ piWRS(thisR);
 
 % Adding the instances alone changes nothing.  That's probably good.
 piObjectInstance(thisR);
+thisR.assets = thisR.assets.uniqueNames;
 
-%%
-thisR.show;
+thisR.show('instances');
 piWRS(thisR);
 
-%%  This fails.  
+%%  Three variations on the uppercase L  
 
 % Maybe this should be thisR.get('asset',idx,'top branch')
 thisLetter = piAssetSearch(thisR,'object name','_l_uc');
 p2Root = thisR.get('asset',thisLetter,'pathtoroot');
 idx = p2Root(end);
 
-% The 'position' seems to be a translation
-% DJC -- Here is where things currently break with "l_uc_m" not definted
+% The 'position' seems to mean a translation
 [thisR, foo] = piObjectInstanceCreate(thisR, idx, 'position',[-0.1 0 0.0]);
 thisR = piObjectInstanceCreate(thisR, idx, 'position',[0 0.1 0.0]);
-
+thisR.assets = thisR.assets.uniqueNames;
 piWRS(thisR);
 
 %% END
