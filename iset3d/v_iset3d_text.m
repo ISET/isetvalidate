@@ -65,14 +65,15 @@ piWRS(thisR);
 
 %% Deal with instances
 
-% Adding the instances alone changes nothing.  That's probably good.
+% Converting everything into an instance. This alone changes nothing
+% in the rendering because the instances are the same as the original.
 piObjectInstance(thisR);
 thisR.assets = thisR.assets.uniqueNames;
 
 thisR.show('instances');
 piWRS(thisR);
 
-%%  Three variations on the uppercase L  
+%%  Change the position of the uppercase L  
 
 % Maybe this should be thisR.get('asset',idx,'top branch')
 thisLetter = piAssetSearch(thisR,'object name','_l_uc');
@@ -80,9 +81,23 @@ p2Root = thisR.get('asset',thisLetter,'pathtoroot');
 idx = p2Root(end);
 
 % The 'position' seems to mean a translation
-[thisR, foo] = piObjectInstanceCreate(thisR, idx, 'position',[-0.1 0 0.0]);
-thisR = piObjectInstanceCreate(thisR, idx, 'position',[0 0.1 0.0]);
+piObjectInstanceCreate(thisR, idx, 'position',[-0.1 0 0.0]);
+piObjectInstanceCreate(thisR, idx, 'position',[0 0.1 0.0]);
 thisR.assets = thisR.assets.uniqueNames;
+
+% We want to implement a return of instances that contain a string in
+% their name 
+%
+%   thisR.get('instances','name',param)
+%
+id = thisR.get('instances');
+for ii=1:numel(id)
+    thisR.get('node',id(ii),'name');
+    if contains(thisR.get('node',id(ii),'name'),'l_uc')
+        fprintf('%s \n',thisR.get('node',id(ii),'name'));
+    end
+end
+
 piWRS(thisR);
 
 %% END
