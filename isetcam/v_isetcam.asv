@@ -85,8 +85,7 @@ fprintf("IP      ran in: %5.1f seconds.\n", getpref('ISETValidate','tvipTime'));
 fprintf("Display ran in: %5.1f seconds.\n", getpref('ISETValidate','tvdisplayTime'));
 fprintf("Metrics ran in: %5.1f seconds.\n", getpref('ISETValidate','tvmetricsTime'));
 fprintf("CI      ran in: %5.1f seconds.\n", getpref('ISETValidate','tvciTime'));
-% Not running this here anymore
-%fprintf("Human   ran in: %5.1f seconds.\n", getpref('ISETValidate','tvhumanTime'));
+fprintf("Human   ran in: %5.1f seconds.\n", getpref('ISETValidate','tvhumanTime'));
 
 %% Sometimes we have trouble because of a failure to clear variables
 
