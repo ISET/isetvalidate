@@ -89,8 +89,8 @@ fprintf("CI      ran in: %5.1f seconds.\n", getpref('ISETValidate','tvciTime'));
 %fprintf("Human   ran in: %5.1f seconds.\n", getpref('ISETValidate','tvhumanTime'));
 
 %% Sometimes we have trouble because of a failure to clear variables
-
-disp('Setting ieInit clear status to false. Variables not cleared on ieInit.')
-ieSessionSet('init clear',false);
+% This seems wrong -- DJC
+%disp('Setting ieInit clear status to false. Variables not cleared on ieInit.')
+%ieSessionSet('init clear',false);
 
 %% END

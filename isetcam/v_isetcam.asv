@@ -85,10 +85,10 @@ fprintf("IP      ran in: %5.1f seconds.\n", getpref('ISETValidate','tvipTime'));
 fprintf("Display ran in: %5.1f seconds.\n", getpref('ISETValidate','tvdisplayTime'));
 fprintf("Metrics ran in: %5.1f seconds.\n", getpref('ISETValidate','tvmetricsTime'));
 fprintf("CI      ran in: %5.1f seconds.\n", getpref('ISETValidate','tvciTime'));
-fprintf("Human   ran in: %5.1f seconds.\n", getpref('ISETValidate','tvhumanTime'));
+% Not running this here anymore
+%fprintf("Human   ran in: %5.1f seconds.\n", getpref('ISETValidate','tvhumanTime'));
 
 %% Sometimes we have trouble because of a failure to clear variables
-
 disp('Setting ieInit clear status to false. Variables not cleared on ieInit.')
 ieSessionSet('init clear',false);
 
