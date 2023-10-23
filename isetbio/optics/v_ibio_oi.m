@@ -37,8 +37,11 @@ function ValidationFunction(runTimeParams)
     % This fails because (probably) because the oiCreate for diffraction
     % limited does not include the human lens in the ISETBio/ISETCam
     % configuration.
+    %
+    % oi = oiCompute(oi,scene, %pad value ,{‘zero’,’mean’,’border’}, ’crop’,true/false);
     oi = oiCreate('diffraction limited');
-    oi = oiCompute(oi,scene);
+    oi = oiCompute(oi,scene,'pad value','mean');
+
     if (runTimeParams.generatePlots)
         oiPlot(oi,'otf',[],550);
         oiPlot(oi,'otf',[],450);
@@ -51,7 +54,7 @@ function ValidationFunction(runTimeParams)
 
     %% Wavefront (Thibos) human optics
     oi = oiCreate('wvf human');
-    oi = oiCompute(oi,scene);
+    oi = oiCompute(oi,scene,'pad value','mean');
     if (runTimeParams.generatePlots)
         oiPlot(oi,'psf',[],420);
         oiPlot(oi,'psf',[],550);
@@ -64,7 +67,7 @@ function ValidationFunction(runTimeParams)
 
     %% A simple case used for testing
     oi = oiCreate('uniform ee');
-    oi = oiCompute(oi,scene);
+    oi = oiCompute(oi,scene,'pad value','mean');
     if (runTimeParams.generatePlots)
         oiPlot(oi,'psf',[],420);
         oiPlot(oi,'psf',[],550);
@@ -77,7 +80,7 @@ function ValidationFunction(runTimeParams)
 
     %% Make a scene and show some oiGets and oiCompute work
     oi = oiCreate('humanmw');
-    oi = oiCompute(oi,scene);
+    oi = oiCompute(oi,scene,'pad value','mean');
     if (runTimeParams.generatePlots)
         oiPlot(oi,'illuminance mesh linear');
     end
