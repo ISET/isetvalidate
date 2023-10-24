@@ -9,7 +9,7 @@ function varargout = v_ibio_oiSequence(varargin)
 % The purpose is to show that we can vary the oiSequence time base and the
 % cMosaic integration time and have things roughly work out.
 %
-% This script test oiSequence and computeForOISequence() as well as their
+% This script tests oiSequence and computeForOISequence() as well as their
 % dependent functions.
 %
 % NPC, ISETBIO TEAM, 2016

@@ -68,7 +68,7 @@ function ValidationFunction(runTimeParams)
     optics = opticsSet(optics,'off axis method','skip');
     optics = opticsSet(optics,'otf method','skip otf');
     oi     = oiSet(oi,'optics',optics);
-    oi     = oiCompute(oi,scene);
+    oi     = oiCompute(oi,scene,'pad value','mean');
 
     %% Define a region of interest starting at the scene's center with size
     % roiSize x roiSize

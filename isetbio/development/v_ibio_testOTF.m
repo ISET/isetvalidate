@@ -35,7 +35,7 @@ function testOTF
         scene = sceneSet(scene,'distance', sceneDistanceInMeters);
         
         %% Compute optical image
-        oi = oiCompute(scene,oi); 
+        oi = oiCompute(oi,scene,'pad value','mean'); 
         
         %% Compute RGB rendition of optical image
         opticalRGBImage = oiGet(oi, 'rgb image');

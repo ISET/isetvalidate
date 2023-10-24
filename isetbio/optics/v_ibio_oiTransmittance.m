@@ -11,7 +11,7 @@ function ValidationFunction(runTimeParams)
 %ieInit;
 
 % Tolerance fraction
-toleranceFraction = 0.005;
+toleranceFraction = 0.00001;
 
 %% Human optics
 oi = oiCreate('human');
@@ -33,7 +33,7 @@ end
 wavelengths2 = 450;
 scene = sceneCreate;
 scene = sceneSet(scene,'wavelength',wavelengths2);
-oi = oiCompute(oi,scene);
+oi = oiCompute(oi,scene,'pad value','mean');
 
 % Notice that the new get respects the new computation
 transmittance2 = oiGet(oi,'optics transmittance');
@@ -53,7 +53,7 @@ end
 scene = sceneCreate;
 scene = sceneSet(scene,'wavelength',550);
 oi = oiCreate('diffraction');
-oi = oiCompute(oi,scene);
+oi = oiCompute(oi,scene,'pad value','mean');
 wavelengths3 = 400:10:500;
 transmittance3 = oiGet(oi,'optics transmittance',wavelengths3);
 theTolerance = mean(transmittance3(:))*toleranceFraction;

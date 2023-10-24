@@ -24,7 +24,7 @@ UnitTest.assert(isequal(tst,vcGetObject('scene')),'ieAddObject/vcGetObject pass 
 
 %%
 oi = oiCreate('human');
-oi = oiCompute(oi,scene);
+oi = oiCompute(oi,scene,'pad value','mean');
 
 ieAddObject(oi);
 tst = vcSESSION.OPTICALIMAGE{1};

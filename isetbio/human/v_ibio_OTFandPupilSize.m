@@ -51,7 +51,7 @@ function ValidationFunction(runTimeParams)
         scene = sceneSet(scene,'distance', sceneDistanceInMeters);
         
         %% Compute optical image
-        oi = oiCompute(oi,scene); 
+        oi = oiCompute(oi,scene,'pad value','mean');
         
         %% Retrieve the full OTF
         optics = oiGet(oi, 'optics');

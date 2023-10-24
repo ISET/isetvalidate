@@ -14,7 +14,7 @@ function testMagnification
     pupilRadiusInMeters = pupilDiameterInMillimeters/2.0/1000.0;
     oi = oiCreate('human', pupilRadiusInMeters);
     
-    oi = oiCompute(scene,oi);
+    oi = oiCompute(oi,scene,'pad value','mean');
     optics = oiGet(oi, 'optics');
     otfAll1 = opticsGet(optics,'otf data');
     otfSupport1 = oiGet(oi,'fsupport','cyclesPerDegree');
@@ -33,7 +33,7 @@ function testMagnification
     
     %waveSampling = 380:10:780;
     %oi  = oiSet(oi, 'wave', waveSampling);
-    oi = oiCompute(scene,oi);
+    oi = oiCompute(oi,scene,'pad value','mean');
     optics = oiGet(oi, 'optics');
     otfAll2 = opticsGet(optics,'otf data');
     max(otfAll2(:))
@@ -60,7 +60,7 @@ function testMagnification
     pause
     
     % Compute the optical image
-    oi = oiCompute(scene,oi);
+    oi = oiCompute(oi,scene,'pad value','mean');
     optics = oiGet(oi, 'optics');
 
     magnification = opticsGet(optics, 'magnification', sceneDistanceInMeters)

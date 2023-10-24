@@ -279,7 +279,7 @@ end
 
 function theOIsequence = oiSequenceGenerate(theScene, theOI, oiTimeAxis, modulationFunction, modulationType)
     % Compute the background and modulated optical images
-    oiBackground = oiCompute(theOI, theScene);
+    oiBackground = oiCompute(theOI, theScene,'pad value','mean');
     oiModulated  = oiBackground;
     
     if strcmp(modulationType, 'FULL')

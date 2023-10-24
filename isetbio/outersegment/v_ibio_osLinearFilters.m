@@ -45,7 +45,7 @@ for iLum = 1:numel(backgroundLuminances)
     fprintf('Computing os linear filters for background luminance %2.1f cd/m2  [%d/%d]\n',  backgroundLuminances(iLum), iLum, numel(backgroundLuminances));
     theScene = uniformFieldSceneCreate(FOV, backgroundLuminances(iLum));
     % Compute the optical images
-    oiBackground = oiCompute(theOI, theScene);
+    oiBackground = oiCompute(theOI, theScene,'pad value','mean');
     oiModulated  = oiBackground;
 
     % Generate the sequence of optical images

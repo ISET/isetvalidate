@@ -74,7 +74,7 @@ try
     optics = opticsSet(optics,'off axis method','skip');
     optics = opticsSet(optics,'otf method','skip otf');
     oi = oiSet(oi,'optics',optics);
-    oi = oiCompute(oi,scene);
+    oi = oiCompute(oi,scene,'pad value','mean');
     oi = oiSet(oi,'fov',sceneDegrees);
     
     %% Compute mosaic responses

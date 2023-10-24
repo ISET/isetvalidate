@@ -48,7 +48,7 @@ oi = oiCreate('wvf human',3);     % Pupil diameter in mm
 % oiGet(oi,'optics pupil diameter','mm')
 
 % open an optical image.  This include the lens transmission.
-oi = oiCompute(oi,scene);
+oi = oiCompute(oi,scene,'pad value','mean');
 
 % Get rid of the edges.
 oi = oiCrop(oi,'border');

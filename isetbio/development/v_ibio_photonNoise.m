@@ -21,7 +21,7 @@ optics = oiGet(oi,'optics');
 optics = opticsSet(optics,'cos4th','off');
 oi = oiSet(oi,'optics',optics);
 
-oi = oiCompute(oi, scene);
+oi = oiCompute(oi, scene,'pad value','mean');
 % Reset the rect if you adjust any sizes
 % vcAddAndSelectObject(oi); oiWindow
 % [oi,rect] = oiCrop(oi);

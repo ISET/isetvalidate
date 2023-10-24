@@ -26,7 +26,7 @@ scene = sceneCreate('uniform ee');
 scene = sceneSet(scene,'fov',1);
 scene = sceneAdjustLuminance(scene,200);
 oi = oiCreate('humanmw');
-oi = oiCompute(oi,scene);
+oi = oiCompute(oi,scene,'pad value','mean');
 
 %% Creat the mosaic and compute isomerizations (which are sometimes called absorptions)
 %
