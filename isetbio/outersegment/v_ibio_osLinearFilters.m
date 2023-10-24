@@ -13,6 +13,9 @@ function ValidationFunction(runTimeParams)
 % %% Init
 % ieInit;
 
+% Set fractional tolerance
+fractionalTolerance = 0.00001;
+
 % Define the time axis for the simulation
 stimulusSamplingInterval = 10/1000;            % 5 milliseconds
 oiTimeAxis = 0:stimulusSamplingInterval:0.1;   % 0.1 seconds
@@ -73,9 +76,10 @@ filterTimeAxis = theConeMosaic.interpFilterTimeAxis;
 
 % Unit test validation data
 UnitTest.validationRecord('SIMPLE_MESSAGE', '***** v_osLinearFilters *****');
+theTolerance = mean(LMSfilters{1}(:))*fractionalTolerance;
 UnitTest.validationData('LMSfilters', LMSfilters, ...
     'UsingTheFollowingVariableTolerancePairs', ...
-    'LMSFilters', 1e-4);
+    'LMSFilters', theTolerance);
 UnitTest.validationData('filterTimeAxis', filterTimeAxis);
 UnitTest.validationData('backgroundLuminances', backgroundLuminances);
 UnitTest.validationData('osTimeSteps', osTimeSteps);
