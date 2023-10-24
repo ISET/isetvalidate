@@ -19,6 +19,9 @@ function ValidationFunction(runTimeParams)
 %% Initialize
 close all;
 
+% Tolerance fraction
+toleranceFraction = 0.0002;
+
 %% Some informative text
 UnitTest.validationRecord('SIMPLE_MESSAGE', 'Check diffraction limited PSFs.');
 
@@ -99,7 +102,10 @@ plot(arcminutes(index),ptbPSF(index),'b','LineWidth',2);
 xlabel('Arc Minutes');
 ylabel('Normalized PSF');
 title(sprintf('Diffraction limited, %0.1f mm pupil, %0.f nm',calcPupilMM,calcWavelength));
-UnitTest.validationData('ptbPSF', ptbPSF);
+theTolerance = mean(ptbPSF(:))*toleranceFraction;
+UnitTest.validationData('ptbPSF', ptbPSF, ...
+    'UsingTheFollowingVariableTolerancePairs', ...
+    'ptbPSF', theTolerance);
 
 %% Do the same thing using isetbio functions
 thisWave = 550;
@@ -131,7 +137,6 @@ xlabel('Arc min')
 set(gca,'xlim',[-2 2])
 grid on
 legend('WVF','ISETBIO','PTB');
-
 UnitTest.validationData('wvf0', wvfGet(wvf0,'psf'));
 
 %% Repeat the PSF calculation with a wavelength offset
@@ -202,7 +207,10 @@ ptbPSF1 = AiryPattern(radians,pupilSize,w);
 % Save unit test data
 UnitTest.validationData('wvf1', wvfGet(wvf1,'psf'));
 UnitTest.validationData('wvf17', wvfGet(wvf17,'psf'));
-UnitTest.validationData('ptbPSF1', ptbPSF1);
+theTolerance = mean(ptbPSF1(:))*toleranceFraction;
+UnitTest.validationData('ptbPSF1', ptbPSF1, ...
+    'UsingTheFollowingVariableTolerancePairs', ...
+    'ptbPSF1', theTolerance);
 
 % PSF angular sampling should be the same across wavelengths
 arcminpersample2 = wvfGet(wvf1,'psf angle per sample','min',w);
@@ -237,7 +245,10 @@ ylabel('Normalized PSF');
 title(sprintf('Diffraction limited, %0.1f mm pupil, %0.f nm',pupilSize,wList));
 
 UnitTest.validationData('wvf2', wvfGet(wvf2,'psf'));
-UnitTest.validationData('ptbPSF2', ptbPSF2);
+theTolerance = mean(ptbPSF2(:))*toleranceFraction;
+UnitTest.validationData('ptbPSF2', ptbPSF2, ...
+    'UsingTheFollowingVariableTolerancePairs', ...
+    'ptbPSF2', theTolerance);
 
 %% Show the PSF slices across wavelengths along with the 'white'
 

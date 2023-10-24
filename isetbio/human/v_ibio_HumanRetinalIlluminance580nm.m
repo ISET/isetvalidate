@@ -33,6 +33,9 @@ function ValidationFunction(runTimeParams)
 
     %% Initialize ISETBIO
     close all;
+
+    %% Tolerance fraction
+    toleranceFraction = 0.000005;
     
     %% Set run parameters
     sceneFOV                = 20;      % 20 degrees scene
@@ -52,29 +55,22 @@ function ValidationFunction(runTimeParams)
     oi      = oiSet(oi,'optics',optics);
     
     %% Compute optical image from the scene
-    oi = oiCompute(oi,scene);
+    oi = oiCompute(oi,scene,'pad value','mean');
     
     %% Get irradiance in the center
     roi = oiGet(oi,'size') ./2; 
     photonIrradiance = oiGet(oi,'roi mean photons',roi);
     
     % Divide by lens transmittance, to agree with old validations.
-    % 08/21/23 - DHB. This fails because on the isetcam branch
-    % there is no lens object.  If you comment out the next three
-    % lines, the internal validation passes, but older code will break elsewhere
-    % so we need to think about the problem and are leaving this in
-    % to remind us. In addition, we're not getting the same photons in the
-    % retinal image.  That is probably image padding for the convolution,
-    % which is different in ISETBio and ISETCam.
     lens = oiGet(oi,'lens');
     lensTransmittance = lens.transmittance;
     photonIrradiance = photonIrradiance ./ lensTransmittance';
     
-    %% Compute difference from expected value
+    %% Compute difference from expected value from literature for this condition
     expectedPhotonIrradiance = 10^19;
     percentDifference = (photonIrradiance - expectedPhotonIrradiance)/expectedPhotonIrradiance;
     
-    %% Validate against a 3 percent tolerance
+    % Validate against a 3 percent tolerance
     tolerance = 0.03;  % 3 percent error
     quantityOfInterest = percentDifference;
     resultString = sprintf('Irradiance (q/sec/m^2/nm) at %.0f nm = %g, Expected = %g, Residual = %g %%', ...
@@ -92,7 +88,11 @@ function ValidationFunction(runTimeParams)
     % UnitTest.validationData('scene', scene);
     % UnitTest.validationData('oi', oi);
     UnitTest.validationData('scenePhotons', sceneGet(scene,'photons'));
-    UnitTest.validationData('oiPhotons', oiGet(oi,'photons'));
+    theOiPhotons = oiGet(oi,'photons');
+    theTolerance = mean(theOiPhotons(:))*toleranceFraction;
+    UnitTest.validationData('oiPhotons', theOiPhotons, ...
+        'UsingTheFollowingVariableTolerancePairs', ...
+        'humanWVFFromScenePhotons', theTolerance);  
     
     %% Plotting
     if (runTimeParams.generatePlots)

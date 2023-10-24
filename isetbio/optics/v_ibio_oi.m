@@ -22,7 +22,7 @@ function ValidationFunction(runTimeParams)
     % ieInit;
 
     % Tolerance fraction
-    toleranceFraction = 0.005;
+    toleranceFraction = 0.00001;
 
     % Create a scene to check oi function
     scene = sceneCreate;
@@ -54,6 +54,7 @@ function ValidationFunction(runTimeParams)
 
     %% Wavefront (Thibos) human optics
     oi = oiCreate('wvf human');
+    %oi = oiSet(oi,'focal length',)
     oi = oiCompute(oi,scene,'pad value','mean');
     if (runTimeParams.generatePlots)
         oiPlot(oi,'psf',[],420);
