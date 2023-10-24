@@ -30,7 +30,8 @@ end
 function ValidationFunction(runTimeParams)
 
     %% Init
-    % ieInit;
+    %ieInit;
+    
     %% Build stimuli
     
     % Set the simulation time interval. In general, the stimulation time interval should 

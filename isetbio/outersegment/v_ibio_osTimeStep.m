@@ -2,14 +2,14 @@ function varargout = v_ibio_osTimeStep(varargin)
 %
 % Demonstrate simulations using three different timebases, 
 %    For stimuli (based on stimulus refresh rate), 
-%    For absorptions and eye movements (based on coneMosaic.integrationTime)
+%    For absorptions and eye movements (based on coneMosaicRect.integrationTime)
 %    For outer segment current computations (based on os.timeStep) 
 %
-% Mainly, we can just use the compute method of the @coneMosaic class for
+% Mainly, we can just use the compute method of the @coneMosaicRect class for
 % either a single image or for a sequence of oi images (oiSequence class).
 %
 % This script demonstrates the direct usage of the computeForOISequence()
-% method of @coneMosaic. The sequence version of compute calculates
+% method of @coneMosaicRect. The sequence version of compute calculates
 % absorptions and photocurrents for an oiSequence class of optical images
 % with eye movements.
 %
@@ -25,7 +25,7 @@ function ValidationFunction(runTimeParams)
 % This code is too long, needs some attention and simplification.
 
 %% Init
-ieInit;
+%ieInit;
 
 % Reproduce identical random number
 rng('default'); rng(1);
@@ -204,7 +204,7 @@ function [theConeMosaic, theOIsequence, ...
      
      tolerance = 1E-6;
      quantityOfInterest = s1(:)-s2(:);
-     UnitTest.assertIsZero(quantityOfInterest,'coneMosaic.computeForOISequence: absorptions from coneMosaic property and returned absorptions',tolerance);
+     UnitTest.assertIsZero(quantityOfInterest,'coneMosaicRect.computeForOISequence: absorptions from coneMosaicRect property and returned absorptions',tolerance);
     
      % Check that the data in the current property agrees with the data in the last instance of allInstancesPhotoCurrents
      s1 = single(theConeMosaic.current);
@@ -213,9 +213,9 @@ function [theConeMosaic, theOIsequence, ...
      
      tolerance = 1E-6;
      quantityOfInterest = s1(:)-s2(:);
-     UnitTest.assertIsZero(quantityOfInterest,'coneMosaic.computeForOISequence: current from coneMosaic property and returned photocurrents',tolerance);
+     UnitTest.assertIsZero(quantityOfInterest,'coneMosaicRect.computeForOISequence: current from coneMosaicRect property and returned photocurrents',tolerance);
        
-     % Compute responses for the first instance only using the coneMosaic.compute() method
+     % Compute responses for the first instance only using the coneMosaicRect.compute() method
      [allInstancesAbsorptionsCountSequence2, allInstancesPhotoCurrents2] = ...
             theConeMosaic.compute(theOIsequence, ...
             'emPath', emPaths(1,:,:), ...
@@ -230,7 +230,7 @@ function [theConeMosaic, theOIsequence, ...
      
      tolerance = 1E-6;
      quantityOfInterest = s1(:)-s2(:);
-     UnitTest.assertIsZero(quantityOfInterest,'coneMosaic.compute: absorptions from coneMosaic property and returned absorptions',tolerance);
+     UnitTest.assertIsZero(quantityOfInterest,'coneMosaicRect.compute: absorptions from coneMosaicRect property and returned absorptions',tolerance);
     
      % Check that the data in the current property agrees with the data in the last instance of allInstancesPhotoCurrents
      s1 = single(theConeMosaic.current);
@@ -239,7 +239,7 @@ function [theConeMosaic, theOIsequence, ...
      
      tolerance = 1E-6;
      quantityOfInterest = s1(:)-s2(:);
-     UnitTest.assertIsZero(quantityOfInterest,'coneMosaic.compute: current from coneMosaic property and returned photocurrents',tolerance);
+     UnitTest.assertIsZero(quantityOfInterest,'coneMosaicRect.compute: current from coneMosaicRect property and returned photocurrents',tolerance);
 end
 
 
@@ -265,7 +265,7 @@ function theConeMosaic = coneMosaicGenerate(mosaicSize, photonNoise, osNoise, in
     % Set the integrationTime
     theConeMosaic.integrationTime = integrationTime;
     
-    % Generate the outer-segment object to be used by the coneMosaic
+    % Generate the outer-segment object to be used by the coneMosaicRect
     theOuterSegment = osLinear();
     theOuterSegment.noiseFlag = osNoise;
     
@@ -279,7 +279,7 @@ end
 
 function theOIsequence = oiSequenceGenerate(theScene, theOI, oiTimeAxis, modulationFunction, modulationType)
     % Compute the background and modulated optical images
-    oiBackground = oiCompute(theOI, theScene,'pad value','mean');
+    oiBackground = oiCompute(theOI, theScene);
     oiModulated  = oiBackground;
     
     if strcmp(modulationType, 'FULL')
