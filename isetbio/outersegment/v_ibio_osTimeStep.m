@@ -295,13 +295,14 @@ end
 function theOI = oiGenerate(noOptics)
     % Generate optics
     if (noOptics)
+        error('No optics probably as lens transmission mucked up in ISETCam version');
         theOI = oiCreate('diffraction limited');
         optics = oiGet(theOI,'optics');           
         optics = opticsSet(optics,'fnumber',0);
         optics = opticsSet(optics, 'off axis method', 'skip');
         theOI = oiSet(theOI,'optics', optics);
     else
-        theOI = oiCreate('human');
+        theOI = oiCreate('humanmw');
     end
 end
 
