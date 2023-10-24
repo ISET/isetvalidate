@@ -21,8 +21,11 @@ end
 %% Function implementing the isetbio validation code
 function ValidationFunction(runTimeParams)
 
-% Reproduce identical random number
+%% Reproduce identical random numbers
 rng(1);
+
+%% Tolerance fraction
+toleranceFraction = 0.00001;
 
 %% Produces the harmonic.  Need to lock this down as a function.
 
@@ -70,11 +73,19 @@ UnitTest.assertIsZero(quantityOfInterest,'coneMosaic absorptions',tolerance);
 
 % Unit test validation data
 UnitTest.validationRecord('SIMPLE_MESSAGE', '***** v_oiSequence *****');
-UnitTest.validationData('photonsFixed', photonsFixed);
-UnitTest.validationData('photonsModulated', photonsModulated);
+theTolerance = mean(photonsFixed(:))*toleranceFraction;
+UnitTest.validationData('photonsFixed', photonsFixed, ...
+        'UsingTheFollowingVariableTolerancePairs', ...
+        'photonsFixed', theTolerance); 
+
+theTolerance = mean(photonsModulated(:))*toleranceFraction;
+UnitTest.validationData('photonsModulated', photonsModulated, ...
+        'UsingTheFollowingVariableTolerancePairs', ...
+        'photonsModulated',theTolerance);
+
 UnitTest.validationData('totalAbsorptions', totalAbsorptions, ...
     'UsingTheFollowingVariableTolerancePairs', ...
-    'totalAbsorptions', 600);
+    'totalAbsorptions', 5);
 
 end
 
