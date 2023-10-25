@@ -79,13 +79,16 @@ oiSet(oi,'gamma',0.5); drawnow;
 
 %% The same scene through Zhenyi's piFlareApply
 
-% Close match.
-[oiApply, pMask, psf] = piFlareApply(scene,'num sides aperture',nsides, ...
-    'focal length',wvfGet(wvf,'focal length','m'), ...
-    'fnumber',wvfGet(wvf,'fnumber'));
+% piFlareApply is in ISETAuto and thus we do not always check this.
+if exist('piFlareApply','file')
+    % Close match.
+    [oiApply, pMask, psf] = piFlareApply(scene,'num sides aperture',nsides, ...
+        'focal length',wvfGet(wvf,'focal length','m'), ...
+        'fnumber',wvfGet(wvf,'fnumber'));
 
-oiApply = oiSet(oiApply,'name','piFlare');
-oiWindow(oiApply);
-oiSet(oiApply,'gamma',0.5); drawnow;
+    oiApply = oiSet(oiApply,'name','piFlare');
+    oiWindow(oiApply);
+    oiSet(oiApply,'gamma',0.5); drawnow;
+end
 
 %% END
