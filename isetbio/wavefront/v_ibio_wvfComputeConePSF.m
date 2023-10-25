@@ -51,7 +51,7 @@ UnitTest.validationRecord('SIMPLE_MESSAGE', 'Check L, M, S cone PSFs.');
 %
 % Note that the Autrusseau paper does not account for the SCE.
 % This actually matters enough to be easily visible on the graphs.
-DOSCE = 0;
+DOSCE = false;
 CIRCULARLYAVERAGE = 0;
 CENTER = 0;
 plotLimit = 6;
@@ -144,7 +144,7 @@ for wavelength = [400 500 600 700];
 end
 
 %% Include SCE if desired
-if (DOSCE == 1)
+if DOSCE
     sce = sceCreate(wls,'berendschot_data','centered');
     wvf0 = wvfSet(wvf0,'sce params',sce);
 else
@@ -154,12 +154,12 @@ end
 
 %% Compute LMS psfs both for a subject and diffraction limited
 wvfParams1 = wvf0;
-wvfParams1 = wvfCompute(wvfParams1);
+wvfParams1 = wvfCompute(wvfParams1,'computesce',DOSCE,'human lca',true);
 conePsf1   = wvfGet(wvfParams1,'cone psf');
 
 wvfParams2 = wvf0;
 wvfParams2 = wvfSet(wvfParams2,'zcoeffs',0);
-wvfParams2 = wvfCompute(wvfParams2);
+wvfParams2 = wvfCompute(wvfParams2,'computesce',DOSCE,'human lca',true);
 conePsf2   = wvfGet(wvfParams2,'cone psf');
 
 % This bit is a sanity check that our code yields constant sampling in the psf domain.
