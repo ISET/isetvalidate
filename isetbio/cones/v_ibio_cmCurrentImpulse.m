@@ -28,7 +28,7 @@ runTimeParams.generatePlots = true;
 rng('default'); rng(3);
 
 %% Set testing tolerance
-% tolerance = 1e-4;
+toleranceFraction = 3e-4;
 
 %% Impulse on a 5 ms time axis.
 integrationTime = 5e-3;
@@ -39,7 +39,11 @@ modulation(10:11) = 1;
 
 %% Scene parameters in general
 sceneParams.fov       = 0.5;   % Half a degree
-sceneParams.meanluminance = 50;    % Uniform scene luminance (cd/m2)
+
+% 100 is the default, and because oisCreate calls a set that doesn't
+% really do anything, the fact that this was set to 50 in the ISETBio
+% validation was not doing much.
+sceneParams.meanluminance = 100;    % Uniform scene luminance (cd/m2)
 
 % Creates the impulse.  Steady background of 50 cd/m2, then a flash at
 % 100 cd/m2 for 5 ms, then back to 50.
@@ -69,9 +73,21 @@ interpFilters = cMosaic.computeCurrent;
 %% Save validation data
 absorptions = cMosaic.absorptions;
 photocurrents = cMosaic.current;
-UnitTest.validationData('absorptions', absorptions);
-UnitTest.validationData('photocurrents', photocurrents);
-UnitTest.validationData('interpFilters', interpFilters );
+
+theTolerance = mean(absorptions(:))*toleranceFraction;
+UnitTest.validationData('absorptions', absorptions, ...
+    'UsingTheFollowingVariableTolerancePairs', ...
+    'absorptions', theTolerance);
+
+theTolerance = mean(abs(photocurrents(:)))*toleranceFraction;
+UnitTest.validationData('photocurrents', photocurrents, ...
+    'UsingTheFollowingVariableTolerancePairs', ...
+    'photocurrents', theTolerance);
+
+theTolerance = mean(abs(interpFilters(:)))*toleranceFraction;
+UnitTest.validationData('interpFilters', interpFilters, ...
+    'UsingTheFollowingVariableTolerancePairs', ...
+    'interpFilters', theTolerance);
 
 %% Visually compare the interpolated and complete impulse response functions.
 if (runTimeParams.generatePlots)

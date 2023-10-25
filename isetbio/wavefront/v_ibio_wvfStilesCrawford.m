@@ -36,7 +36,7 @@ sceP = sceCreate(theWavelength,'berendschot_data','centered');
 
 %% No Stiles Crawford effect
 wvf = wvfSet(wvf,'sce params',[]);
-wvf = wvfComputePupilFunction(wvf);
+wvf = wvfComputePupilFunction(wvf,'computesce',true);
 wvf = wvfComputePSF(wvf);
 %sce1DFig2 = vcNewGraphWin; hold on
 %wvfPlot(wvf,'1d psf angle','min',[],maxMIN,'no window');
@@ -62,7 +62,7 @@ UnitTest.validationData('PSFNoSCE', pupilFunction, ...
 
 %% Include the SCE in place
 wvf = wvfSet(wvf,'sce params',sceP);
-wvf = wvfComputePupilFunction(wvf);
+wvf = wvfComputePupilFunction(wvf,'computesce',true);
 wvf = wvfComputePSF(wvf);
 % [f,p] = wvfPlot(wvf,'1d psf angle','min',[],maxMIN,'no window');
 % set(p,'color','b')
