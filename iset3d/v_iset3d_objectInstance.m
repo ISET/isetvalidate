@@ -15,7 +15,7 @@ thisR.show('objects');
 % See notes in piLightPrint.  The short and long light names have
 % different numbers of entries in the keys.
 %
-% thisR.show('lights');
+thisR.show('lights');
 
 % We need a way to know the names of the objectBegin instances we have
 % created.  Right now they are used as a reference object.  I think the
