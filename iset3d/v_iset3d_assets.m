@@ -15,8 +15,7 @@ if ~piDockerExists, piDockerConfig; end
 parentRecipe = piRecipeDefault('scene name','cornell_box');
 lightName = 'from camera';
 ourLight = piLightCreate(lightName,...
-    'type','distant',...
-    'cameracoordinate', true);
+    'type','distant');
 recipeSet(parentRecipe,'lights', ourLight,'add');
 % piWRS(parentRecipe);
 
@@ -39,9 +38,8 @@ for ii = 1:numel(assetFiles)
     % from previous runs
     parentRecipe = piRecipeDefault('scene name','cornell_box');
     lightName = 'from camera';
-    ourLight = piLightCreate(lightName,...
-        'type','distant',...
-        'cameracoordinate', true);
+    ourLight = piLightCreate(lightName,'type','distant');
+    
     recipeSet(parentRecipe,'lights', ourLight,'add');
     assetName = assetFiles(ii).name;
     fprintf('\n\nTesting: %s\n_________\n',assetName);
@@ -56,7 +54,7 @@ for ii = 1:numel(assetFiles)
         ourAsset.thisR.set('asset',thisID(1),'scale',[0.1 0.1 0.1] ./ sz);
         
         % Merge it with the Cornell Box
-        combinedR = piRecipeMerge(parentRecipe, ourAsset.thisR, 'node name',ourAsset.mergeNode);
+        combinedR = piRecipeMerge(parentRecipe, ourAsset.thisR);
         % piAssetGeometry(combinedR);
         
         combinedR.show('textures');
