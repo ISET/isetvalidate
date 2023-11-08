@@ -38,7 +38,9 @@ thisR.set('object distance',3);
 thisR.camera = piCameraCreate('omni','lens file','dgauss.22deg.12.5mm.json');
 
 thisR.set('film diagonal',5); % mm
-thisR.get('film distance','mm');
+if exist('ilensRootPath','file'), thisR.get('film distance','mm');
+else, disp('Try adding isetlens to your path');
+end
 piWRS(thisR,'name','dgauss test');
 
 
@@ -59,6 +61,8 @@ thisR.set('object distance',10);
 thisR.camera = piCameraCreate('omni', 'lens file',lList(ll).name);
 thisR.set('skymap','sky-cathedral_interior.exr');
 oi = piWRS(thisR,'name','fisheye test');
+
+%% Denoise
 oi = piAIdenoise(oi);
 oi = oiSet(oi,'name','fisheye denoised test');
 ieReplaceObject(oi); 
