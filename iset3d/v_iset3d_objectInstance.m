@@ -7,8 +7,9 @@
 % Read a simple car scene.  One car.  Skymap. Ground plane.  The car has a
 % lot of parts, though.
 fileName = fullfile(piRootPath, 'data/scenes/low-poly-taxi/low-poly-taxi.pbrt');
+
 thisR = piRead(fileName);
-thisR.set('skymap',fullfile(piRootPath,'data/skymaps','sky-rainbow.exr'));
+thisR.set('skymap','sky-rainbow.exr');
 thisR.show('objects');
 
 % The light names are not right.  Debug why.

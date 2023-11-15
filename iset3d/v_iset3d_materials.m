@@ -15,7 +15,7 @@ fprintf('Testing four materials\n');
 thisR = piRecipeDefault('scene name','bunny');
 
 thisR.set('skymap','room.exr');
-bunnyIDX = piAssetSearch(thisR,'object','Bunny');
+bunnyIDX = piAssetSearch(thisR,'object name','Bunny');
 thisR.set('asset',bunnyIDX,'scale',4);
 thisR.set('nbounces',3);
 
