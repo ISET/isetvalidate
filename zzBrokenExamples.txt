@@ -13,6 +13,8 @@ DHB: Almost go this to work by changing coneMosaic -> coneMosaicRect.
 But there is still an problem with the window method not recognizing
 'show'.
 
+We are going to fix this by making coneMosaicHex go away.
+
 ** At least one example failed for emGenSequence.
 
 DHB: I don't get it.  There are no examples in this file.
