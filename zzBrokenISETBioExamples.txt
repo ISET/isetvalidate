@@ -1,8 +1,4 @@
-At least one example failed for visualize.
 
-
-DHB: Problem seems to be in calls to scene things.   Probably
-some sort of isetbio/isetcam incompatiability.
 
 ** At least one example failed for humanOI.  Be sure to fix the
 version we decide to keep (isetcam/isetbio).
