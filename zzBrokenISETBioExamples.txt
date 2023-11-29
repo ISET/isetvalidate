@@ -1,23 +1,11 @@
-Failure cases (21)
-At least one example failed for bipolarMosaic.
-At least one example failed for bipolarSet.
 At least one example failed for visualize.
-At least one example failed for movieHex.
-At least one example failed for plotHexMeanImage.
 At least one example failed for conePlot.
+At least one example failed for humanConeContrast.
+At least one example failed for humanConeIsolating.
+At least one example failed for humanOI.
+At least one example failed for oisCreate.
+At least one example failed for coneTypeLocations.
 At least one example failed for selectPlotSupport.
-
-** At least one example failed for coneMosaicHex.
-
-DHB: Almost go this to work by changing coneMosaic -> coneMosaicRect.
-But there is still an problem with the window method not recognizing
-'show'.
-
-We are going to fix this by making coneMosaicHex go away.
-
-** At least one example failed for emGenSequence.
-
-DHB: I don't get it.  There are no examples in this file.
 
 ** At least one example failed for oisCreate.
 
@@ -43,3 +31,9 @@ fSupport and nSamps required.
 
 Error in visualizePSFfromOI (line 48)
     psfSupportMicrons = opticsGet(optics,'psf support','um');
+
+** At least one example failed for ijspeert.
+
+
+DHB: I fixed this in the isetcam version.  Need to decide whether to keep 
+isetcam or isetbio, and if the latter move the fix over.
