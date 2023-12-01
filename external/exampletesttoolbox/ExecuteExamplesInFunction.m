@@ -113,7 +113,7 @@ if (strcmp(theFunction,[mfilename '.m']))
 end
 
 % Look for a comment line with the text " Examples:"
-ind = strfind(theText{1},'% Examples:');
+ind = strfind(theText{1},'% Examples:') | strfind(theText{1},'% Example');
 if (isempty(ind))
     if (p.Results.verbose)
         fprintf('\tNo comment line starting with "%% Examples:" in file\n');
