@@ -1,8 +1,6 @@
 *************
 
 Failure cases (8)
-At least one example failed for ComputePhotopigmentBleaching.
-At least one example failed for emGenSequence.
 At least one example failed for mouseCore.
 At least one example failed for oisCreate.
 At least one example failed for diameterForCircularApertureFromWidthForSquareAperture.
