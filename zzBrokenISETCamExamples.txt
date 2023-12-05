@@ -2,6 +2,8 @@
 
 Failure cases (72)
 At least one example failed for ieLuminance2Radiance.
+	Mysterious - both examples run manually.
+
 At least one example failed for s_focusLensTable.
 At least one example failed for chartCornerpoints.
 At least one example failed for ieFontSizeSet.
