@@ -2,8 +2,6 @@
 
 Failure cases (8)
 At least one example failed for oisCreate.
-At least one example failed for diameterForCircularApertureFromWidthForSquareAperture.
-At least one example failed for sizeForSquareApertureFromDiameterForCircularAperture.
 At least one example failed for visualizePSFfromOI.
 
 *************
