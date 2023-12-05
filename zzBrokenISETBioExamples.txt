@@ -1,21 +1,12 @@
 *************
 
 Failure cases (8)
-At least one example failed for mouseCore.
 At least one example failed for oisCreate.
 At least one example failed for diameterForCircularApertureFromWidthForSquareAperture.
 At least one example failed for sizeForSquareApertureFromDiameterForCircularAperture.
 At least one example failed for visualizePSFfromOI.
 
 *************
-
-** At least one example failed for humanOI.  Be sure to fix the
-version we decide to keep (isetcam/isetbio).
-
-DHB: The example fails because there is no opticsSet for 'spectrum'.
-There is a comment in humanOI that the whole spectrum concept
-is suspect. In any case, I don't know what the optics spectrum
-might be.
 
 ** At least one example failed for visualizePSFfromOI.
 
@@ -30,34 +21,5 @@ fSupport and nSamps required.
 Error in visualizePSFfromOI (line 48)
     psfSupportMicrons = opticsGet(optics,'psf support','um');
 
-** At least one example failed for ijspeert.
-   At least one example failed for humanConeContrast.
-   At least one example failed for humanConeIsolating.
 
 
-DHB: I fixed this in the isetcam version.  Need to decide whether to keep 
-isetcam or isetbio, and if the latter move the fixes over.
-
-** At least one example failed for oisCreate.
-
-DHB:
-
-Second example: sceneCreate calls sceneVernier, but there is no sceneVernier.
-My guess is that we need to bring sceneVernier over from isetbio.
-
-Third example: Looks like some sceneSet incompatibility:
-
->>  % Impulse (temporal)
-    clear iparams
-    sparams.fov = 1;
-    sparams.luminance = 100;
-    stimWeights = zeros(1, 50);
-    stimWeights(2:4) = 1;
-    impulse = oisCreate('impulse', 'add', stimWeights, ...
-        'sceneParameters', sparams);
-    impulse.visualize('movie illuminance');
-Error using sceneSet
-Lminance array does not match photon array size.
-
-Error in oisCreate (line 243)
-                        scene{jj} = sceneSet(scene{jj}, fields{ii}, val);
