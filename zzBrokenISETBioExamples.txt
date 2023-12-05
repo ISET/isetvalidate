@@ -1,4 +1,16 @@
+*************
 
+Failure cases (9)
+At least one example failed for wvfLoadWavefrontOpticsData.
+At least one example failed for ComputePhotopigmentBleaching.
+At least one example failed for coneAbsorptions.
+At least one example failed for emGenSequence.
+At least one example failed for oiSequence.
+At least one example failed for oisCreate.
+At least one example failed for coneMeanIsomerizations.
+At least one example failed for oiTreeShrewCreate.
+At least one example failed for visualizePSFfromOI.
+*************
 
 ** At least one example failed for humanOI.  Be sure to fix the
 version we decide to keep (isetcam/isetbio).

@@ -1,16 +1,19 @@
 
 
-Failure cases (69)
+Failure cases (73)
 At least one example failed for ieLuminance2Radiance.
 At least one example failed for s_focusLensTable.
 At least one example failed for chartCornerpoints.
 At least one example failed for ieFontSizeSet.
+At least one example failed for ieDrawCylinder.
 At least one example failed for ieDrawShape.
 At least one example failed for ieROIDraw.
 At least one example failed for ieROISelect.
-At least one example failed for humanConeMosaic.
+At least one example failed for vcLineSelect.
+At least one example failed for humanConeContrast.
+At least one example failed for humanConeIsolating.
 At least one example failed for humanOI.
-At least one example failed for westheimerLSF.
+At least one example failed for humanUVSafety.
 At least one example failed for Demosaic.
 At least one example failed for ipGet.
 At least one example failed for ipMCCXYZ.
@@ -22,7 +25,9 @@ At least one example failed for ieISO12233v1.
 At least one example failed for oiFromFile.
 At least one example failed for lensList.
 At least one example failed for opticsGet.
+At least one example failed for opticsRayTrace.
 At least one example failed for siSynthetic.
+At least one example failed for rtGeometry.
 At least one example failed for rtRIInterp.
 At least one example failed for psfAverageMultiple.
 At least one example failed for psfCenter.
@@ -56,8 +61,7 @@ At least one example failed for sensorSet.
 At least one example failed for sensorSetSizeToFOV.
 At least one example failed for sensorStats.
 At least one example failed for autoExposure.
-At least one example failed for ieExamplesRun.
-At least one example failed for ieExamplesRunInFunction.
+At least one example failed for cprintf.
 At least one example failed for ieDNGRead.
 At least one example failed for ieImageType.
 At least one example failed for imageDeadLeaves.
