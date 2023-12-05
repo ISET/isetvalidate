@@ -1,6 +1,6 @@
 
 
-Failure cases (73)
+Failure cases (72)
 At least one example failed for ieLuminance2Radiance.
 At least one example failed for s_focusLensTable.
 At least one example failed for chartCornerpoints.
@@ -12,7 +12,6 @@ At least one example failed for ieROISelect.
 At least one example failed for vcLineSelect.
 At least one example failed for humanConeContrast.
 At least one example failed for humanConeIsolating.
-At least one example failed for humanOI.
 At least one example failed for humanUVSafety.
 At least one example failed for Demosaic.
 At least one example failed for ipGet.

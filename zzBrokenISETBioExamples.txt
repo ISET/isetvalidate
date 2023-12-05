@@ -1,15 +1,15 @@
 *************
 
-Failure cases (9)
-At least one example failed for wvfLoadWavefrontOpticsData.
+Failure cases (8)
+At least one example failed for cprintf.
 At least one example failed for ComputePhotopigmentBleaching.
-At least one example failed for coneAbsorptions.
 At least one example failed for emGenSequence.
-At least one example failed for oiSequence.
+At least one example failed for mouseCore.
 At least one example failed for oisCreate.
-At least one example failed for coneMeanIsomerizations.
-At least one example failed for oiTreeShrewCreate.
+At least one example failed for diameterForCircularApertureFromWidthForSquareAperture.
+At least one example failed for sizeForSquareApertureFromDiameterForCircularAperture.
 At least one example failed for visualizePSFfromOI.
+
 *************
 
 ** At least one example failed for humanOI.  Be sure to fix the
