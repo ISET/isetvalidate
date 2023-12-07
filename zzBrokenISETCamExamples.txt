@@ -1,25 +1,64 @@
 
 
-At least one example failed for s_focusLensTable.
 At least one example failed for chartCornerpoints.
-At least one example failed for ieFontSizeSet.
-At least one example failed for ieDrawCylinder.
+	@Brian:
+	Camera code in here is broken.  This set of
+	lines fails in the second example.
+
+	scene = sceneCreate;  camera = cameraCreate('default');
+  	camera = cameraCompute(camera,scene);
+
 At least one example failed for ieDrawShape.
+	@Brian:
+	Looks like same issue as in chartCornrpoints above.
+
 At least one example failed for ieROIDraw.
+	@Brian
+	Three examples fail with this error:
+
+	Error using ieAppGet
+	Undefined ip app
+
+	Error in ieROIDraw (line 87)
+	[~,ax] = ieAppGet(isetobj);
+
 At least one example failed for ieROISelect.
-At least one example failed for vcLineSelect.
-At least one example failed for humanConeContrast.
-At least one example failed for humanConeIsolating.
-At least one example failed for humanUVSafety.
+	@Brian
+	Examples fail in ways that seem related to ROIs.
+
 At least one example failed for Demosaic.
+	@Brian
+	Examples fail in cameraCommpute and/or ipSet. 
+
 At least one example failed for ipGet.
+	@Brian
+	ipGet unhappy for reasons I'm not sure of.
+
 At least one example failed for ipMCCXYZ.
+	@Brian
+	Dies in call to macbethSelect.
+
 At least one example failed for ip2lightfield.
-At least one example failed for vcimageMCCXYZ.
+	@Brian
+	Dies because it assumes you have a recipe and none is created.
+	If that is an iset3d recipe then this is in the wrong place.
+	If it is an ip recipe, one needs to be created.
+
 At least one example failed for ISOFindSlantedBar.
+	@Brian
+	Examples die in something to do with ip.
+
+At least one example failed for ipCreate
+	@Brian
+	This is because the third line needs some variables
+	that are not set up in the example.
+
 At least one example failed for ieISO12233.
 At least one example failed for ieISO12233v1.
-At least one example failed for oiFromFile.
+	@Brian
+	Dies in some ip related code in both of these.
+	Same problem in each, I think.
+
 At least one example failed for lensList.
 At least one example failed for opticsGet.
 At least one example failed for opticsRayTrace.
@@ -44,7 +83,6 @@ At least one example failed for macbethChartCreate.
 At least one example failed for macbethCompareIdeal.
 At least one example failed for macbethSelect.
 At least one example failed for sceneReflectanceChart.
-At least one example failed for sceneAdjustIlluminant.
 At least one example failed for sceneAdjustLuminance.
 At least one example failed for sceneAdjustReflectance.
 At least one example failed for sceneCreate.
