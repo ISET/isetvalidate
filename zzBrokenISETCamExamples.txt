@@ -60,18 +60,34 @@ At least one example failed for ieISO12233v1.
 	Same problem in each, I think.
 
 At least one example failed for lensList.
-At least one example failed for opticsGet.
-At least one example failed for opticsRayTrace.
+	@Brian.
+	lensList calls piDirGet, which doesn't exist.
+
 At least one example failed for siSynthetic.
-At least one example failed for rtGeometry.
-At least one example failed for rtRIInterp.
-At least one example failed for psfAverageMultiple.
-At least one example failed for psfCenter.
-At least one example failed for psfCircularlyAverage.
-At least one example failed for psfFindCriterionRadius.
+	@Brian
+	The first two examples run, but the returned optics structure
+	has a PSF with size 0 on the wavelength dimension.  I tried
+	to fix this by passing in an oi that really did have wavelengths,
+	but that didn't fix it and I gave up.  Indeed, these examples
+	were initially broken because no oi had been defined.
+
+	The third example is broken because it relies on a function
+	that doesn't exist, ieSaveSIOpticsFile.  I commented this one
+	out, should be fixed or deleted.
+
+	The fourth example doesn't run because it depends on undefined
+	variables.  I commented this one out, should be fixed or deleted.
+
 At least one example failed for wvf2SiPsf.
-At least one example failed for wvf2oi.
-At least one example failed for wvfAperture.
+	I fixed the first example.
+
+	@Brian.
+	The second example, now commented out, is just a call into a tutorial
+	called t_opticsGetAndSetPsf.  That tutorial does not currently exist.
+	I commented out the example, but am wondering if we should try to track
+	down the tutorial which seems like it might once have been useful.  Otherwise,
+	can just delete this example.
+
 At least one example failed for wvfApply.
 At least one example failed for wvfComputeConeAverageCriterionRadius.
 At least one example failed for wvfComputeConePSF.
@@ -109,3 +125,5 @@ At least one example failed for plotDisplayColor.
 At least one example failed for plotSensorHistogram.
 At least one example failed for scenePlot.
 At least one example failed for sensorPlot.
+At least one example failed for rtGeometry.
+At least one example failed for rtRIInterp.
