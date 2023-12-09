@@ -88,12 +88,18 @@ At least one example failed for wvf2SiPsf.
 	down the tutorial which seems like it might once have been useful.  Otherwise,
 	can just delete this example.
 
-At least one example failed for wvfApply.
-At least one example failed for wvfComputeConeAverageCriterionRadius.
-At least one example failed for wvfComputeConePSF.
-At least one example failed for wvfComputePupilFunction.
-At least one example failed for wvfGet.
-At least one example failed for wvfPupilFunction.
+At least one example failed for oiPlot.
+	@Brian
+	I tried to make the examples that were in the header comment runable,
+	but oiPlot does not consistently return uData and so some are quite broken.
+	I am not sure whether these never worked, or whether a working version
+	was in ISETBio.  Thus leaving them in and broken to remind us to try
+	to sort this out.
+
+Need to think about lca logic.  wvfCompute has it off by default.  Maybe different
+oi's get it right internally, but the wvf tutorials and examples that go directly
+need to be carefully checked.
+
 At least one example failed for imgDeadleaves.
 At least one example failed for macbethChartCreate.
 At least one example failed for macbethCompareIdeal.
@@ -101,7 +107,6 @@ At least one example failed for macbethSelect.
 At least one example failed for sceneReflectanceChart.
 At least one example failed for sceneAdjustLuminance.
 At least one example failed for sceneAdjustReflectance.
-At least one example failed for sceneCreate.
 At least one example failed for sceneShowImage.
 At least one example failed for sensorColorFilter.
 At least one example failed for sensorDemosaic.
@@ -112,7 +117,6 @@ At least one example failed for sensorSet.
 At least one example failed for sensorSetSizeToFOV.
 At least one example failed for sensorStats.
 At least one example failed for autoExposure.
-At least one example failed for cprintf.
 At least one example failed for ieDNGRead.
 At least one example failed for ieImageType.
 At least one example failed for imageDeadLeaves.
@@ -120,7 +124,6 @@ At least one example failed for imageMakeMontage.
 At least one example failed for imageSlantedEdge.
 At least one example failed for qinterp2.
 At least one example failed for ipPlot.
-At least one example failed for oiPlot.
 At least one example failed for plotDisplayColor.
 At least one example failed for plotSensorHistogram.
 At least one example failed for scenePlot.
