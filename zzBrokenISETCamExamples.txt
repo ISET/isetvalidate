@@ -1,43 +1,5 @@
 
 
-At least one example failed for chartCornerpoints.
-	@Brian:
-	Camera code in here is broken.  This set of
-	lines fails in the second example.
-
-	scene = sceneCreate;  camera = cameraCreate('default');
-  	camera = cameraCompute(camera,scene);
-
-At least one example failed for ieDrawShape.
-	@Brian:
-	Looks like same issue as in chartCornrpoints above.
-
-At least one example failed for ieROIDraw.
-	@Brian
-	Three examples fail with this error:
-
-	Error using ieAppGet
-	Undefined ip app
-
-	Error in ieROIDraw (line 87)
-	[~,ax] = ieAppGet(isetobj);
-
-At least one example failed for ieROISelect.
-	@Brian
-	Examples fail in ways that seem related to ROIs.
-
-At least one example failed for Demosaic.
-	@Brian
-	Examples fail in cameraCommpute and/or ipSet. 
-
-At least one example failed for ipGet.
-	@Brian
-	ipGet unhappy for reasons I'm not sure of.
-
-At least one example failed for ipMCCXYZ.
-	@Brian
-	Dies in call to macbethSelect.
-
 At least one example failed for ip2lightfield.
 	@Brian
 	Dies because it assumes you have a recipe and none is created.
