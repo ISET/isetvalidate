@@ -1,20 +1,5 @@
 
 
-At least one example failed for ip2lightfield.
-	@Brian
-	Dies because it assumes you have a recipe and none is created.
-	If that is an iset3d recipe then this is in the wrong place.
-	If it is an ip recipe, one needs to be created.
-
-At least one example failed for ISOFindSlantedBar.
-	@Brian
-	Examples die in something to do with ip.
-
-At least one example failed for ipCreate
-	@Brian
-	This is because the third line needs some variables
-	that are not set up in the example.
-
 At least one example failed for ieISO12233.
 At least one example failed for ieISO12233v1.
 	@Brian
