@@ -2,7 +2,7 @@ function ieTutorials(repo,varargin)
 % Run all tutorials in repo and print out which worked and which did not
 %
 % Syntax:
-%    ieRunTutorialsAll(repo)
+%    ieTutorials(repo)
 %
 % Description:
 %   Run all of the tutorials in a specified repo and print out a report at the end as
