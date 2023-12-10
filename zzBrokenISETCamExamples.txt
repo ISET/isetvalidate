@@ -100,33 +100,113 @@ Need to think about lca logic.  wvfCompute has it off by default.  Maybe differe
 oi's get it right internally, but the wvf tutorials and examples that go directly
 need to be carefully checked.
 
-At least one example failed for imgDeadleaves.
-At least one example failed for macbethChartCreate.
 At least one example failed for macbethCompareIdeal.
+	@Brian,
+	The example croaks in something related to ip.
+
 At least one example failed for macbethSelect.
-At least one example failed for sceneReflectanceChart.
-At least one example failed for sceneAdjustLuminance.
-At least one example failed for sceneAdjustReflectance.
-At least one example failed for sceneShowImage.
-At least one example failed for sensorColorFilter.
+	@Brian.
+        Several examples broken, some related to ip,
+	some related to simpler errors in arg passing,
+	I think.
+
+	Note that examples that start with vcGetObject('sensor')
+	and indeed vcGetObject('anything') don't work because
+	vcGetObject returns empty when the example is run
+	in a clean workspace.  I have been trying to rewrite
+	these with a call to the appropriate create, but when
+	haven't been systematic about that yet.
+	
 At least one example failed for sensorDemosaic.
-At least one example failed for sensorGet.
-At least one example failed for sensorMacbethDaylightEstimate.
+	@Brian
+	Error in ip routines.
+
 At least one example failed for sensorReadMosaic.
+	@Brian
+	Example calls snesorIMX363(), but that function
+        does not exist.
+
 At least one example failed for sensorSet.
-At least one example failed for sensorSetSizeToFOV.
+	@Brian
+        I got most of the examples to work, but one relies
+	on a parameter whose value isn't clear to me.  I
+	left that as its own example with an ETTBSkip, but
+        should probably be fixed or just deleted.
+
+        %{
+            % ETTBSkip
+            % This doesn't work because we don't know what baseName should be.
+            sensor = sensorCreate; 
+            sensor = sensorSet(sensor,'sensor compute method',baseName);
+        %}
+
 At least one example failed for sensorStats.
+	@Brian
+	Routine sensorStats() itself appears broken in a call to something
+	called ieAppGet.  It may be that more args need to be passed in the
+        example - when I got to it, it was being called with no args at all
+        and wasn't working for lack of a passed sensor.
+
+        Once the first example is fixed, the subsequent ones will need to
+        be expanded so that they run in a clean workspace.  Test by using
+        clear before running each.
+
+	sensor = sensorCreate;
+        [stats, sensor, theRect] = sensorStats(sensor);
+        Error using ieAppGet
+        Undefined sensor app
+
+        Error in ieROISelect (line 50)
+[       app, appAxis] = ieAppGet(obj);
+
+        Error in sensorStats (line 66)
+        [~,roiRectangle] = ieROISelect(sensor);
+
 At least one example failed for autoExposure.
-At least one example failed for ieDNGRead.
-At least one example failed for ieImageType.
-At least one example failed for imageDeadLeaves.
+	@Brian.  
+	Second example works.  First and third fail for reasons having
+	something to do with ROI selection and/or cropping.
+
 At least one example failed for imageMakeMontage.
-At least one example failed for imageSlantedEdge.
-At least one example failed for qinterp2.
+        @Brian
+        I got the example to work by defining variable hc as
+	a random image.  But I think with a little work and
+        some comments, the example could be made to be more helpful.
+
 At least one example failed for ipPlot.
+	#Brian
+	ip related error in imageSet.
+
 At least one example failed for plotDisplayColor.
+	@Brian
+	ROI related to error, and code seems connected to ip.
+
 At least one example failed for plotSensorHistogram.
-At least one example failed for scenePlot.
+	@Brian
+	This routine is expecting some sort of setup before it is called, and that
+	setup isn't done by the example.
+
 At least one example failed for sensorPlot.
+	@Brian
+	The simple code at the start of the example fails.
+
+        The problem here and with many others may be that
+	imageSet is shadowed
+
+	>> which imageSet -all
+	/Applications/MATLAB_R2023b.app/toolbox/vision/vision/imageSet.m  % imageSet constructor
+	/Users/dhb/Documents/MATLAB/toolboxes/isetcam/imgproc/imageSet.m  % Shadowed
+
+
 At least one example failed for rtGeometry.
-At least one example failed for rtRIInterp.
+	@Brian
+	Something not specified here, but not immediately clear to me what.
+
+	scene = sceneCreate('gridlines');
+  	oi = oiCreate; %vcGetObject('oi');
+  	oi = rtGeometry(oi,scene);
+  	imageSPD(gImage);
+
+	Error using rtGeometry
+	Insufficient image height data
+
