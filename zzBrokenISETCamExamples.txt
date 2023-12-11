@@ -1,48 +1,4 @@
 
-
-At least one example failed for ieISO12233.
-At least one example failed for ieISO12233v1.
-	@Brian
-	Dies in some ip related code in both of these.
-	Same problem in each, I think.
-
-At least one example failed for lensList.
-	@Brian.
-	lensList calls piDirGet, which doesn't exist.
-
-At least one example failed for siSynthetic.
-	@Brian
-	The first two examples run, but the returned optics structure
-	has a PSF with size 0 on the wavelength dimension.  I tried
-	to fix this by passing in an oi that really did have wavelengths,
-	but that didn't fix it and I gave up.  Indeed, these examples
-	were initially broken because no oi had been defined.
-
-	The third example is broken because it relies on a function
-	that doesn't exist, ieSaveSIOpticsFile.  I commented this one
-	out, should be fixed or deleted.
-
-	The fourth example doesn't run because it depends on undefined
-	variables.  I commented this one out, should be fixed or deleted.
-
-At least one example failed for wvf2SiPsf.
-	I fixed the first example.
-
-	@Brian.
-	The second example, now commented out, is just a call into a tutorial
-	called t_opticsGetAndSetPsf.  That tutorial does not currently exist.
-	I commented out the example, but am wondering if we should try to track
-	down the tutorial which seems like it might once have been useful.  Otherwise,
-	can just delete this example.
-
-At least one example failed for oiPlot.
-	@Brian
-	I tried to make the examples that were in the header comment runable,
-	but oiPlot does not consistently return uData and so some are quite broken.
-	I am not sure whether these never worked, or whether a working version
-	was in ISETBio.  Thus leaving them in and broken to remind us to try
-	to sort this out.
-
 Need to think about lca logic.  wvfCompute has it off by default.  Maybe different
 oi's get it right internally, but the wvf tutorials and examples that go directly
 need to be carefully checked.
