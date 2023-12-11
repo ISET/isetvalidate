@@ -80,36 +80,3 @@ At least one example failed for ipPlot.
 	#Brian
 	ip related error in imageSet.
 
-At least one example failed for plotDisplayColor.
-	@Brian
-	ROI related to error, and code seems connected to ip.
-
-At least one example failed for plotSensorHistogram.
-	@Brian
-	This routine is expecting some sort of setup before it is called, and that
-	setup isn't done by the example.
-
-At least one example failed for sensorPlot.
-	@Brian
-	The simple code at the start of the example fails.
-
-        The problem here and with many others may be that
-	imageSet is shadowed
-
-	>> which imageSet -all
-	/Applications/MATLAB_R2023b.app/toolbox/vision/vision/imageSet.m  % imageSet constructor
-	/Users/dhb/Documents/MATLAB/toolboxes/isetcam/imgproc/imageSet.m  % Shadowed
-
-
-At least one example failed for rtGeometry.
-	@Brian
-	Something not specified here, but not immediately clear to me what.
-
-	scene = sceneCreate('gridlines');
-  	oi = oiCreate; %vcGetObject('oi');
-  	oi = rtGeometry(oi,scene);
-  	imageSPD(gImage);
-
-	Error using rtGeometry
-	Insufficient image height data
-
