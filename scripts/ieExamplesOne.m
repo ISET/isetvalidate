@@ -12,6 +12,12 @@ function status = ieExamplesOne(theFunction,varargin)
 % Inputs:
 %   theFunction - name of ISET function
 %
+% Optional key/value pairs
+%   'verbose'  - Boolean. Print the results to the command window, showing
+%                the successes and failures separately. Default false.
+%   'print'    - Print the examples to the command window.  
+%                Default: false
+%
 % Outputs:
 %    status
 %     -1: Found examples but at least one crashed, or other
@@ -21,10 +27,7 @@ function status = ieExamplesOne(theFunction,varargin)
 %     N: With N > 0.  Number of examples run successfully,
 %        with none failing.
 %
-% Optional key/value pairs
-%    'print'  - Boolean. Print the results to the command line, showing the successes
-%               and failures separately. Default true.
-%
+
 % See also:
 %   ieExamples, ieValidate, ieRunTutorialsAll
 %   ExampleTestToolbox:  ExecuteExamplesInFunction
@@ -33,6 +36,7 @@ function status = ieExamplesOne(theFunction,varargin)
 p = inputParser;
 p.addRequired('func',@(x)(~isempty(which(x)))); 
 p.addParameter('print',true,@islogical);
+p.addParameter('verbose',false,@islogical);
 
 p.parse(theFunction,varargin{:});
 % select = p.Results.select;
@@ -45,7 +49,9 @@ if iscell(theFunction)
     theFunction = theFunction{1};
 end
 
-status = ExecuteExamplesInFunction(theFunction);
+status = ExecuteExamplesInFunction(theFunction, ...
+    'verbose',p.Results.verbose, ...
+    'print example text',p.Results.print);
 
 switch status
     case -1
