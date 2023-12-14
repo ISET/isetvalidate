@@ -53,7 +53,7 @@ p = struct(...
     'tutorialsSourceDir',       fullfile(eval(repoRootDirFcns{selectedRepoNum}), repoTutorialDirs{selectedRepoNum}) ...
     );
 
-%% List of scripts to be skipped from automatic publishing.
+%% List of scripts to be skipped from automatic running.
 %
 % Anything with this in its path name is skipped.
 scriptsToSkip = {...
@@ -68,4 +68,5 @@ scriptsToSkip = {...
 
 %% Use UnitTestToolbox method to do this.
 UnitTest.runProjectTutorials(p, scriptsToSkip, 'All');
+
 end
