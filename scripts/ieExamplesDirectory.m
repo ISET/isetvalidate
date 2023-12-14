@@ -1,5 +1,5 @@
 function result = ieExamplesDirectory(thisDir,varargin)
-% Run all the examples in the specified repo
+% Run all the examples in the specified directory and subdirectories.
 %
 % Syntax:
 %     result = ieExamplesDirectory(repo)
@@ -10,7 +10,8 @@ function result = ieExamplesDirectory(thisDir,varargin)
 %          "% ETTBSkip"
 %
 % Inputs:
-%   thisDir - name of directory
+%   thisDir - full path to the directory.  Subdirectories will be
+%             checked.
 %
 % Outputs:
 %  result - describing the outcome
