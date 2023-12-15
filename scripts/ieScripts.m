@@ -1,5 +1,5 @@
-function ieRunScriptsAll
-% ieRunScriptsAll
+function ieScripts
+% ieScripts
 %
 % Syntax
 %    ieRunScriptsAll
@@ -11,14 +11,13 @@ function ieRunScriptsAll
 %   directory 'development' are skipped.
 %
 % See also
-%  ieRunValidateAll
-%
-%%  Set for app designer buggy stuff
+%  ieTutorials, ieValidate, ieExamples
 
+%%  Set for app designer buggy stuff
 ieSessionSet('waitbar','off');
 
 %%
-
+%
 % User/project specific preferences
 % local directory where tutorial scripts are located
 p = struct(...
