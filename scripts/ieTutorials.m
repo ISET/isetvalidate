@@ -12,7 +12,7 @@ function ieTutorials(repo,varargin)
 %   contains 'development' are skipped.
 %
 % Inputs:
-%   repo - name of repository ('isetcam','isetbio')
+%   repo - name of repository. One of {'isetcam','isetbio','csfgenerator'}
 %
 % Outputs:
 %   None.
@@ -23,17 +23,18 @@ function ieTutorials(repo,varargin)
 % History:
 %   07/26/17  dhb  Wrote this, because we care.
 %   07/25/23  dhb  Updated to work in isetbiovalidation repo context
+%   12/15/23  dhb, fh  Add ISETBioCSFGenerator to options
 
 p = inputParser;
-p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio'})));
+p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio','csfgenerator'})));
 p.parse(repo,varargin{:});
 
 % Specify repos we can test.  For each, also need to provide
 % the name of the function that gives the repository root path
 % and the path to the tutorial directory under that path.
-availRepos = {'isetbio' 'isetcam'};
-repoRootDirFcns = {'isetbioRootPath' 'isetRootPath'};
-repoTutorialDirs = {'tutorials' 'tutorials'};
+availRepos = {'isetbio' 'isetcam', 'csfgenerator'};
+repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', 'csfGeneratorRootPath'};
+repoTutorialDirs = {'tutorials' 'tutorials', 'tutorials'};
 
 % Ask user where we want to go today
 knownRepo = false;
