@@ -2,10 +2,10 @@
 \cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
 {\colortbl;\red255\green255\blue255;}
 {\*\expandedcolortbl;;}
-\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\margl1440\margr1440\vieww18960\viewh17140\viewkind0
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
-\f0\fs24 \cf0 At least one example failed for nrePhotopigmentExcitationsConeMosaicHexWithNoEyeMovements.\
+\f0\fs36 \cf0 At least one example failed for nrePhotopigmentExcitationsConeMosaicHexWithNoEyeMovements.\
 At least one example failed for nreMidgetRGC.\
 At least one example failed for nreMidgetRGCMosaicOISequence.\
 At least one example failed for nreMidgetRGCMosaicSingleShot.\
@@ -14,4 +14,10 @@ At least one example failed for nrePhotopigmentExcitationsCmosaic.\
 At least one example failed for nrePhotopigmentExcitationsCmosaicEyeMovements.\
 At least one example failed for sceAOCircularSpot.\
 At least one example failed for sceAOTwoSpot.\
-At least one example failed for sceGrating.}
+\
+At least one example failed for sceGrating.\
+	The problem is with a change in displayCreate interface between ISETBio/Cam.\
+	Can fix by moving ISETBio version to ISETCam, and will then have to clean\
+	up some warnings that appear in code using the ISETCam interface.\
+\
+	May also want to worry about any changes in displaySet/displayGet ....}
