@@ -2,7 +2,7 @@ function ieValidate(repo,typeToRun,varargin)
 % Run all tutorials/scripts/validations for a repo and print out which worked and which did not
 %
 % Syntax:
-%    ieTutorials(repo)
+%    ieValidate(repo,typeToRun)
 %
 % Description:
 %   Run all of the tutorials/scripts/validations for a specified repo and print out a report at the end as
@@ -58,8 +58,8 @@ function ieValidate(repo,typeToRun,varargin)
 
 p = inputParser;
 p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio','csfgenerator','iset3d','psych221'})));
-p.addrequred(typeToRun,@(x)(ismember(ieParamFormat(x),{'tutorials','scripts','validations'})));
-p.parse(repo,varargin{:});
+p.addRequired('typeToRun',@(x)(ismember(ieParamFormat(x),{'tutorials','scripts','validations'})));
+p.parse(repo,typeToRun,varargin{:});
 
 % Specify repos we can test.  For each, also need to provide
 % the name of the function that gives the repository root path
