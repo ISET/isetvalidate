@@ -10,10 +10,10 @@ function result = ieExamples(repo,varargin)
 %          "% ETTBSkip"
 %
 % Inputs:
-%   repo - name of repository, one of {'isetcam','isetbio', 'csfgenerator'}
+%     repo - name of repository, one of {'isetcam','isetbio', 'csfgenerator'}
 %
 % Outputs:
-%  result - describing the outcome
+%    result - describing the outcome
 %      result.names   Names of the functions
 %      result.status  What happened
 %
@@ -57,7 +57,7 @@ switch repo
         [result.names, result.status ] = ExecuteExamplesInDirectory(isetRootPath,'verbose',false);
     case 'csfgenerator'
         disp(select)
-        [result.names, result.status ] = ExecuteExamplesInDirectory(csfgeneratorRootPath,'verbose',false);
+        [result.names, result.status ] = ExecuteExamplesInDirectory(csfGeneratorRootPath,'verbose',false);
     otherwise
         error('Not yet supported %s\n',repo);
 end
