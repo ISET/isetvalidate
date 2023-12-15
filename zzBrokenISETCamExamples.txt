@@ -12,17 +12,55 @@ need to be carefully checked.
 	
 
 
-Failure cases (12)
 At least one example failed for ieROISelect.
-At least one example failed for lensList.
-At least one example failed for wvfComputeConePSF.
-At least one example failed for macbethSelect.
-At least one example failed for sceneHarmonic.
-At least one example failed for sceneVernier.
-At least one example failed for sceneAdjustLuminance.
-At least one example failed for sensorMacbethDaylightEstimate.
-At least one example failed for ipPlot.
+	@Brian
+	There was a typo in the skip commands, which I fixed.
+	But all of the examples fail when I try to run them by 
+	hand.  In some cases, a variable isn't defined.  This 
+	is typically because it was defined in an earlier
+	example, but we don't want to count on examples being
+	run in order - each should execute from a clean workspace.
+	But I don't think that is the only issue.
 
+At least one example failed for ipPlot.
+	@Brian
+	Dies in ieAppGet
+	Error using ieAppGet
+
+	Undefined ip app
+
+	Error in ieROIDraw (line 91)
+	[~,ax] = ieAppGet(isetobj);
+
+	Error in plotDisplayLine (line 64)
+       	 ieROIDraw(ip,'shape','line','shape data',[1 sz(2) xy(2) xy(2)]);
+
+	Error in ipPlot (line 63)
+        	[uData, hdl] = plotDisplayLine(ip,'h',xy);
+
+At least one example failed for macbethSelect.
+	@Brian
+	There are a bunch of examples in this file.  I tried maybe
+	the first four, each of which failed for a reason that
+	wasn't immediately obvious to me.
+
+At least one example failed for sceneVernier.
+	@Brian
+	Args are getting messed up by the time sceneCreate calls into sceneVernier.
+	By the time we get to the line that throws the error, the variable
+	c has value 'display' rather than something numeric.
+
+At least one example failed for sceneHarmonic.
+	@Brian
+	Examples call sceneInit and sceneComplete, neither of which exist.
+
+At least one example failed for lensList.
+	@Brian
+	>>    lensNames = lensList;   
+	Unrecognized function or variable 'piDirGet'.
+
+	Error in lensList (line 57)
+	files = dir(fullfile(piDirGet('lens'),star));
 
 At least one example failed for oiPlot.
 	@Brian
