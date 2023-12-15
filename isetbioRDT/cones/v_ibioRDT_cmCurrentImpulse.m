@@ -21,7 +21,7 @@ function ValidationFunction(runTimeParams)
 % 
 
 %% Initialize
-% ieInit;
+ieInit;
 runTimeParams.generatePlots = true;
 
 %% Reproduce identical random numbers
