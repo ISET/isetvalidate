@@ -27,10 +27,8 @@ function status = ieExamplesOne(theFunction,varargin)
 %     N: With N > 0.  Number of examples run successfully,
 %        with none failing.
 %
-
 % See also:
-%   ieExamples, ieValidate, ieRunTutorialsAll
-%   ExampleTestToolbox:  ExecuteExamplesInFunction
+%   ieExamples, ieValidate, ieTutorials, ExampleTestToolbox:ExecuteExamplesInFunction
 
 %%
 p = inputParser;

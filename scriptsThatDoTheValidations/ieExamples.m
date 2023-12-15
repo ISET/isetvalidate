@@ -10,10 +10,10 @@ function result = ieExamples(repo,varargin)
 %          "% ETTBSkip"
 %
 % Inputs:
-%   repo - name of repository ('isetcam','isetbio')
+%     repo - name of repository, one of {'isetcam','isetbio', 'csfgenerator'}
 %
 % Outputs:
-%  result - describing the outcome
+%    result - describing the outcome
 %      result.names   Names of the functions
 %      result.status  What happened
 %
@@ -37,10 +37,11 @@ function result = ieExamples(repo,varargin)
 %}
 
 % History:
-%   07/25/23  dhb  Make header comment consistent with isetbio style.
+%  07/25/23  dhb      Make header comment consistent with isetbio style.
+%  12/15/23  dhb, fh  Add ISETBioCSFGenerator option
 
 p = inputParser;
-p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio'})));
+p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio','csfgenerator'})));
 p.addParameter('select','all',@ischar);
 p.addParameter('print',true,@islogical);
 
@@ -54,6 +55,9 @@ switch repo
     case 'isetcam'
         disp(select)
         [result.names, result.status ] = ExecuteExamplesInDirectory(isetRootPath,'verbose',false);
+    case 'csfgenerator'
+        disp(select)
+        [result.names, result.status ] = ExecuteExamplesInDirectory(csfGeneratorRootPath,'verbose',false);
     otherwise
         error('Not yet supported %s\n',repo);
 end

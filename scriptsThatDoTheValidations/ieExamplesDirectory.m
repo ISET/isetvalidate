@@ -28,16 +28,16 @@ function result = ieExamplesDirectory(thisDir,varargin)
 %   The source file contains examples.
 %
 % See also:
-%   ieValidate, ieRunTutorialsAll
+%   ieExamples, ieExamplesOne, ieTutorials, ieValidate
 
 % Examples: 
 %{
 % ETTBSkip
-ieExamplesDirectory(fullfile(isetRootPath,'fonts'));
+     ieExamplesDirectory(fullfile(isetRootPath,'fonts'));
 %}
 %{
 % ETTBSkip
-ieExamplesDirectory(fullfile(isetRootPath,'gui'),'verbose',true);
+     ieExamplesDirectory(fullfile(isetRootPath,'gui'),'verbose',true);
 %}
 
 % History:

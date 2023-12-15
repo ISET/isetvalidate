@@ -9,10 +9,7 @@ end
 %% Function implementing the isetbio validation code
 function ValidationFunction(runTimeParams)
 
-    
-    %% Initialize ISETBIO
-    s_initISET;
-        
+           
     %% Internal validations
     % The result of a computation: a vector of doubles
     gain = 10E18;
