@@ -34,7 +34,7 @@ function status = ieExamplesOne(theFunction,varargin)
 p = inputParser;
 p.addRequired('func',@(x)(~isempty(which(x)))); 
 p.addParameter('print',false,@islogical);
-p.addParameter('verbose',false,@islogical);
+p.addParameter('verbose',true,@islogical);
 
 p.parse(theFunction,varargin{:});
 % select = p.Results.select;
