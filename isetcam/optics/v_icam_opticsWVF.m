@@ -155,12 +155,16 @@ wvfD = wvfCompute(wvfD,'human lca',false);
 pRange = 20;
 wvfPlot(wvfD,'psf','unit','um','wave',thisWave,'plot range',pRange);
 title(sprintf('Defocus %.1f D',defocus));
+psf500 = wvfGet(wvfD,'psf',500);
+assert(abs(max(psf500(:)) - 0.0017609) < 1e-6);
 
 %% Convert to an OI and render
 
 oiD = oiCompute(wvfD,gridScene);
 oiD = oiSet(oiD,'name',sprintf('oiCompute Defocus %.1f no LCA',defocus));
 oiWindow(oiD);
+photons550 = oiGet(oiD,'photons',550);
+assert((sum(photons550(:))/1.3360e+19) - 1 < 1e-3);
 
 %% Now recompute and include human longitudinal chromatic aberration
 
@@ -178,6 +182,10 @@ wvfVA = wvfSet(wvfVA,'zcoeff',-0.5,'vertical_astigmatism');
 wvfVA  = wvfCompute(wvfVA,'human lca', true);
 
 oi = oiCompute(wvfVA,gridScene);
+
+photons550 = oiGet(oi,'photons',550);
+assert((sum(photons550(:))/1.3369e+19) - 1 < 1e-3);
+
 oi = oiSet(oi,'name','vertical astig');
 oiWindow(oi);
 
