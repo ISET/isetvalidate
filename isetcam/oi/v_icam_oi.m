@@ -3,9 +3,20 @@
 % Copyright Imageval LLC, 2009
 
 %% Diffraction limited simulation properties
-oi = oiCreate;
+oi  = oiCreate('diffraction limited');
+tmp = oiGet(oi,'optics otf',550);
+assert(abs(sum(tmp(:)))/abs(1.0850e+03 + 4.3387e-30i) -1 < 1e-4);
+
 oiPlot(oi,'otf',[],550);
 oiPlot(oi,'otf',[],450);
+
+%% Shift invariant, which defaults to diffraction limited
+oi = oiCreate('shift invariant');
+oiPlot(oi,'otf',[],550);
+oiPlot(oi,'otf',[],450);
+
+tmp = oiGet(oi,'optics otf',550);
+assert(abs(sum(tmp(:)))/abs(1.0850e+03 + 4.3387e-30i) -1 < 1e-4);
 
 %% Human optics
 if exist('isetbioRootPath','file')
@@ -15,7 +26,9 @@ if exist('isetbioRootPath','file')
 end
 
 %% Make a scene and show some oiGets and oiCompute work
-scene = sceneCreate;
+scene = sceneCreate('gridlines',[1024 1024]);
+scene = sceneSet(scene,'fov',2);
+oi = oiCreate('shift invariant');
 oi = oiCompute(oi,scene);
 oiPlot(oi,'illuminance mesh linear');
 
