@@ -1,12 +1,23 @@
 function ieValidate(repo,typeToRun,varargin)
 % Run all tutorials/scripts/validations for a repo and print out which worked and which did not
 %
+% NOTES:  
+%
+% * BW/ZL made various fixes for isetcam, iset3d.  But they are
+% not yet tested.  
+% 
+% * Also, there was a bug about finding the right subdirectory.  We
+% might have broken the path for isetbio?  But there does not appear
+% to be a 'validation' subdirectory anywhere.
+%
 % Syntax:
 %    ieValidate(repo,typeToRun)
+%    e.g., ieValidate('isetcam','validations');
 %
 % Description:
-%   Run all of the tutorials/scripts/validations for a specified repo and print out a report at the end as
-%   to whether they threw errors, or not.
+%   Run all of the tutorials/scripts/validations for a specified repo
+%   and print out a report at the end as to whether they threw errors,
+%   or not.
 % 
 %   The path to the tutorials is setup in the source of this routine, as
 %   are various strings that will cause something to be skipped if it is in
@@ -54,7 +65,7 @@ function ieValidate(repo,typeToRun,varargin)
 %   07/26/17  dhb  Wrote this, because we care.
 %   07/25/23  dhb  Updated to work in isetbiovalidation repo context
 %   12/15/23  dhb, fh  Add ISETBioCSFGenerator to options
-%   12/15/21  dhb  Integrate tutorials/scripts/validations.
+%   12/15/23  dhb  Integrate tutorials/scripts/validations.
 
 p = inputParser;
 p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio','csfgenerator','iset3d','psych221'})));
@@ -67,7 +78,7 @@ p.parse(repo,typeToRun,varargin{:});
 %
 % I took a guess at the correct root path for iset3d and psych221
 availRepos = {'isetbio' 'isetcam', 'csfgenerator','iset3d','psych221'};
-repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', 'csfGeneratorRootPath','iset3dRootPath','psych221RootPath'};
+repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', 'csfGeneratorRootPath','piRootPath','psych221RootPath'};
 
 % Ask user where we want to go today
 knownRepo = false;
@@ -82,7 +93,8 @@ if (~knownRepo)
     error('Unknown repository requested')
 end
 
-% Set up variables to handle what was specified
+% Choose the top level directory corresponding to the type of
+% validation.
 switch (availRepos{selectedRepoNum})
     case 'isetcam'
         switch (typeToRun)
@@ -91,7 +103,7 @@ switch (availRepos{selectedRepoNum})
             case 'scripts'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
             case 'validations'
-                topLevelDir = eval(isetvalidateRootPath);
+                topLevelDir = fullfile(isetvalidateRootPath,'isetcam');
         end
 
     case 'isetbio'
@@ -101,7 +113,7 @@ switch (availRepos{selectedRepoNum})
             case 'scripts'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
             case 'validations'
-                topLevelDir = eval(isetvalidateRootPath);
+                topLevelDir = isetvalidateRootPath;
         end
 
     case 'csfgenerator'
@@ -115,13 +127,15 @@ switch (availRepos{selectedRepoNum})
         end
 
     case 'iset3d'
-        case 'tutorials'
+        switch (typeToRun)
+            case 'tutorials'
                 error('Not sure whether tutorials currently exist for iset3d');
             case 'scripts'
                 error('Not sure whether currently exist for iset3d');
             case 'validations'
                 topLevelDir = eval(isetvalidateRootPath);
-    
+        end
+
     case 'psych221'
         case 'tutorials'
                 error('Not sure whether tutorials currently exist for psych221');
@@ -135,8 +149,11 @@ switch (availRepos{selectedRepoNum})
 end
 
 % Set up preferences to work for the selected repository
+
+% Was ....
+% 'tutorialsSourceDir',       fullfile(topLevelDir, typeToRun) ...
 p = struct(...
-    'tutorialsSourceDir',       fullfile(topLevelDir, typeToRun) ...
+    'tutorialsSourceDir',       fullfile(topLevelDir) ...
     );
 
 %% List of scripts to be skipped from automatic running.
