@@ -66,6 +66,7 @@ function ieValidate(repo,typeToRun,varargin)
 %   07/25/23  dhb  Updated to work in isetbiovalidation repo context
 %   12/15/23  dhb, fh  Add ISETBioCSFGenerator to options
 %   12/15/23  dhb  Integrate tutorials/scripts/validations.
+%   12/20/23  dhb  Generalized setup to handle bugs identified by BAW.
 
 p = inputParser;
 p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio','csfgenerator','iset3d','psych221'})));
@@ -80,7 +81,7 @@ p.parse(repo,typeToRun,varargin{:});
 availRepos = {'isetbio' 'isetcam', 'csfgenerator','iset3d','psych221'};
 repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', 'csfGeneratorRootPath','piRootPath','psych221RootPath'};
 
-% Ask user where we want to go today
+% Figure out where we want to go today
 knownRepo = false;
 for rr = 1:length(availRepos)
     if (strcmp(repo,availRepos{rr}))
@@ -94,66 +95,87 @@ if (~knownRepo)
 end
 
 % Choose the top level directory corresponding to the type of
-% validation.
+% validation.  For repo and validation type, we specify the
+% top level directory of the scripts to run, and the subdirectory
+% of that top level directory where the scripts are. 
 switch (availRepos{selectedRepoNum})
     case 'isetcam'
         switch (typeToRun)
             case 'tutorials'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                subDir = 'tutorials';
             case 'scripts'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                subDir = 'scripts';
             case 'validations'
-                topLevelDir = fullfile(isetvalidateRootPath,'isetcam');
+                topLevelDir = fullfile(isetvalidateRootPath);
+                subDir = 'isetcam';
         end
 
     case 'isetbio'
         switch (typeToRun)
             case 'tutorials'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                subDir = 'tutorials';
             case 'scripts'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                subDir = 'scripts';
             case 'validations'
                 topLevelDir = isetvalidateRootPath;
+                subDir = 'isetbio';
         end
 
     case 'csfgenerator'
         switch (typeToRun)
             case 'tutorials'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                subDir = 'tutorials';
             case 'scripts'
+                topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                subDir = 'scripts';
                 error('No scripts currently exist for csfgenerator');
             case 'validations'
+                topLevelDir = isetvalidateRootPath;
+                subDir = 'csfgenerator';
                 error('No validations currently exist for csfgenerator');
         end
 
     case 'iset3d'
         switch (typeToRun)
             case 'tutorials'
+                topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                subDir = 'tutorials';
                 error('Not sure whether tutorials currently exist for iset3d');
             case 'scripts'
+                topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                subDir = 'scripts';
                 error('Not sure whether currently exist for iset3d');
             case 'validations'
-                topLevelDir = eval(isetvalidateRootPath);
+                topLevelDir = isetvalidateRootPath;
+                subDir = 'iset3d';
         end
 
     case 'psych221'
         case 'tutorials'
+                topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                subDir = 'tutorials';
                 error('Not sure whether tutorials currently exist for psych221');
             case 'scripts'
+                topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                subDir = 'scripts';
                 error('Not sure whether tutorials urrently exist for psych221');
             case 'validations'
+                topLevelDir = isetvalidateRootPath;
+                subDir = 'psych221';
                 topLevelDir = eval(isetvalidateRootPath);
 
     otherwise
         error('We do not know how to handle specified repo');
 end
 
-% Set up preferences to work for the selected repository
-
-% Was ....
-% 'tutorialsSourceDir',       fullfile(topLevelDir, typeToRun) ...
+% Set up preferences to work for the selected run
 p = struct(...
-    'tutorialsSourceDir',       fullfile(topLevelDir) ...
+    'tutorialsSourceDir',       fullfile(topLevelDir,subDir) ...
     );
 
 %% List of scripts to be skipped from automatic running.
