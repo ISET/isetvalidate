@@ -7,29 +7,13 @@
 
 \f0\fs36 \cf0 Updated 12/19/23 - DHB\
 \
+Failure cases (7)\
 At least one example failed for nrePhotopigmentExcitationsConeMosaicHexWithNoEyeMovements.\
 At least one example failed for nreMidgetRGC.\
-At least one example failed for nreMidgetRGCMosaicOISequence.\
-At least one example failed for nreMidgetRGCMosaicSingleShot.\
 At least one example failed for nrePhotocurrentsCmosaicEyeMovements.\
 At least one example failed for nrePhotopigmentExcitationsCmosaic.\
 At least one example failed for nrePhotopigmentExcitationsCmosaicEyeMovements.\
 At least one example failed for sceAOCircularSpot.\
 At least one example failed for sceAOTwoSpot.\
 \
-At least one example failed for sceGrating.\
-\
-	Error using imageLinearTransform\
-	image/T data sizes are incorrect. If im is RGB, size(T,1) must be 3.\
-\
-	Error in sceGrating>generateGratingSequenceFrame (line 215)\
-   	backgroundRGB = imageLinearTransform(backgroundXYZ, displayXYZToLinearRGB);\
-\
-	Error in sceGrating>generateGratingSequence (line 179)\
-        [theSceneFrame, outOfGamutFlag(frameIndex)] = generateGratingSequenceFrame(presentationDisplay, 	gratingParams, ...\
-\
-	Error in sceGrating (line 93)\
-       [theSceneSequence, temporalSupportSeconds, statusReport] = generateGratingSequence(presentationDisplay,     	gratingParams, testContrast);\
-\
-	Error in sceneEngine/compute (line 37)\
-      dataOut = obj.sceneComputeFunction(obj, sceneContrast, obj.sceneParams);}
+}
