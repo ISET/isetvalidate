@@ -26,11 +26,13 @@ if exist('isetbioRootPath','file')
 end
 
 %% Make a scene and show some oiGets and oiCompute work
-scene = sceneCreate('gridlines',[1024 1024]);
-scene = sceneSet(scene,'fov',2);
+scene = sceneCreate('gridlines',[256 256]);
+scene = sceneSet(scene,'fov',1);
 oi = oiCreate('shift invariant');
 oi = oiCompute(oi,scene);
-oiPlot(oi,'illuminance mesh linear');
+
+oiWindow(oi);
+% oiPlot(oi,'illuminance mesh linear');
 
 %% Check GUI control
 oiWindow(oi); pause(0.2);
