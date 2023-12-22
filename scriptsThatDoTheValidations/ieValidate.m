@@ -1,11 +1,11 @@
 function ieValidate(repo,typeToRun,varargin)
 % Run all tutorials/scripts/validations for a repo and print out which worked and which did not
 %
-% NOTES:  
+% NOTES:
 %
 % * BW/ZL made various fixes for isetcam, iset3d.  But they are
-% not yet tested.  
-% 
+% not yet tested.
+%
 % * Also, there was a bug about finding the right subdirectory.  We
 % might have broken the path for isetbio?  But there does not appear
 % to be a 'validation' subdirectory anywhere.
@@ -18,7 +18,7 @@ function ieValidate(repo,typeToRun,varargin)
 %   Run all of the tutorials/scripts/validations for a specified repo
 %   and print out a report at the end as to whether they threw errors,
 %   or not.
-% 
+%
 %   The path to the tutorials is setup in the source of this routine, as
 %   are various strings that will cause something to be skipped if it is in
 %   the pathname (e.g., paths with 'development' are skipped).
@@ -78,8 +78,8 @@ p.parse(repo,typeToRun,varargin{:});
 % and the path to the tutorial directory under that path.
 %
 % I took a guess at the correct root path for iset3d and psych221
-availRepos = {'isetbio' 'isetcam', 'csfgenerator','iset3d','psych221'};
-repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', 'csfGeneratorRootPath','piRootPath','psych221RootPath'};
+availRepos = {'isetbio' 'isetcam', 'csfgenerator','iset3d','psych221','ptb'};
+repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', 'csfGeneratorRootPath','piRootPath','psych221RootPath',''};
 
 % Figure out where we want to go today
 knownRepo = false;
@@ -97,7 +97,7 @@ end
 % Choose the top level directory corresponding to the type of
 % validation.  For repo and validation type, we specify the
 % top level directory of the scripts to run, and the subdirectory
-% of that top level directory where the scripts are. 
+% of that top level directory where the scripts are.
 switch (availRepos{selectedRepoNum})
     case 'isetcam'
         switch (typeToRun)
@@ -156,18 +156,34 @@ switch (availRepos{selectedRepoNum})
         end
 
     case 'psych221'
-        case 'tutorials'
+        switch (typeToRun)
+            case 'tutorials'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'tutorials';
                 error('Not sure whether tutorials currently exist for psych221');
             case 'scripts'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'scripts';
-                error('Not sure whether tutorials urrently exist for psych221');
+                error('Not sure whether scripts currently exist for psych221');
             case 'validations'
                 topLevelDir = isetvalidateRootPath;
                 subDir = 'psych221';
-                topLevelDir = eval(isetvalidateRootPath);
+        end
+
+    case 'ptb'
+        switch (typeToRun)
+            case 'tutorials'
+                topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                subDir = 'tutorials';
+                error('Tutorials do not currently exist for ptb');
+            case 'scripts'
+                topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                subDir = 'scripts';
+                error('Scripts do not currently exist for ptb');
+            case 'validations'
+                topLevelDir = isetvalidateRootPath;
+                subDir = 'ptb';
+        end
 
     otherwise
         error('We do not know how to handle specified repo');
