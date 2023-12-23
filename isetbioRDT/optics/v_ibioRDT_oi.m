@@ -47,6 +47,10 @@ function ValidationFunction(runTimeParams)
         oiPlot(oi,'otf',[],450);
     end
     theOiPhotons = oiGet(oi,'photons');
+
+    % December, 2023. After wvfGet change.
+    assert(abs((mean(theOiPhotons(:))/1.7930e+14) - 1) < 1e-3);
+
     theTolerance = mean(theOiPhotons(:))*toleranceFraction;
     UnitTest.validationData('diffractionLimitedFromScenePhotons', theOiPhotons, ...
         'UsingTheFollowingVariableTolerancePairs', ...
@@ -61,6 +65,10 @@ function ValidationFunction(runTimeParams)
         oiPlot(oi,'psf',[],550);
     end
     theOiPhotons = oiGet(oi,'photons');
+    
+    % December, 2023. After wvfGet change.
+    assert(abs( mean(theOiPhotons(:))/6.9956e+13 - 1) < 1e-4);
+
     theTolerance = mean(theOiPhotons(:))*toleranceFraction;
     UnitTest.validationData('humanWVFFromScenePhotons', theOiPhotons, ...
         'UsingTheFollowingVariableTolerancePairs', ...

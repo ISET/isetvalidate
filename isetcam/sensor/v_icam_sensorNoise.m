@@ -103,11 +103,7 @@ title('Noise photon, clipping, quantization)')
 %
 scene = sceneCreate('grid lines');
 scene = sceneSet(scene,'fov',3);
-if ~exist('isetbioRootPath','file')
-    oi = oiCreate('wvf');   % Default optics
-else
-    oi = oiCreate('human mw');   % Default optics
-end
+oi = oiCreate('diffraction limited');   % Default optics
 
 oi = oiCompute(oi,scene);
 sensor = sensorCreate('bayer-rggb');
