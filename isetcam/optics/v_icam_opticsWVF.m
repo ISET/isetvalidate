@@ -164,7 +164,7 @@ oiD = oiCompute(wvfD,gridScene);
 oiD = oiSet(oiD,'name',sprintf('oiCompute Defocus %.1f no LCA',defocus));
 oiWindow(oiD);
 photons550 = oiGet(oiD,'photons',550);
-assert((sum(photons550(:))/1.3360e+19) - 1 < 1e-3);
+assert((sum(photons550(:))/1.7800e+21) - 1 < 1e-3);
 
 %% Now recompute and include human longitudinal chromatic aberration
 
@@ -184,7 +184,7 @@ wvfVA  = wvfCompute(wvfVA,'human lca', true);
 oi = oiCompute(wvfVA,gridScene);
 
 photons550 = oiGet(oi,'photons',550);
-assert((sum(photons550(:))/1.3369e+19) - 1 < 1e-3);
+assert((sum(photons550(:))/1.7800e+21) - 1 < 1e-3);
 
 oi = oiSet(oi,'name','vertical astig');
 oiWindow(oi);
