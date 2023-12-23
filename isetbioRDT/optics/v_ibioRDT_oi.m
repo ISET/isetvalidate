@@ -50,6 +50,8 @@ function ValidationFunction(runTimeParams)
 
     % December, 2023. After wvfGet change.
     assert(abs((mean(theOiPhotons(:))/1.7930e+14) - 1) < 1e-3);
+    assert(abs(oi.wAngular - 12.4822) < 1e-4);
+    assert(abs(oi.optics.focalLength - 0.0039) < 1e-4);
 
     theTolerance = mean(theOiPhotons(:))*toleranceFraction;
     UnitTest.validationData('diffractionLimitedFromScenePhotons', theOiPhotons, ...
@@ -68,7 +70,7 @@ function ValidationFunction(runTimeParams)
     
     % December, 2023. After wvfGet change.
     assert(abs( mean(theOiPhotons(:))/6.9956e+13 - 1) < 1e-4);
-
+    
     theTolerance = mean(theOiPhotons(:))*toleranceFraction;
     UnitTest.validationData('humanWVFFromScenePhotons', theOiPhotons, ...
         'UsingTheFollowingVariableTolerancePairs', ...
@@ -76,6 +78,11 @@ function ValidationFunction(runTimeParams)
 
     %% A simple case used for testing
     oi = oiCreate('uniform ee');
+
+    % The oi is created in a special way.  This might change, and if so we
+    % might have to change this test.
+    assert(abs(oi.optics.fNumber/1e-3 - 1) < 1e-3);
+
     oi = oiCompute(oi,scene,'pad value','mean');
     if (runTimeParams.generatePlots)
         oiPlot(oi,'psf',[],420);
