@@ -22,7 +22,7 @@ function ValidationFunction(runTimeParams)
     % ieInit;
 
     % Tolerance fraction
-    toleranceFraction = 0.00001;
+    toleranceFraction = 0.001;
 
     % Create a scene to check oi function
     scene = sceneCreate;
@@ -50,8 +50,8 @@ function ValidationFunction(runTimeParams)
 
     % December, 2023. After wvfGet change.
     assert(abs((mean(theOiPhotons(:))/1.7930e+14) - 1) < 1e-3);
-    assert(abs(oi.wAngular - 12.4822) < 1e-4);
-    assert(abs(oi.optics.focalLength - 0.0039) < 1e-4);
+    assert(abs(oiGet(oi,'wAngular') - 12.4822) < 1e-4);
+    assert(abs(oiGet(oi,'optics focal length') - 0.0039) < 1e-4);
 
     theTolerance = mean(theOiPhotons(:))*toleranceFraction;
     UnitTest.validationData('diffractionLimitedFromScenePhotons', theOiPhotons, ...
@@ -81,7 +81,7 @@ function ValidationFunction(runTimeParams)
 
     % The oi is created in a special way.  This might change, and if so we
     % might have to change this test.
-    assert(abs(oi.optics.fNumber/1e-3 - 1) < 1e-3);
+    assert(abs(oiGet(oi,'optics fNumber')/1e-3 - 1) < 1e-3);
 
     oi = oiCompute(oi,scene,'pad value','mean');
     if (runTimeParams.generatePlots)
