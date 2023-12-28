@@ -77,12 +77,13 @@ function ValidationFunction(runTimeParams)
         'humanWVFFromScenePhotons', theTolerance);    
 
     %% A simple case used for testing
-    oi = oiCreate('uniform ee');
+    [oi, scene] = oiCreate('uniform ee',128);
 
     % The oi is created in a special way.  This might change, and if so we
     % might have to change this test.
     assert(abs(oiGet(oi,'optics fNumber')/1e-3 - 1) < 1e-3);
 
+    % With the new oi compute, we have slight differences at the edge.
     oi = oiCompute(oi,scene,'pad value','mean');
     if (runTimeParams.generatePlots)
         oiPlot(oi,'psf',[],420);
