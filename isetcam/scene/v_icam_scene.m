@@ -11,7 +11,6 @@ s_sceneDemo;
 s_sceneExamples;
 s_sceneChangeIlluminant;
 s_sceneIncreaseSize
-s_sceneFromRGB
 s_sceneHCCompress
 
 % Check GUI control

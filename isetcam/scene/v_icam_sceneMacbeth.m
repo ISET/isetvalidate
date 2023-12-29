@@ -7,33 +7,45 @@
 %%
 ieInit
 
+fprintf('Validating macbeth scenes ...')
+
 %% Default and empty
 patchSize = 32; wave = 500:5:600;
 scene = sceneCreate('default',patchSize,wave);
-ieAddObject(scene); sceneWindow;
+% ieAddObject(scene); sceneWindow;
 assert(isequal(scene.spectrum.wave,500:5:600),'Bad default scene create');
 
 scene = sceneCreate('empty',[],400:2:700);
 assert(isequal(scene.spectrum.wave,400:2:700),'Bad empty scene create');
 
 %% Macbeth cases
+
 scene = sceneCreate('macbeth d65');
-ieAddObject(scene); sceneWindow;
+tmp = sceneGet(scene,'photons');
+assert(sum(tmp(:))/7.1660e+20 - 1 < 1e-5);
 
 scene = sceneCreate('macbeth d50');
-ieAddObject(scene); sceneWindow;
+tmp = sceneGet(scene,'photons');
+assert(sum(tmp(:))/7.3033e+20 - 1 < 1e-5);
 
 scene = sceneCreate('macbeth c');
-ieAddObject(scene); sceneWindow;
+tmp = sceneGet(scene,'photons');
+assert(sum(tmp(:))/7.3973e+20 - 1 < 1e-5);
+
 
 scene = sceneCreate('macbeth tungsten');
-ieAddObject(scene); sceneWindow;
+tmp = sceneGet(scene,'photons');
+assert(sum(tmp(:))/8.2817e+20 - 1 < 1e-5);
 
 scene = sceneCreate('macbeth fluorescent');
-ieAddObject(scene); sceneWindow;
+tmp = sceneGet(scene,'photons');
+assert(sum(tmp(:))/4.7760e+20 - 1 < 1e-5);
 
-%% IR case
 wave = 390:900;
 scene = sceneCreate('macbeth equal energy infrared',[],wave);
-ieAddObject(scene); sceneWindow;
+% ieAddObject(scene); sceneWindow;
 assert(isequal(scene.spectrum.wave,390:900),'Bad IR scene create');
+
+fprintf('done\n');
+
+%% END
