@@ -2,16 +2,14 @@
 %
 % Scripts related to scenes
 %
-% BW:
-% Checked with the new app design implementation.  Runs as of 08.16.2020.
-%
 
 %%
-s_sceneDemo;
-s_sceneExamples;
-s_sceneChangeIlluminant;
-s_sceneIncreaseSize
-s_sceneHCCompress
+delay = 0.2;
+s_sceneDemo; pause(delay);
+s_sceneExamples; pause(delay);
+s_sceneChangeIlluminant; pause(delay);
+s_sceneIncreaseSize; pause(delay);
+s_sceneHCCompress; pause(delay);
 
 % Check GUI control
 sceneWindow;

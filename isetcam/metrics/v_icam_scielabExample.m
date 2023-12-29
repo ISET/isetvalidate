@@ -53,10 +53,11 @@ colorbar;
 
 % Show the RGB images as scenes. This illustrates how the RGB data were
 % converted to SPDs using the calibrated display
-vcAddAndSelectObject(scene1);
-vcAddAndSelectObject(scene2);sceneWindow;
+% {
+% sceneWindow(scene1); sceneWindow(scene2);
+ieAddObject(scene1); ieAddObject(scene2);
 imageMultiview('scene',[1 2],false);
-
+%}
 
 %% Illustrate the processing within the routine, showing explicit calls.
 

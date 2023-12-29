@@ -210,6 +210,13 @@ scriptsToSkip = {...
     };
 
 %% Use UnitTestToolbox method to do this.
+
+% Do not show all those little progress bars.  It slows things down.
+
+% wbarFlag = ieSessionGet('wait bar');
+% ieSessionSet('wait bar',0);
+
 UnitTest.runProjectTutorials(p, scriptsToSkip, 'All');
 
+% ieSessionSet('wait bar',wbarFlag);
 end
