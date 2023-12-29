@@ -5,8 +5,6 @@
 
 %%
 delay = 0.2;
-s_sceneDemo; pause(delay);
-s_sceneExamples; pause(delay);
 s_sceneChangeIlluminant; pause(delay);
 s_sceneIncreaseSize; pause(delay);
 s_sceneHCCompress; pause(delay);
