@@ -11,9 +11,9 @@
 ieInit;
 
 %% A simple test scene
-
 scene = sceneCreate('point array',128,32);
 scene = sceneSet(scene,'fov',1);
+wave = sceneGet(scene,'wave');
 
 %% Experiment with different wavefronts
 
@@ -21,6 +21,7 @@ wvf = wvfCreate;    % Default wavefront 5.67 fnumber
 pupilMM = 3; flengthM = 7e-3;
 wvf = wvfSet(wvf,'calc pupil diameter',pupilMM);
 wvf = wvfSet(wvf,'focal length',flengthM);
+wvf = wvfSet(wvf,'wave',wave);
 
 % Now create some flare based on the aperture, dust and scratches.
 % There are many parameters for this function, including dot mean, line
@@ -32,27 +33,25 @@ aperture = wvfAperture(wvf,'nsides',nsides,...
 % ieNewGraphWin; imagesc(aperture); axis image;
 
 % This does not yet work.
+plotWave = 600;
 wvf = wvfCompute(wvf,'aperture',aperture);
-
-wvfPlot(wvf,'psf','unit','um','plot range',20,'airy disk',true);
+wvfPlot(wvf,'psf','unit','um','plot range',20,'airy disk',true,'wave',plotWave);
 
 ieNewGraphWin([], 'wide');
-subplot(1,3,1); wvfPlot(wvf,'image pupil amp','unit','um','window',false);
-subplot(1,3,2); wvfPlot(wvf,'image pupil phase','unit','um','window',false);
-subplot(1,3,3); wvfPlot(wvf,'image wavefront aberrations','unit','um','window',false);
+subplot(1,3,1); wvfPlot(wvf,'image pupil amp','unit','um','window',false,'wave',plotWave);
+subplot(1,3,2); wvfPlot(wvf,'image pupil phase','unit','um','window',false,'wave',plotWave);
+subplot(1,3,3); wvfPlot(wvf,'image wavefront aberrations','unit','um','window',false,'wave',plotWave);
 
 %% Convert to an OI
-
 oi = wvf2oi(wvf);
 [uData, fig] = oiPlot(oi,'psf 550');
 
 psfPlotrange(fig,oi);
 thisWave = wvfGet(wvf,'wave');
-AD = airyDisk(thisWave,wvfGet(wvf,'fnumber'),'diameter',true);
-title(sprintf("fNumber %.2f Wave %.0f Airy Diam %.2f",oiGet(oi,'optics fnumber'),thisWave,AD));
+AD = airyDisk(plotWave,wvfGet(wvf,'fnumber'),'diameter',true);
+title(sprintf("fNumber %.2f Wave %.0f Airy Diam %.2f",oiGet(oi,'optics fnumber'),plotWave,AD));
 
 %% oiCompute using the wvf
-
 oi = oiCompute(wvf,scene);
 
 % Show the oi PSF
