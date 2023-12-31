@@ -36,7 +36,7 @@ ieInit;
 % First, calculate using the wvf code base.
 
 wvf = wvfCreate;
-thisWave = wvfGet(wvf,'wave');
+wvfWave = wvfGet(wvf,'wave');
 
 % Set aribtrarily
 fLengthMM = 10; fLengthM = fLengthMM*1e-3; fNumber = 3;
@@ -49,7 +49,6 @@ wvfPlot(wvf,'psf','unit','um','plot range',pRange,'airy disk',true);
 title(sprintf('Calculated pupil diameter %.1f mm',pupilMM));
 
 %% Compare wvf and oi methods directly
-
 wvfData = wvfPlot(wvf,'psf xaxis','unit','um','plot range',10);
 
 % Convert to OI and plot the same slice.
@@ -62,6 +61,7 @@ legend({'wvf','Airy','oi'});
 
 % Checksum
 assert(abs(sum(uData.data(:)) - 0.157166317909746) < 1e-3);
+
 %% Get the otf data from the OI and WVF computed two ways
 
 % Compare the two OTF data sets directly.
@@ -82,7 +82,6 @@ title('OTF: oi converted to wvf')
 assert(real(sum(oiOTFS(:))) / 1.085e+03 - 1 < 1e-3)
 
 %% Now, make a multispectral wvf and convert it to ISET OI format
-
 wave = linspace(400,700,4);
 pupilMM = 3;   % Could be 6, 4.5, or 3
 fLengthM = 17e-3;
@@ -91,6 +90,7 @@ fLengthM = 17e-3;
 wvf  = wvfCreate('wave',wave,'name',sprintf('%dmm-pupil',pupilMM));
 wvf  = wvfSet(wvf,'calc pupil diameter',pupilMM);
 wvf  = wvfSet(wvf,'focal length',fLengthM);  % 17 mm focal length for deg per mm
+wvfWave = wvfGet(wvf,'wave');
 
 % Calculate without human LCA
 wvf  = wvfCompute(wvf,'human lca',false);
@@ -114,7 +114,6 @@ for ii=1:numel(wave)
 end
 
 %%  Show that the diffraction limited OTFs differ by wavelength
-
 ieNewGraphWin([],'wide');
 otf = oiPlot(oi,'otf',[],wave(1),'mm','no window');
 subplot(1,2,1); mesh(otf.fx,otf.fy,abs(otf.otf));
@@ -124,8 +123,8 @@ subplot(1,2,2); mesh(otf.fx,otf.fy,abs(otf.otf));
 title(sprintf('Wave: %d',wave(end)));
 
 %% Compute with the oi and the wvf
-
 gridScene = sceneCreate('grid lines',384,128);
+gridScene = sceneSet(gridScene,'wave',wvfWave);
 gridScene = sceneSet(gridScene,'hfov',1);
 % sceneWindow(gridScene);
 
@@ -147,13 +146,13 @@ plot(photons1(:),photons2(:),'.');
 identityLine; grid on; xlabel('oiCompute'); ylabel('wvfApply');
 
 %% Setting a defocus on the wvf structure
-
 defocus = 1;  % Diopters
 wvfD = wvfSet(wvf,'zcoeff',defocus,'defocus');
 
 wvfD = wvfCompute(wvfD,'human lca',false);
 pRange = 20;
-wvfPlot(wvfD,'psf','unit','um','wave',thisWave,'plot range',pRange);
+plotWave = 700;
+wvfPlot(wvfD,'psf','unit','um','wave',plotWave,'plot range',pRange);
 title(sprintf('Defocus %.1f D',defocus));
 psf500 = wvfGet(wvfD,'psf',500);
 assert(abs(max(psf500(:)) - 0.0017609) < 1e-6);
