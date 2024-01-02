@@ -10,15 +10,9 @@
 %  scenePlotTest
 %
 
-%%
-delay = 0.2;
-s_sceneIncreaseSize; pause(delay);
-s_sceneHCCompress; pause(delay);
-
 %% Check GUI control
-sceneWindow;
-scene = ieGetObject('scene');
-
+scene = sceneCreate;
+sceneWindow(scene);
 sceneSet(scene,'gamma',0.5);
 sceneSet(scene,'gamma',1);
 
@@ -26,4 +20,5 @@ sceneSet(scene,'gamma',1);
 scene = sceneCombine(sceneCreate,sceneCreate,'direction','horizontal');
 sceneWindow(scene);
 
+%%
 

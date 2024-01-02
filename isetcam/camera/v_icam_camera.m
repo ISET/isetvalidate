@@ -8,10 +8,13 @@ ieInit
 
 %% Test that 'ideal' cameraCreate works
 c = cameraCreate('ideal');
+
 assert(cameraGet(c,'sensor noise flag') == 1);
 assert(cameraGet(c,'sensor nfilters') == 1);
+
 fprintf('Ideal noise flag %d. Nfilters = %d\n',...
-    cameraGet(c,'sensor noise flag'),cameraGet(c,'sensor nfilters'));
+    cameraGet(c,'sensor noise flag'), ...
+    cameraGet(c,'sensor nfilters'));
 
 %% Test cameraCreate for 'current'
 oi     = oiCreate;
@@ -28,10 +31,11 @@ ieAddObject(sensor);
 
 %% These should be the names of the objects built aboves
 c = cameraCreate('current');
+
 assert(strncmp(cameraGet(c,'sensor name'),'human',5));
 assert(cameraGet(c,'optics fnumber')  == 22);   % 22
 assert(cameraGet(c,'sensor noise flag') == noiseFlag); % 2
-cameraGet(c,'pixel size','um')   % 1.5 um
+assert(isequal(cameraGet(c,'pixel size','um'),[1.5 1.5]));
 
 % Nothing to see
 % cameraWindow(c);

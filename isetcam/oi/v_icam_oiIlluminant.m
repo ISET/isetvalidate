@@ -10,6 +10,9 @@
 
 %%
 ieInit;
+tolerance = 1e-6;
+
+%%
 scene = sceneCreate;
 oi = oiCreate;
 oi = oiCompute(oi, scene);
@@ -24,15 +27,18 @@ assert(isequal(thisI,testI));
 sz = oiGet(oi,'size');
 [X,Y] = meshgrid(1:sz(2),1:sz(1));
 oi = oiIlluminantSS(oi,X);
-oiGet(oi,'illuminant format')
+assert(isequal(oiGet(oi,'illuminant format'),'spatial spectral'));
 
 %%
 illuPhoton = oiGet(oi, 'illuminant photons');
 illuName = oiGet(oi, 'illuminant name');
 illuWave = oiGet(oi, 'illuminant wave');
 rgb = imageSPD(illuPhoton, illuWave);
-oiPlot(oi, 'illuminant image');
+assert(abs( mean(double(rgb(:)))/0.667954238028162 - 1 )< tolerance);
 
+%%
+uData = oiPlot(oi, 'illuminant image');
+assert(abs(mean(double(uData.srgb(:)))/0.693425079000493 - 1) < tolerance);
 
 %% END
 
