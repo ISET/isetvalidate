@@ -22,7 +22,7 @@ function ValidationFunction(runTimeParams)
     % ieInit;
 
     % Tolerance fraction
-    toleranceFraction = 0.001;
+    toleranceFraction = 0.0001;
 
     % Create a scene to check oi function
     scene = sceneCreate;
@@ -77,7 +77,7 @@ function ValidationFunction(runTimeParams)
         'humanWVFFromScenePhotons', theTolerance);    
 
     %% A simple case used for testing
-    [oi, scene] = oiCreate('uniform ee',128);
+    oi = oiCreate('uniform ee');
 
     % The oi is created in a special way.  This might change, and if so we
     % might have to change this test.
