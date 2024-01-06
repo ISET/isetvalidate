@@ -45,7 +45,7 @@ mn = mean(eImage(:));
 % 1.5118 rather than 1.849.  Not sure why.  Other numbers below changed a
 % little also.  I presume we have slightly different display numbers
 % interpolated.
-% assert(abs(mn - 1.5118) < 0.01,'Mean error image is off');
+assert(abs(mn - 1.5118) < 0.01,'Mean error image is off');
 
 % Show the error image
 ieNewGraphWin; imagesc(eImage)
@@ -55,8 +55,8 @@ colorbar;
 % converted to SPDs using the calibrated display
 % {
 % sceneWindow(scene1); sceneWindow(scene2);
-ieAddObject(scene1); ieAddObject(scene2);
-imageMultiview('scene',[1 2],false);
+% ieAddObject(scene1); ieAddObject(scene2);
+% imageMultiview('scene',[1 2],false);
 %}
 
 %% Illustrate the processing within the routine, showing explicit calls.
@@ -112,9 +112,10 @@ params.filters = [];
 [errorImage, params] = scielab(img1XYZ, img2XYZ, whiteXYZ, params);
 
 % Here is the mean spatial CIELAB deltaE
-mean(errorImage(:))
+assert(abs(mean(errorImage(:)) - 1.829381209867864) < 1e-3);
 
 %% Examining and interpreting the results.
+%{
 ieNewGraphWin;
 imagesc(errorImage);
 colorbar('vert');
@@ -123,9 +124,10 @@ title('S-CIELAB error map')
 ieNewGraphWin;
 histogram(errorImage(:),100)
 title('S-CIELAB delta E histogram')
-
+%}
 %% Examine the SCIELAB spatial filters
 
+%{
 f = ieNewGraphWin;
 filters = params.filters;   %
 support = params.support;   % Degress
@@ -135,7 +137,7 @@ for ii=1:3
     set(gca,'zlim',[-(mx/10) mx]);
     xlabel('Deg'), ylabel('Deg');
 end
-
+%}
 %% Overlay the image edges and the largest SCIELAB errors
 
 % If you have the image processing toolbox, you can find out where the
