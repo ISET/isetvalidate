@@ -40,7 +40,12 @@ title(sprintf('%s: Channel image histogram',fname))
 
 %% Now call ieHistImage, which relies on histcn
 
-img = ieHistImage(X,'hist type','histcn');
+ieHistImage(unique(X,'rows'),'hist type','histcn');
 
 %%
-img = ieHistImage(X,'hist type','scatplot');
+ieHistImage(unique(X,'rows'),'hist type','scatplot');
+
+%% END
+
+%%
+drawnow
