@@ -212,11 +212,19 @@ scriptsToSkip = {...
 %% Use UnitTestToolbox method to do this.
 
 % Do not show all those little progress bars.  It slows things down.
-
 % wbarFlag = ieSessionGet('wait bar');
 % ieSessionSet('wait bar',0);
 
+% Clear the variables on an ieInit when running the ieValidate.  Otherwise
+% we accumulate tons of unwanted variables.  I will be putting ieInit at
+% the head of most of the validation scripts.
+initClear = ieSessionGet('init clear');
+ieSessionSet('init clear',true);
+
 UnitTest.runProjectTutorials(p, scriptsToSkip, 'All');
+
+% Restore
+ieSessionSet('init clear',initClear);
 
 % ieSessionSet('wait bar',wbarFlag);
 end
