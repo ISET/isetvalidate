@@ -71,3 +71,6 @@ assert( abs(mean(srgb(:))-0.5488235) < 1e-2);
 % cameraWindow(camera,'sensor');
 
 %%
+drawnow;
+
+%%

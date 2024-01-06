@@ -19,6 +19,7 @@ sceneSet(scene,'gamma',1);
 %% Check sceneCombine
 scene = sceneCombine(sceneCreate,sceneCreate,'direction','horizontal');
 sceneWindow(scene);
+drawnow;
 
 %%
 

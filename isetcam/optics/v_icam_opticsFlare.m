@@ -90,4 +90,7 @@ if exist('piFlareApply','file')
     oiSet(oiApply,'gamma',0.5); drawnow;
 end
 
+%%
+drawnow;
+
 %% END

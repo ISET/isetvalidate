@@ -93,4 +93,7 @@ assert( abs(mean(dES(:)) - 5.574721542812232) < 1e-2);
 % s = 2; hsh = s * round(dES/s);
 % assert(isequal(md5(sprintf('%s',hsh)),'00347c470fdb59dc96ddf0e53797b46a'))
 
+%%
+drawnow;
+
 %% End

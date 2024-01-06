@@ -187,4 +187,7 @@ assert(abs(mtf.mtf50 - 77) <= 3);
 % ipWindow(ip);
 % h = ieDrawShape(ip,'rectangle',mtf.rect);
 
+%%
+drawnow;
+
 %% END

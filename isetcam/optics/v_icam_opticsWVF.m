@@ -193,4 +193,7 @@ for ii = 1:numel(testWave)
     oiPlot(oi,'psf',[],testWave(ii)); 
 end
 
+%%
+drawnow;
+
 %% END

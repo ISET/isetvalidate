@@ -47,3 +47,5 @@ t = var(pNoise(:))/mean(pMean(:));
 fprintf('Should be near 1:  %f\n',t);
 % assert(abs(t - 1) < 0.1)
 
+%%
+drawnow;

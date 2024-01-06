@@ -124,3 +124,6 @@ ylabel('Estimated');
 assert( abs(mean(cFilters(:))/0.273934849542002 )  - 1 < 1e-3,'Estimated filter test.');
 
 %%
+drawnow;
+
+%%

@@ -54,4 +54,6 @@ oi = oiCompute(oi,scene);
 p = oiGet(oi,'photons');
 assert( (mean(p(:)/1.180227521409805e+14) - 1) < tolerance);
 
+%%
+drawnow;
 %% End

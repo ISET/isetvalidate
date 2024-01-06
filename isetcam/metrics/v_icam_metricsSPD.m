@@ -77,4 +77,7 @@ grid on;
 assert(abs(miredval(end) - 12.0726) < 1e-4);
 assert(abs(angval(end) - 2.6800) < 1e-4);
 
+%%
+drawnow;
+
 %% END

@@ -199,4 +199,7 @@ assert(abs(MeanAbove2 - 2.92) < 0.1,'Mean above differs more than it should');
 % little, probably because of the display data.
 assert(abs(35.9649 - percent) < 0.1,'Percent differs more than it should');
 
+%%
+drawnow;
+
 %% End

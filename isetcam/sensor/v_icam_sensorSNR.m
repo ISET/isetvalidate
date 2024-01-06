@@ -143,5 +143,7 @@ semilogx(volts,SNRprnu,'r-',...
     volts,SNRshot,'g-');
 grid on; ylabel('SNR (db)'); xlabel('Volts')
 legend({'PRNU','DSNU','Read','Shot'},'Location','north')
+%%
+drawnow;
 
 %% END

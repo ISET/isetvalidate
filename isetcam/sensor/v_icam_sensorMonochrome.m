@@ -25,4 +25,7 @@ sensorWindow(sensor);
 
 ip = ipCompute(ip,sensor); ieAddObject(ip); ipWindow;
 
+%%
+drawnow;
+
 %% END

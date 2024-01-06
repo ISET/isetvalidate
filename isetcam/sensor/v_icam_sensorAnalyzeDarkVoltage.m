@@ -101,4 +101,7 @@ fprintf('---------------------------\n')
 
 assert(abs(darkVoltageEstimate - trueDV) < trueDV*1e-2,'Bad dark voltage estimate');
 
+%%
+drawnow;
+
 %% END

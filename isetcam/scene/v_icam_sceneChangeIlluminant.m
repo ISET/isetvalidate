@@ -17,7 +17,7 @@
 % Copyright ImagEval Consultants, LLC, 2010.
 
 %%
-ieInit
+ieInit;
 tolerance = 1e-6;
 msg = 'sceneChangeIlluminant failure.';
 %% Create a default scene
@@ -70,4 +70,8 @@ scene = sceneAdjustIlluminant(scene,'illHorizon-20180220.mat');
 % sceneWindow(scene); pause(delay);
 photons = sceneGet(scene,'photons');
 assert(mean(photons(:))/11.532888329013328e+15 - 1 < tolerance,msg)
+
+%%
+drawnow;
+
 %%
