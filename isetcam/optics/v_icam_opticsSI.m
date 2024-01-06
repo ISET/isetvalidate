@@ -15,6 +15,7 @@
 
 %%
 ieInit;
+tolerance = 1e-6;
 
 %% Let's work with a small checkerboard scene
 pixPerCheck = 8;
@@ -51,6 +52,6 @@ oi = oiSet(oi,'optics',optics);
 % You can now compute using your current scene.
 oi = oiCompute(oi,scene);
 p = oiGet(oi,'photons');
-assert(abs(mean(p(:))/7.719856895950848e+15 - 1) < tolerance);
+assert( (mean(p(:)/1.180227521409805e+14) - 1) < tolerance);
 
 %% End

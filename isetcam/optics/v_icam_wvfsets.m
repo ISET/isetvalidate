@@ -45,7 +45,7 @@ assert(abs(fLength/4 - wvfGet(wvf,'calc pupil diameter','mm')) < 1e-4);
 
 %% The default OI has an f number of 4 and focal length of 3.9 mm
 
-[oi, wvf] = oiCreate('diffraction limited');
+[oi, wvf] = oiCreate('wvf');
 
 assert( abs(oiGet(oi,'optics fnumber') - wvfGet(wvf,'fnumber')) < 1e-5);
 assert( abs(oiGet(oi,'optics focal length','mm') - wvfGet(wvf,'focal length','mm')) < 1e-5);
