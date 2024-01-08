@@ -52,7 +52,7 @@ end
 % that differ from those in the scene. 
 scene = sceneCreate;
 scene = sceneSet(scene,'wavelength',550);
-oi = oiCreate('diffraction');
+oi = oiCreate('diffractionlimited');
 oi = oiCompute(oi,scene,'pad value','mean');
 wavelengths3 = 400:10:500;
 transmittance3 = oiGet(oi,'optics transmittance',wavelengths3);
