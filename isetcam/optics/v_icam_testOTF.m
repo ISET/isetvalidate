@@ -52,8 +52,8 @@ function testOTF
         %% Retrieve the spatial frequency support. This is in cycles/micron
         OTFsupport = opticsGet(optics,'otf support', 'um');
         
-        otf_sfXInCyclesPerMicron = OTFsupport{1};
-        otf_sfYInCyclesPerMicron = OTFsupport{2};
+        otf_sfXInCyclesPerMicron = OTFsupport.fx;
+        otf_sfYInCyclesPerMicron = OTFsupport.fy;
         
         %% Convert to cycles/deg.
         % In human retina, 1 deg of visual angle is about 288 microns

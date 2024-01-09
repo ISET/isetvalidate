@@ -21,7 +21,7 @@
 % (c) Wavefront Toolbox Team, 2012 (bw)
 
 %% Initialize and set parameters
-s_initISET
+ieInit;
 
 % Ranges for plotting
 maxMIN = 2;
@@ -38,13 +38,13 @@ nWave = wvfGet(wvfP,'n wave');
 wList = wvfGet(wvfP,'wave');
 
 %% Compute and plot the default
-wvfParams = wvfComputePSF(wvfP);
+wvfParams = wvfCompute(wvfP,'humanlca',false);
 
 %% Plot the series of lines
 f = vcNewGraphWin([],'tall');
 for ii=1:nWave
     subplot(nWave,1,ii)
-    [f,p] = wvfPlot(wvfParams,'1d psf space','um',wList(ii),maxUM,'no fig');
+    [f,p] = wvfPlot(wvfParams,'image psf','unit','um','wave',wList(ii),'plotrange',maxUM,'window',false);
     title(sprintf('wave %d',wList(ii)));
 end
 
@@ -55,7 +55,7 @@ end
 vcNewGraphWin([],'tall');
 for ii=1:nWave
     subplot(nWave,1,ii)
-    wvfPlot(wvfParams,'image psf ','um',wList(ii),maxUM,'no fig');
+    wvfPlot(wvfParams,'image psf','unit','um','wave',wList(ii),'plotrange',maxUM,'window',false);
     title(sprintf('wave %d',wList(ii)));
 end
 
