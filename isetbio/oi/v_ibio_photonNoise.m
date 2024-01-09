@@ -41,5 +41,5 @@ pNoise = noisyPhotons(:,:,10) - photons(:,:,10);
 % This should be close to 1
 t = var(pNoise(:))/mean(pMean(:));
 sprintf('Should be near 1:  %f\n',t)
-% assert(abs(t - 1) < 0.1)
+assert(abs(t - 1) < 0.1)
 

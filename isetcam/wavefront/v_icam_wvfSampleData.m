@@ -32,13 +32,16 @@
 % (c) Wavefront Toolbox Team, 2012 (bw)
 
 %% Initialize
-s_initISET
+ieInit;
+
 maxMIN = 6;
 
 %% Use Heidi Hofer's sample data here
 
 % Set values in millimeters
 wvfP = wvfCreate('measured pupil',6,'calculated pupil',3);
+wvfP = wvfCompute(wvfP,'humanlca',true);
+
 wList = wvfGet(wvfP,'wave');
 
 % Sample data
@@ -65,23 +68,24 @@ for ii = 1:nSubjects
     
     % Compute the diffraction limited version of the PSF
     wvfP = wvfSet(wvfP,'zcoeffs',zeros(61,1));
-    wvfP = wvfComputePSF(wvfP);
+    wvfP = wvfCompute(wvfP,'humanlca',true);
+
     % Diffraction limited
-    udataD = wvfPlot(wvfP,'1d psf angle','min',wList,maxMIN);
+    udataD = wvfPlot(wvfP,'1d psf angle','unit','min','wave',wList,'plotrange',maxMIN);
     hold on;
     
     % Now, set it up for the typical subject
     wvfP = wvfSet(wvfP,'zcoeffs',theZernikeCoeffs(:,ii));
-    wvfP = wvfComputePSF(wvfP);
+    wvfP = wvfCompute(wvfP,'humanlca',true);
     
-    [udataS, pData] = wvfPlot(wvfP,'1d psf angle','min',wList,maxMIN,'no fig');
+    [udataS, pData] = wvfPlot(wvfP,'1d psf angle','unit','min','wave',wList,'plotrange',maxMIN,'window',false);
     set(pData,'color','b');
     hold on;
     
     strehlDirect = max(udataS.y(:))/max(udataD.y(:));
     fprintf('Strehl ratio with no defocus:  %.3f\n',strehlDirect);
     
-    wvfPlot(wvfP,'2d psf space','um',wList,20);
+    wvfPlot(wvfP,'image psf','unit','um','wave',wList,'plotrange',20);
     
 end
 
