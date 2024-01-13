@@ -36,12 +36,13 @@ ieInit;
 % First, calculate using the wvf code base.
 
 wvf = wvfCreate;
-wvfWave = wvfGet(wvf,'wave');
+% wvfWave = wvfGet(wvf,'wave');
 
 % Set aribtrarily
-fLengthMM = 10; fLengthM = fLengthMM*1e-3; fNumber = 3;
+fLengthMM = 10; 
+fNumber = 3;
 pupilMM = fLengthMM/fNumber;
-wvf = wvfSet(wvf,'focal length',fLengthM);
+wvf = wvfSet(wvf,'focal length',fLengthMM);
 wvf  = wvfCompute(wvf,'human lca', false);
 
 pRange = 10;  % Microns
@@ -84,12 +85,12 @@ assert(real(sum(oiOTFS(:))) / 1.085e+03 - 1 < 1e-3)
 %% Now, make a multispectral wvf and convert it to ISET OI format
 wave = linspace(400,700,4);
 pupilMM = 3;   % Could be 6, 4.5, or 3
-fLengthM = 17e-3;
+fLengthMM = 17;
 
 % Create the multispectral wvf
 wvf  = wvfCreate('wave',wave,'name',sprintf('%dmm-pupil',pupilMM));
 wvf  = wvfSet(wvf,'calc pupil diameter',pupilMM);
-wvf  = wvfSet(wvf,'focal length',fLengthM);  % 17 mm focal length for deg per mm
+wvf  = wvfSet(wvf,'focal length',fLengthMM);  % 17 mm focal length for deg per mm
 wvfWave = wvfGet(wvf,'wave');
 
 % Calculate without human LCA
@@ -190,8 +191,12 @@ oiWindow(oi);
 
 testWave = [450,550];
 for ii = 1:numel(testWave)
-    oiPlot(oi,'psf',[],testWave(ii)); 
+    uData = oiPlot(oi,'psf',[],testWave(ii));
+    set(gca,'xlim',[-20 20],'ylim',[-20 20]);
 end
+% The 550 nm PSF max ...
+assert(abs(max(uData.psf(:)) - 0.0145) < 1e-3)
+assert(abs(max(uData.x(:)) - 188.1156) < 1e-3)
 
 %%
 drawnow;
