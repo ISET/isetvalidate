@@ -3,7 +3,8 @@ function validateRDTSetup
 % RDT validations.
 
 % Edit this to point at where you put your validation data file
-whereIPutTheUnzippedFile = '/Users/dhb/Desktop/ISETBioValidationFiles';
+whereIPutTheUnzippedFile = fullfile(isetvalidateRootPath,'local','ISETBioValidationFiles');
+% whereIPutTheUnzippedFile = '/Users/dhb/Desktop/ISETBioValidationFiles';
 
 % Point at the validation data and other setup.  You should not have to
 % edit this.
