@@ -4,6 +4,8 @@ function validateRDTSetup
 
 % Edit this to point at where you put your validation data file
 whereIPutTheUnzippedFile = fullfile(isetvalidateRootPath,'local','ISETBioValidationFiles');
+fprintf('Assuming validation data files are in %s',whereIPutTheUnzippedFile);
+
 % whereIPutTheUnzippedFile = '/Users/dhb/Desktop/ISETBioValidationFiles';
 
 % Point at the validation data and other setup.  You should not have to
