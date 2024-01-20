@@ -35,7 +35,10 @@ weights = [zeros(1, 5), stimWeights, zeros(1, 5)];
 hparams(1) = harmonicP;
 hparams(2) = hparams(1); hparams(2).contrast = 0;
 sparams.fov = 0.3;
+
+% oisCreate was made to use the opticsOTF method.
 ois = oisCreate('harmonic','blend',weights, 'testParameters',hparams,'sceneParameters',sparams);
+
 % ois.visualize('movie illuminance');
 
 % Assert values from December 22, 2017 (DHB)

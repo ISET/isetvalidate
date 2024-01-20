@@ -60,7 +60,8 @@ function ValidationFunction(runTimeParams)
 
     %% Wavefront (Thibos) human optics
     oi = oiCreate('wvf human');
-    %oi = oiSet(oi,'focal length',)
+    % Adjustment to use OTF method.  This passes
+    oi = oiSet(oi,'optics name','opticsotf');  
     oi = oiCompute(oi,scene,'pad value','mean');
     if (runTimeParams.generatePlots)
         oiPlot(oi,'psf',[],420);
