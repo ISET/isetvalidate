@@ -6,6 +6,13 @@
 % See also
 %   s_assetsRecipe, piAssetLoad, piRecipeMerge, piDirGet
 
+%{
+Failed as of Jan 25, 2024.
+head.mat
+mccCB.mat
+plane.mat
+%}
+
 %% Initialize ISETCam and ISET3d-V4
 ieInit;
 if ~piDockerExists, piDockerConfig; end
@@ -89,4 +96,8 @@ tmp = assetNames(~status);
 for ii=1:numel(tmp)
     fprintf('%s\n',tmp{ii});
 end
+
+%%
+assert(isempty(tmp));
+
 %%
