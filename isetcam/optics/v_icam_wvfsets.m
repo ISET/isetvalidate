@@ -1,5 +1,6 @@
 %% v_icam_wvfsets
 %
+% Requires having isetLens on your path
 
 %% Test focal length and fnumber wvfSets/Gets
 
@@ -52,38 +53,42 @@ assert( abs(oiGet(oi,'optics focal length','mm') - wvfGet(wvf,'focal length','mm
 
 %% Test from ISETBio validate via DHB
 
-pupilDiamMm = 3;
-theOI = oiCreate('wvf human', pupilDiamMm);
+if ~isempty(which('isetbioRootPath'))
 
-assert(abs(pupilDiamMm - oiGet(theOI,'optics pupil diameter','mm')) < 1e-5)
+    pupilDiamMm = 3;
+    theOI = oiCreate('wvf human', pupilDiamMm);
 
-% This is the distance we should set the focal length to be in perfect
-% focus for the scene.  Not exactly the focal length.
-% focalLength = oiGet(theOI, 'distance');
+    assert(abs(pupilDiamMm - oiGet(theOI,'optics pupil diameter','mm')) < 1e-5)
 
-focalLength = oiGet(theOI,'optics focal length','mm');
+    % This is the distance we should set the focal length to be in perfect
+    % focus for the scene.  Not exactly the focal length.
+    % focalLength = oiGet(theOI, 'distance');
 
-desiredFNumber = focalLength / pupilDiamMm ;
-assert(abs(desiredFNumber - oiGet(theOI,'optics fnumber')) < 1e-5)
+    focalLength = oiGet(theOI,'optics focal length','mm');
 
-% This set is the test.  Did we change things correctly?
-theOI  = oiSet(theOI , 'optics fnumber', desiredFNumber);
+    desiredFNumber = focalLength / pupilDiamMm ;
+    assert(abs(desiredFNumber - oiGet(theOI,'optics fnumber')) < 1e-5)
 
-focalLengthTest = oiGet(theOI,'optics focal length','mm');
-pupilTest = oiGet(theOI,'optics pupil diameter','mm');
+    % This set is the test.  Did we change things correctly?
+    theOI  = oiSet(theOI , 'optics fnumber', desiredFNumber);
 
-assert( abs(focalLengthTest - focalLength) < 1e-6);
-assert( abs(pupilTest - pupilDiamMm) < 1e-6);
+    focalLengthTest = oiGet(theOI,'optics focal length','mm');
+    pupilTest = oiGet(theOI,'optics pupil diameter','mm');
 
-%% Change the focalLength, reset the fnumber, and test
+    assert( abs(focalLengthTest - focalLength) < 1e-6);
+    assert( abs(pupilTest - pupilDiamMm) < 1e-6);
 
-theOI  = oiSet(theOI , 'optics focal length', 0.004);   % Meters
-theOI  = oiSet(theOI , 'optics fnumber', desiredFNumber);
 
-pupilTest = oiGet(theOI,'optics pupil diameter','mm');
-focalLengthTest = oiGet(theOI,'optics focal length','mm');
+    %% Change the focalLength, reset the fnumber, and test
 
-assert(abs(focalLengthTest/pupilTest - desiredFNumber) < 1e-6);
-assert(abs(focalLengthTest - 4) < 1e-6);
+    theOI  = oiSet(theOI , 'optics focal length', 0.004);   % Meters
+    theOI  = oiSet(theOI , 'optics fnumber', desiredFNumber);
+
+    pupilTest = oiGet(theOI,'optics pupil diameter','mm');
+    focalLengthTest = oiGet(theOI,'optics focal length','mm');
+
+    assert(abs(focalLengthTest/pupilTest - desiredFNumber) < 1e-6);
+    assert(abs(focalLengthTest - 4) < 1e-6);
+end
 
 %% END
