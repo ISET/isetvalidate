@@ -32,9 +32,16 @@ function ieValidate(repo,typeToRun,varargin)
 %   repo - name of repository. One of {'isetcam','isetbio','csfgenerator', 'iset3d', 'psych221'}
 %   typeToRun - One of {'tutorials', 'scripts', 'validations'}
 %
+%   Some of us have a special case of isetbiordt.  See below.
+%
 %   Not all combinations of repo/typeToRun are available.  The examples
 %   block in the source for this routine indicates those that are likely
 %   to.
+%
+%  ISETBIORDT - For historical testing, we have a script and method to
+%   install the old ISETBio RDT data locally. (validateRDTSetup).  We use
+%   this to put the old data in iesetvalidate/local/ISETBioValidationFiles.
+%   Then we run ieValidateRDTFullAll.
 %
 % Outputs:
 %   None.
@@ -69,7 +76,7 @@ function ieValidate(repo,typeToRun,varargin)
 %   12/20/23  dhb  Generalized setup to handle bugs identified by BAW.
 
 p = inputParser;
-p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio','csfgenerator','iset3d','psych221'})));
+p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio','csfgenerator','iset3d','psych221','isetbiordt'})));
 p.addRequired('typeToRun',@(x)(ismember(ieParamFormat(x),{'tutorials','scripts','validations'})));
 p.parse(repo,typeToRun,varargin{:});
 
@@ -78,7 +85,7 @@ p.parse(repo,typeToRun,varargin{:});
 % and the path to the tutorial directory under that path.
 %
 % I took a guess at the correct root path for iset3d and psych221
-availRepos = {'isetbio' 'isetcam', 'csfgenerator','iset3d','psych221','ptb'};
+availRepos = {'isetbio' 'isetcam', 'csfgenerator','iset3d','psych221','ptb','isetbiordt'};
 repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', 'csfGeneratorRootPath','piRootPath','psych221RootPath',''};
 
 % Figure out where we want to go today
@@ -183,6 +190,29 @@ switch (availRepos{selectedRepoNum})
             case 'validations'
                 topLevelDir = isetvalidateRootPath;
                 subDir = 'ptb';
+        end
+
+    case 'isetbiordt'
+        % This is an external call to ieValidateRDTFullAll.  The user has
+        % to have the RDT data set up in the path.  These files are
+        % installed using the script validateRDTSetup, by setting the
+        % variable
+        %
+        %    whereIPutTheUnzippedFile
+        %
+        % I think by default they should be in the directory
+        %
+        %    isetvalidate/local/ISETBioValidationFiles 
+        %
+        switch typeToRun
+            case 'validations'
+                if ~exist(fullfile(isetvalidateRootPath,'local','ISETBioValidationFiles'),'dir')
+                    warning('Validation files not in expected location.  Trying anyway.');
+                end
+                ieValidateRDTFullAll;
+                return;
+            otherwise
+                error('For ISETBIORDT we only run validations.')
         end
 
     otherwise

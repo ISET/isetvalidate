@@ -1,4 +1,4 @@
-function ieValidateFullAll(varargin)
+function ieValidateRDTFullAll(varargin)
 % Full data check (no figures, no publish) of all validation functions
 %
 %    ieValidateFullAll(param,val, ...)
