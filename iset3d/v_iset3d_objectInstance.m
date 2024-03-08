@@ -7,9 +7,11 @@
 % Read a simple car scene.  One car.  Skymap. Ground plane.  The car has a
 % lot of parts, though.
 fileName = fullfile(piRootPath, 'data/scenes/low-poly-taxi/low-poly-taxi.pbrt');
-
+if ~exist(fileName,'file')
+    fileName = piSceneWebTest('low-poly-taxi','low-poly-taxi.pbrt');
+end
 thisR = piRead(fileName);
-thisR.set('skymap','sky-rainbow.exr');
+thisR.set('skymap','room.exr');
 thisR.show('objects');
 
 % The light names are not right.  Debug why.

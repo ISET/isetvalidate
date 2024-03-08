@@ -37,7 +37,6 @@ runTest('v_iset3d_scenedepth','depth','*** DEPTH -- v_iset3d_scenedepth', ...
 runTest('v_iset3d_omni', 'omni','*** OMNI -- v_iset3d_omni',...
     'Omni failed.\n');
 
-
 %% Assets
 runTest('v_iset3d_assets','assets','*** ASSETS -- v_iset3d_assets',...
     'Asset validation failed.\n');
@@ -111,7 +110,7 @@ vprintf('Recipes:    ', getpref('ISET3d','tvrecipeTime'));
 vprintf('Scene Eye:  ', getpref('ISET3d','tveyeTime'));
 vprintf('Text:       ', getpref('ISET3d','tvtextTime'));
 vprintf('World:      ', getpref('ISET3d','tvworldTime'));
-
+rmpref('ISET3d');
 %% END
 
 

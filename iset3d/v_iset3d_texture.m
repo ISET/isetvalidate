@@ -43,7 +43,8 @@ thisR.show('objects');
 thisR.show('lights');
 thisR.show('materials');
 thisR.show('textures');
-
+thisR.set('lights','all','delete');
+thisR.set('skymap','room.exr');
 piWRS(thisR,'name','random color');
 
 %% Change the texture of the checkerboard.
@@ -101,7 +102,8 @@ piMaterialsInsert(thisR,'groups','testpatterns');
 
 planeIDX = piAssetSearch(thisR,'object name','Plane');
 thisR.set('asset',planeIDX,'material name','dots');
-
+thisR.set('lights','all','delete');
+thisR.set('skymap','room.exr');
 piWRS(thisR);
 
 %%  We have many more complex textures, including those based on images.
@@ -109,6 +111,8 @@ piWRS(thisR);
 % Pull in a couple of wood types
 piMaterialsInsert(thisR,'groups','wood');
 thisR.get('print materials');
+planeIDX = piAssetSearch(thisR,'object name','Plane');
+
 thisR.set('asset',planeIDX,'material name','wood-medium-knots');
 
 piWRS(thisR);

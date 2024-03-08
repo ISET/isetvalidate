@@ -37,14 +37,7 @@ thisR.set('rays per pixel',96);
 thisR.set('n bounces',1); % Number of bounces
 thisR.set('film rendertype',{'radiance','depth'});
 %% Render
-tic
-piWrite(thisR);
-toc
-%%  Create the scene
-[scene, result] = piRender(thisR);
-
-%%  Show it and the depth map
-sceneWindow(scene);
+scene = piWRS(thisR);
 
 %%
 scenePlot(scene,'depth map');

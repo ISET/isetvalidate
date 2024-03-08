@@ -12,6 +12,8 @@ thisR.set('rays per pixel',32);
 thisR.set('fov',45);
 thisR.set('nbounces',5); 
 
+thisR.set('lights','all','delete');
+thisR.set('skymap','room.exr');
 %%
 thisR.assets.print
 names = thisR.assets.names;
@@ -29,14 +31,10 @@ rot = thisR.get('asset', names{15}, 'world rotation');
 rot = thisR.get('asset', names{17}, 'world rotation');
 
 %%
-piWrite(thisR)
-[scene, res] = piRender(thisR, 'render type', 'radiance');
-sceneWindow(scene);
+piWRS(thisR);
 
 %%
 thisR.set('asset', names{15}, 'translation', [-1 0 0]);
 
 %%
-piWrite(thisR)
-[scene, res] = piRender(thisR, 'render type', 'radiance');
-sceneWindow(scene);
+piWRS(thisR);
