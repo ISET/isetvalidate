@@ -21,9 +21,9 @@ for ii=1:numel(str), pos(ii,:) = to + ii*delta; end
 pos(end,:) = pos(end,:) + delta/2;  % Move the 'm' a bit
 thisR = textRender(thisR, str,'letterSize',[0.15,0.1,0.15],'letterRotation',[0,15,15],...
     'letterPosition',pos,'letterMaterial','wood-light-large-grain');
-thisR.set('skymap','sky-sunlight.exr');
+thisR.set('skymap','room.exr');
 thisR.set('nbounces',4);
-piWRS(thisR);
+piWRS(thisR,'show',getpref('ISET3d','show'));
 
 %% This now renders the same way as above
 
@@ -61,7 +61,7 @@ for ii=1:numel(str)
     thisR.set('asset',idx, 'scale', letterScale);
 end
 
-piWRS(thisR);
+piWRS(thisR,'show',getpref('ISET3d','show'));
 
 %% Deal with instances
 
@@ -71,7 +71,7 @@ piObjectInstance(thisR);
 thisR.assets = thisR.assets.uniqueNames;
 
 thisR.show('instances');
-piWRS(thisR);
+piWRS(thisR,'show',getpref('ISET3d','show'));
 
 %%  Change the position of the uppercase L  
 
@@ -98,6 +98,6 @@ for ii=1:numel(id)
     end
 end
 
-piWRS(thisR);
+piWRS(thisR,'show',getpref('ISET3d','show'));
 
 %% END

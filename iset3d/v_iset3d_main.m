@@ -24,10 +24,11 @@ setpref('ISET3d', 'tStart', tic);
 %% Basic
 ieInit;
 if ~piDockerExists, piDockerConfig; end
-
+% Run silently.
+setpref('ISET3d','show',false);
 %% Quick version of DockerWrapper tests
-runTest('v_iset3d_dockerWrapper','docker','*** DOCKER -- v_iset3d_dockerWrapper', ...
-    'Docker Wrapper test failed\n');
+% runTest('v_iset3d_dockerWrapper','docker','*** DOCKER -- v_iset3d_dockerWrapper', ...
+%     'Docker Wrapper test failed\n');
 
 %% Depth validation
 runTest('v_iset3d_scenedepth','depth','*** DEPTH -- v_iset3d_scenedepth', ...

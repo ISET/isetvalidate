@@ -10,16 +10,16 @@ if ~piDockerExists, piDockerConfig; end
 %%
 thisR = piRecipeDefault('scene name','sphere');
 thisR.set('skymap', 'room.exr');
-piWRS(thisR);
+piWRS(thisR,'show',getpref('ISET3d','show'));
 % 
 % %%
 % thisR = piRecipeDefault('scene name','sphere');
 % thisR.set('skymap', 'cathedral_interior.exr');
-% piWRS(thisR);
+% piWRS(thisR,'show',getpref('ISET3d','show'));
 % 
 % %%
 % thisR = piRecipeDefault('scene name','sphere');
 % thisR.set('skymap', 'equiarea-rainbow.exr');
-% piWRS(thisR);
+% piWRS(thisR,'show',getpref('ISET3d','show'));
 
 %% END

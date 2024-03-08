@@ -45,7 +45,7 @@ thisR.show('materials');
 thisR.show('textures');
 thisR.set('lights','all','delete');
 thisR.set('skymap','room.exr');
-piWRS(thisR,'name','random color');
+piWRS(thisR,'name','random color','show',getpref('ISET3d','show'));
 
 %% Change the texture of the checkerboard.
 
@@ -73,7 +73,7 @@ thisR.show('objects');
 thisR.get('asset',cubeIDX,'material name')
 
 % Write and render the recipe with the new texture
-piWRS(thisR,'name','checks');
+piWRS(thisR,'name','checks','show',getpref('ISET3d','show'));
 
 
 %%  That felt good.  Let's make colored dots.
@@ -85,7 +85,7 @@ thisR.set('asset',cubeIDX,'material name','dots');
 thisR.get('texture','dots','uscale')
 
 % Write and render the recipe with the new texture
-piWRS(thisR,'name','dots-orig');
+piWRS(thisR,'name','dots-orig','show',getpref('ISET3d','show'));
 
 %% These scale factor change the dot densities
 % Other parameters change other visual properties.
@@ -93,7 +93,7 @@ thisR.set('texture','dots','vscale',16);
 thisR.set('texture','dots','uscale',16);
 
 % Write and render the recipe with the new texture
-piWRS(thisR,'name','dots16');
+piWRS(thisR,'name','dots16','show',getpref('ISET3d','show'));
 
 %% Now we change the texture of a material in a more complex scene
 
@@ -104,7 +104,7 @@ planeIDX = piAssetSearch(thisR,'object name','Plane');
 thisR.set('asset',planeIDX,'material name','dots');
 thisR.set('lights','all','delete');
 thisR.set('skymap','room.exr');
-piWRS(thisR);
+piWRS(thisR,'show',getpref('ISET3d','show'));
 
 %%  We have many more complex textures, including those based on images.
 
@@ -115,7 +115,7 @@ planeIDX = piAssetSearch(thisR,'object name','Plane');
 
 thisR.set('asset',planeIDX,'material name','wood-medium-knots');
 
-piWRS(thisR);
+piWRS(thisR,'show',getpref('ISET3d','show'));
 
 %% Let's change the texture of a the sphere to checkerboard
 
@@ -130,6 +130,6 @@ thisR.get('texture','checkerboard')
 thisR.set('texture','checkerboard','uscale',1);
 thisR.set('texture','checkerboard','vscale',0.5);
 
-piWRS(thisR);
+piWRS(thisR,'show',getpref('ISET3d','show'));
 
 %% END

@@ -23,7 +23,7 @@ for ii=1:numel(validNames)
     fprintf('Scene:  %s\n',validNames{ii})
     try
         thisR = piRecipeCreate(validNames{ii});
-        piWRS(thisR);
+        piWRS(thisR,'show',getpref('ISET3d','show'));
         status(ii) = 1;
     catch
         status(ii) = 0;

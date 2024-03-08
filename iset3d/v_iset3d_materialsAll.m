@@ -35,7 +35,7 @@ for ii = 1:numel(allMaterials)
         thisR.set('nbounces',3);
         piMaterialsInsert(thisR,'names',allMaterials{ii});
         thisR.set('asset',bunnyID,'material name',allMaterials{ii});
-        piWRS(thisR,'render flag','hdr');
+        piWRS(thisR,'render flag','hdr','show',getpref('ISET3d','show'));
         results = cat(1,results,sprintf("Material: %s Succeeded\n",allMaterials{ii}));
     catch EX
         results = cat(1,results, sprintf("Material: %s FAILED: %s\n",allMaterials{ii},EX.message));

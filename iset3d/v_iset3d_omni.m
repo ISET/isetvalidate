@@ -30,7 +30,7 @@ thisR.set('object distance',0.5);
 
 % No lens or omnni camera. Just a pinhole to render a scene radiance
 thisR.camera = piCameraCreate('pinhole'); 
-scene = piWRS(thisR,'name','pinhole test');
+scene = piWRS(thisR,'name','pinhole test','show',getpref('ISET3d','show'));
 
 %% Omni with a standard double Gauss lens
 
@@ -41,7 +41,7 @@ thisR.set('film diagonal',5); % mm
 if exist('ilensRootPath','file'), thisR.get('film distance','mm');
 else, disp('Try adding isetlens to your path');
 end
-piWRS(thisR,'name','dgauss test');
+piWRS(thisR,'name','dgauss test','show',getpref('ISET3d','show'));
 
 
 %% Omni with a fisheye lens
@@ -60,13 +60,15 @@ ll = 18;    % fisheye.87deg.50.0mm.json
 thisR.set('object distance',10);
 thisR.camera = piCameraCreate('omni', 'lens file',lList(ll).name);
 thisR.set('skymap','room.exr');
-oi = piWRS(thisR,'name','fisheye test');
+oi = piWRS(thisR,'name','fisheye test','show',getpref('ISET3d','show'));
 
 %% Denoise
 oi = piAIdenoise(oi);
 oi = oiSet(oi,'name','fisheye denoised test');
 ieReplaceObject(oi); 
-oiWindow;
+if ~getpref('ISET3d','show')
+    oiWindow;
+end
 
 %% END
 

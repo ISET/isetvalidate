@@ -44,6 +44,6 @@ thisR   = piObjectInstanceCreate(thisR, [carName,'_m_B'], ...
 thisR.assets = thisR.assets.uniqueNames;
 
 thisR.show('objects');
-piWRS(thisR,'remote resources',true);
+piWRS(thisR,'remote resources',true,'show',getpref('ISET3d','show'));
 
 %% End

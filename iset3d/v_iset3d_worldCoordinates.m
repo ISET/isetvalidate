@@ -31,10 +31,10 @@ rot = thisR.get('asset', names{15}, 'world rotation');
 rot = thisR.get('asset', names{17}, 'world rotation');
 
 %%
-piWRS(thisR);
+piWRS(thisR,'show',getpref('ISET3d','show'));
 
 %%
 thisR.set('asset', names{15}, 'translation', [-1 0 0]);
 
 %%
-piWRS(thisR);
+piWRS(thisR,'show',getpref('ISET3d','show'));

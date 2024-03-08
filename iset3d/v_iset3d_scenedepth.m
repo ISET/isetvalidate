@@ -37,9 +37,15 @@ thisR.set('rays per pixel',96);
 thisR.set('n bounces',1); % Number of bounces
 thisR.set('film rendertype',{'radiance','depth'});
 %% Render
-scene = piWRS(thisR);
+scene = piWRS(thisR,'show',getpref('ISET3d','show'));
 
 %%
-scenePlot(scene,'depth map');
+if ~getpref('ISET3d','show')
+    scenePlot(scene,'depth map');
+else
+    if isempty(scene.depthMap) || ~find(scene.depthMap,1)
+        error('Depth map is incorrect.')
+    end
+end
 
 %%
