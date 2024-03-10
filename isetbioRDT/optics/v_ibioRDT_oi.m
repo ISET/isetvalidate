@@ -26,9 +26,14 @@ function ValidationFunction(runTimeParams)
     toleranceFraction = 0.0001;
 
     % Create a scene to check oi function
+    scene = sceneCreate;
+
+    % The following code tried to replicate the default
+    % with control over the size, but it doesn't do the
+    % the expected thing.
     %imSize = [64 96];
     %scene = sceneCreate('macbeth d65',imSize);
-    scene = sceneCreate;
+
     theScenePhotons = sceneGet(scene,'photons');
     theTolerance = mean(theScenePhotons(:))*toleranceFraction;
     UnitTest.validationData('theScenePhotons',theScenePhotons, ...
@@ -74,7 +79,9 @@ function ValidationFunction(runTimeParams)
 
     % Repeat with PSF method
     %
-    % This is the new method in isetcam
+    % This is the new method in isetcam.  The psf
+    % is undersampled and LCA does not seem to be
+    % turned on.
     oi1 = oiCreate('wvf human');
     oi1 = oiSet(oi1,'optics name','opticspsf');  
     oi1 = oiCompute(oi1,scene,'pad value','mean');
