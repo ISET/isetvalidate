@@ -50,8 +50,8 @@ function ValidationFunction(runTimeParams)
     oi = oiCreate('diffraction limited');
     oi = oiCompute(oi,scene,'pad value','mean');
     if (runTimeParams.generatePlots)
-        oiPlot(oi,'otf',[],550);
-        oiPlot(oi,'otf',[],450);
+        oiPlot(oi,'otf',[],550); 
+        oiPlot(oi,'otf',[],450); 
     end
     theOiPhotons = oiGet(oi,'photons');
 
@@ -72,8 +72,8 @@ function ValidationFunction(runTimeParams)
     oi = oiSet(oi,'optics name','opticsotf');  
     oi = oiCompute(oi,scene,'pad value','mean');
     if (runTimeParams.generatePlots)
-        oiPlot(oi,'psf',[],420);
-        oiPlot(oi,'psf',[],550);
+        oiPlot(oi,'psf',[],420); 
+        oiPlot(oi,'psf',[],550); 
     end
     theOiPhotons = oiGet(oi,'photons');
 
@@ -86,8 +86,8 @@ function ValidationFunction(runTimeParams)
     oi1 = oiSet(oi1,'optics name','opticspsf');  
     oi1 = oiCompute(oi1,scene,'pad value','mean');
     if (runTimeParams.generatePlots)
-        oiPlot(oi1,'psf',[],420);
-        oiPlot(oi1,'psf',[],550);
+        oiPlot(oi1,'psf',[],420); xlim([-60 60]); ylim([-60 60]);
+        oiPlot(oi1,'psf',[],550); xlim([-60 60]); ylim([-60 60]);
     end
     theOiPhotons1 = oiGet(oi1,'photons');
 
