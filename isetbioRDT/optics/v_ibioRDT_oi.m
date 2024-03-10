@@ -20,11 +20,14 @@ function ValidationFunction(runTimeParams)
 
     %% Initialize ISETBIO
     % ieInit;
+    runTimeParams.generatePlots = true;
 
     % Tolerance fraction
     toleranceFraction = 0.0001;
 
     % Create a scene to check oi function
+    %imSize = [64 96];
+    %scene = sceneCreate('macbeth d65',imSize);
     scene = sceneCreate;
     theScenePhotons = sceneGet(scene,'photons');
     theTolerance = mean(theScenePhotons(:))*toleranceFraction;
@@ -41,7 +44,6 @@ function ValidationFunction(runTimeParams)
     % oi = oiCompute(oi,scene, %pad value ,{‘zero’,’mean’,’border’}, ’crop’,true/false);
     oi = oiCreate('diffraction limited');
     oi = oiCompute(oi,scene,'pad value','mean');
-
     if (runTimeParams.generatePlots)
         oiPlot(oi,'otf',[],550);
         oiPlot(oi,'otf',[],450);
@@ -59,8 +61,9 @@ function ValidationFunction(runTimeParams)
         'diffractionLimitedFromScenePhotons', theTolerance);    
 
     %% Wavefront (Thibos) human optics
+    % 
+    % 'opticsotf' method is the original ISETBio method
     oi = oiCreate('wvf human');
-    % Adjustment to use OTF method.  This passes
     oi = oiSet(oi,'optics name','opticsotf');  
     oi = oiCompute(oi,scene,'pad value','mean');
     if (runTimeParams.generatePlots)
@@ -68,9 +71,23 @@ function ValidationFunction(runTimeParams)
         oiPlot(oi,'psf',[],550);
     end
     theOiPhotons = oiGet(oi,'photons');
-    
+
+    % Repeat with PSF method
+    %
+    % This is the new method in isetcam
+    oi1 = oiCreate('wvf human');
+    oi1 = oiSet(oi1,'optics name','opticspsf');  
+    oi1 = oiCompute(oi1,scene,'pad value','mean');
+    if (runTimeParams.generatePlots)
+        oiPlot(oi1,'psf',[],420);
+        oiPlot(oi1,'psf',[],550);
+    end
+    theOiPhotons1 = oiGet(oi1,'photons');
+
     % December, 2023. After wvfGet change.
     assert(abs( mean(theOiPhotons(:))/6.9956e+13 - 1) < 1e-4);
+    abs(mean(theOiPhotons(:))/6.9956e+13 - 1)
+    abs(mean(theOiPhotons1(:))/6.9956e+13 - 1)
     
     theTolerance = mean(theOiPhotons(:))*toleranceFraction;
     UnitTest.validationData('humanWVFFromScenePhotons', theOiPhotons, ...
