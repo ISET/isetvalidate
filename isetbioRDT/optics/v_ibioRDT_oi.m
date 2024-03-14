@@ -1,4 +1,4 @@
-function varargout = v_ibio_oi(varargin)
+function varargout = v_ibioRDT_oi(varargin)
 %
 % Test optical image creating functions
 %
