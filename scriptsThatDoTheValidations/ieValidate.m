@@ -12,7 +12,6 @@ function ieValidate(repo,typeToRun,varargin)
 %
 % Syntax:
 %    ieValidate(repo,typeToRun)
-%    e.g., ieValidate('isetcam','validations');
 %
 % Description:
 %   Run all of the tutorials/scripts/validations for a specified repo
@@ -29,14 +28,16 @@ function ieValidate(repo,typeToRun,varargin)
 %   in their source file.
 %
 % Inputs:
-%   repo - name of repository. One of {'isetcam','isetbio','csfgenerator', 'iset3d', 'psych221'}
+%   repo - name of repository. 
+%       One of {'isetcam','isetbio','isetbiordt','csfgenerator', 'iset3d', 'psych221'}
 %   typeToRun - One of {'tutorials', 'scripts', 'validations'}
+%       Not all combinations of repo/typeToRun are available.  The
+%       examples block in the source for this routine indicates those
+%       that are likely to.
 %
-%   Some of us have a special case of isetbiordt.  See below.
+%   Before running isetbiordt, you need to install the critical data.
+%   See below.
 %
-%   Not all combinations of repo/typeToRun are available.  The examples
-%   block in the source for this routine indicates those that are likely
-%   to.
 %
 %  ISETBIORDT - For historical testing, we have a script and method to
 %   install the old ISETBio RDT data locally. (validateRDTSetup).  We use
@@ -66,6 +67,9 @@ function ieValidate(repo,typeToRun,varargin)
     ieValidate('isetbio','validations');
     ieValidate('iset3d','validations');
     ieValidate('psych221','validations');
+
+    ieValidate('isetbiordt','validations');
+
 %}
 
 % History:
