@@ -11,12 +11,12 @@ sensor = sensorCreate;
 sensor = sensorSet(sensor,'fov',oiGet(oi,'fov')/2,oi);
 
 sensor = sensorSet(sensor,'exp time',0.05);
-sensor = sensorSet(sensor,'analog gain',1);
+sensor = sensorSet(sensor,'analog gain',8);
 sensor = sensorCompute(sensor,oi);
 v = sensorGet(sensor,'volts');
 v1 = mean(v(:))
 
-sensor = sensorSet(sensor,'analog gain',0.25);
+sensor = sensorSet(sensor,'analog gain',1);
 sensor = sensorSet(sensor,'exp time',0.05);
 sensor = sensorCompute(sensor,oi);
 v = sensorGet(sensor,'volts');
