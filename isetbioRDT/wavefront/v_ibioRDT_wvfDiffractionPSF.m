@@ -74,7 +74,7 @@ measWavelength = wvfGet(wvf0,'measured wavelength');
 UnitTest.assertIsZero(max(abs(measWavelength(:)-calcWavelength(:))),'Measured and calculation wavelengths compare',0);
 
 %% Plots 
-
+%
 % Make a graph of the PSF within maxUM of center
 wvfPlot(wvf0,'psf','unit','um','wave',wList,'plot range',maxUM);
 
@@ -82,7 +82,8 @@ wvfPlot(wvf0,'psf','unit','um','wave',wList,'plot range',maxUM);
 wvfPlot(wvf0,'psf angle','unit','min','wave',wList,'plot range',maxMIN);
 
 %% Plot the middle row of the psf, scaled to peak of 1
-wvfPlot(wvf0,'1d psf angle normalized','unit','min','wave',wList,'plot range',maxMIN);
+%wvfPlot(wvf0,'1d psf angle normalized','unit','min','wave',wList,'plot range',maxMIN);
+wvfPlot(wvf0,'1d psf angle','unit','min','wave',wList,'plot range',maxMIN);
 hold on
 
 % Get parameters needed for plotting comparisons with PTB, below
@@ -101,7 +102,7 @@ radians = (pi/180)*(arcminutes/60);
 
 % Compare to what we get from PTB AiryPattern function -- should match
 ptbPSF = AiryPattern(radians,calcPupilMM ,calcWavelength);
-plot(arcminutes(ptbSampleIndex),ptbPSF(ptbSampleIndex),'b','LineWidth',2);
+%plot(arcminutes(ptbSampleIndex),ptbPSF(ptbSampleIndex),'b','LineWidth',2);
 xlabel('Arc Minutes');
 ylabel('Normalized PSF');
 title(sprintf('Diffraction limited, %0.1f mm pupil, %0.f nm',calcPupilMM,calcWavelength));
@@ -131,10 +132,6 @@ oi = oiSet(oi,'optics',optics);
 uData = oiPlot(oi,'psf',[],thisWave);
 set(gca,'xlim',[-10 10],'ylim',[-10 10]);
 
-% We have changed the oi structure, so we don't do this validation
-% comparison anymore.  But the plot below looks good.
-% UnitTest.validationData('oi', oi);
-
 % Pull out slice and add to slice plot
 figure(sliceFig); hold on;
 [r,c] = size(uData.x);
@@ -142,22 +139,64 @@ mid = ceil(r/2);
 psfMid = uData.psf(mid,:);
 posMM = uData.x(mid,:)/1000;               % Microns to mm
 posMinutes = 60*(180/pi)*(atan2(posMM,opticsGet(optics,'flength','mm')));
-plot(posMinutes,psfMid/max(psfMid(:)),'ko')
-%plot(arcminutes(ptbSampleIndex),ptbPSF(ptbSampleIndex),'b','LineWidth',2);
+%plot(posMinutes,psfMid/max(psfMid(:)),'ko');
+plot(posMinutes,psfMid,'ko','MarkerFaceColor','k');
 xlabel('Arc min')
 set(gca,'xlim',[-2 2])
 grid on
 legend('WVF','ISETBIO OI, diff limited','PTB');
 UnitTest.validationData('wvf0', wvfGet(wvf0,'psf'));
 
-%% Repeat the PSF calculation with a wavelength offset
+%% Let's see if we can get the same answer through the human wvf oi methods.
+oi1 = oiCreate('human wvf');
+wvfForOi = wvfCreate('calc wavelengths',[400:10:700]);
+wvfForOi = wvfCompute(wvfForOi,'humanlca',false);
+optics1 = wvf2optics(wvfForOi);
+oi1 = oiSet(oi1,'optics',optics1);
+oi1 = oiSet(oi1,'optics name','opticspsf');  
+uData1 = oiPlot(oi1,'psf',[],thisWave);
+title(sprintf('Point spread from modified wvf human (%d nm)',thisWave));
 
+% Add to slice plot to compare
+[r,c] = size(uData1.x);
+mid = ceil(r/2);
+psfMid = uData1.psf(mid,:);
+posMM = uData1.x(mid,:)/1000;               % Microns to mm
+posMinutes = 60*(180/pi)*(atan2(posMM,opticsGet(optics1,'flength','mm')));
+figure(sliceFig);
+%plot(posMinutes,psfMid/max(psfMid(:)),'c<','MarkerFaceColor','c');
+plot(posMinutes,psfMid,'c<','MarkerFaceColor','c');
+
+% Compute on a scene and then get PSF again
+patchSize = 64;
+sceneFov = 1;
+scene = sceneCreate('macbeth d65',patchSize);
+scene = sceneSet(scene,'fov',sceneFov);
+oi2 = oiCompute(oi1,scene,'pad value','mean');
+
+uData2 = oiPlot(oi2,'psf',[],thisWave);
+title(sprintf('Point spread from modified wvf human after compute (%d nm)',thisWave));
+
+% Add to slice plot to compare
+[r,c] = size(uData2.x);
+mid = ceil(r/2);
+psfMid = uData2.psf(mid,:);
+posMM = uData2.x(mid,:)/1000;               % Microns to mm
+posMinutes = 60*(180/pi)*(atan2(posMM,opticsGet(optics1,'flength','mm')));
+figure(sliceFig);
+%plot(posMinutes,psfMid/max(psfMid(:)),'y>','MarkerFaceColor','y');
+plot(posMinutes,psfMid,'y>','MarkerFaceColor','y');
+
+%% Repeat the PSF calculation with a wavelength offset
+%
 % This section checks that if we add an explicit observer defocus correction,
 % in this case the amount needed to correct for chromatic aberration, we
-% get the same result.  It is a pretty small test of the function
-% wvfLCAFromWavelengthDifference relative to the measured wavelength
-
-% Copy the wavefront structure
+% get the same result as when we compute asking for 'humanlca'.  It is a pretty
+% small test of the function wvfLCAFromWavelengthDifference relative to the measured
+% wavelength, as well as that we still understand how to control the wvf
+% calculations after the move to isetcam.
+%
+% Copy the wavefront structures
 wvf1 = wvf0;
 wvf17 = wvf0;
 
@@ -209,7 +248,8 @@ wvf17 = wvfCompute(wvf17);
 [~,h] = wvfPlot(wvf1,'1d psf angle normalized','unit','min','wave',w,'plot range',maxMIN);
 set(h,'Color','r','LineWidth',4);
 hold on
-[~,h] = wvfPlot(wvf17,'1d psf angle normalized','unit','min','wave',w,'plot range',maxMIN,'window',false);
+%[~,h] = wvfPlot(wvf17,'1d psf angle normalized','unit','min','wave',w,'plot range',maxMIN,'window',false);
+[~,h] = wvfPlot(wvf17,'1d psf angle','unit','min','wave',w,'plot range',maxMIN,'window',false);
 set(h,'Color','g','LineWidth',3);
 ptbPSF1 = AiryPattern(radians,pupilSize,w);
 plot(arcminutes(ptbSampleIndex),ptbPSF1(ptbSampleIndex),'b','LineWidth',2);
