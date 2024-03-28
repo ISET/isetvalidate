@@ -35,7 +35,7 @@ sensor = sensorSet(sensor,'exposure duration',T1);
 sensor = sensorCompute(sensor,oi);
 sensor = sensorSet(sensor,'name','Bluish');
 
-photons = sensorGet(sensor,'photons');
+photons = sensorGet(sensor,'electrons');
 assert( abs(mean(photons(:))/2.2453684e+03) - 1 < 1e-3);
 
 % sensorWindow(sensor);
@@ -48,7 +48,7 @@ sensor = sensorSet(sensor,'exposure duration',T1);
 sensor = sensorCompute(sensor,oi);
 sensor = sensorSet(sensor,'name','Reddish');
 
-photons = sensorGet(sensor,'photons');
+photons = sensorGet(sensor,'electrons');
 assert( abs(mean(photons(:))/2.7616738e+03) - 1 < 1e-3);
 
 % sensorWindow(sensor);

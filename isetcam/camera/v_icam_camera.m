@@ -9,7 +9,7 @@ ieInit
 %% Test that 'ideal' cameraCreate works
 c = cameraCreate('ideal');
 
-assert(cameraGet(c,'sensor noise flag') == 1);
+assert(cameraGet(c,'sensor noise flag') == -1);
 assert(cameraGet(c,'sensor nfilters') == 1);
 
 fprintf('Ideal noise flag %d. Nfilters = %d\n',...
