@@ -25,8 +25,8 @@ toleranceFraction = 0.0002;
 %% Some informative text
 UnitTest.validationRecord('SIMPLE_MESSAGE', 'Check diffraction limited PSFs.');
 
-%% Compare pointspread function in wvf with psf in Psych Toolbox
-
+%% Get diffraction limited pointspread function using wvf
+%
 % When the Zernike coefficients are all zero, the wvfCompute code should
 % return the diffraction limited PSF.  We test whether this works by
 % comparing to the diffraction limited PSF implemented in the PTB routine
@@ -35,7 +35,7 @@ UnitTest.validationRecord('SIMPLE_MESSAGE', 'Check diffraction limited PSFs.');
 % Set up default wvf parameters for the calculation 
 wvf0 = wvfCreate;
 
-% Specify the pupil size for the calculation
+% Specify the pupil size
 calcPupilMM = 3;
 wvf0 = wvfSet(wvf0,'calc pupil size',calcPupilMM);
 
@@ -47,16 +47,21 @@ maxMIN = 2;
 % Which wavelength to plot
 wList = wvfGet(wvf0,'calc wave');
 
-%% Calculate the PSF, normalized to peak of 1
+%% Create an ISETBio scene, which we will need below
+patchSize = 64;
+sceneFov = 1;
+scene = sceneCreate('macbeth d65',patchSize);
+scene = sceneSet(scene,'fov',sceneFov);
 
+%% Calculate the PSF
+%
 % This function computes the PSF by first computing the pupil function.  In
 % the default wvf object, the Zernicke coefficients match diffraction.  By
 % default, 'humanlca' is false for the wvfCompute function, but we set it
 % here for clarity as to what we are doing.
 wvf0 = wvfCompute(wvf0,'humanlca',false);
 
-% Make sure psf computed this way (with zcoeffs zeroed) matches
-% what is returned by our internal get of diffraction limited psf.
+% Grab the psf
 psf = wvfGet(wvf0,'psf');
 
 % We make it easy to simply calculate the diffraction-limited psf of the
@@ -68,25 +73,74 @@ psf = wvfGet(wvf0,'psf');
 diffpsf = wvfGet(wvf0,'diffraction psf');
 UnitTest.assertIsZero(max(abs(psf(:)-diffpsf(:))),'Internal computation of diffraction limited psf',0);
 
-% Verify that the calculated and measured wavelengths are the same
+% Verify that the calculated and measured wavelengths are the same.
+% This only works because the defaults make it so, so this is really
+% just a check that no one messed with the defaults without telling us.
 calcWavelength = wvfGet(wvf0,'wavelength');
 measWavelength = wvfGet(wvf0,'measured wavelength');
 UnitTest.assertIsZero(max(abs(measWavelength(:)-calcWavelength(:))),'Measured and calculation wavelengths compare',0);
 
 %% Plots 
 %
-% Make a graph of the PSF within maxUM of center
-wvfPlot(wvf0,'psf','unit','um','wave',wList,'plot range',maxUM);
+% Can make a graph of the PSF over microns within maxUM of center
+% wvfPlot(wvf0,'psf','unit','um','wave',wList,'plot range',maxUM);
 
-% Make a graph of the PSF within 2 arc min
-wvfPlot(wvf0,'psf angle','unit','min','wave',wList,'plot range',maxMIN);
+% Can make a graph of the PSF over minutes within 2 arc min
+% wvfPlot(wvf0,'psf angle','unit','min','wave',wList,'plot range',maxMIN);
 
-%% Plot the middle row of the psf, scaled to peak of 1
-%wvfPlot(wvf0,'1d psf angle normalized','unit','min','wave',wList,'plot range',maxMIN);
-wvfPlot(wvf0,'1d psf angle','unit','min','wave',wList,'plot range',maxMIN);
-hold on
+% Plot the middle row of the psf, unscaled and scaled
+%
+% This is done by a wvf method.
+sliceFig = figure; clf;
+set(gcf,'Position',[10 10 1500 750]);
+subplot(1,2,1); hold on
+uData_wvfSlice = wvfPlot(wvf0,'1d psf angle','unit','min','wave',wList,'plot range',maxMIN,'window',false);
+subplot(1,2,2); hold on
+wvfPlot(wvf0,'1d psf angle normalized','unit','min','wave',wList,'plot range',maxMIN,'window',false);
 
-% Get parameters needed for plotting comparisons with PTB, below
+% Stash wvf0 psf for validation
+UnitTest.validationData('wvf0', wvfGet(wvf0,'psf'));
+
+%% Make sure we can convert PSF to OTF and back without generating an error
+wvf0_Psf = wvfGet(wvf0,'psf');
+[~,~,wvf0_OtfFromPsf] = PsfToOtf([],[],wvf0_Psf);
+[~,~,wvf0_PsfFromOtf] = OtfToPsf([],[],wvf0_OtfFromPsf);
+if (max(abs(wvf0_Psf(:)-wvf0_PsfFromOtf(:))) > 1e-10)
+    error('Cannot use PTF routines to go back and forth between PSF and OTF');
+end
+
+% Find location of maximum OTF absolute value.  Should be at center, here
+% 101, 101, which it is.
+% There is surely a slicker way.
+theOtf = wvf0_OtfFromPsf;
+maxOtf = -Inf;
+for ii = 1:size(theOtf,1)
+    for jj = 1:size(theOtf,2)
+        if (abs(theOtf(ii,jj)) > maxOtf)
+            bestI = ii;
+            bestJ = jj;
+            maxOtf = abs(theOtf(ii,jj));
+        end
+    end
+end
+fprintf('Max of OtfFromPsf at %d, %d\n',bestI,bestJ);
+
+theOtf = wvfGet(wvf0,'otf');
+maxOtf = -Inf;
+for ii = 1:size(theOtf,1)
+    for jj = 1:size(theOtf,2)
+        if (abs(theOtf(ii,jj)) > maxOtf)
+            bestI = ii;
+            bestJ = jj;
+            maxOtf = abs(theOtf(ii,jj));
+        end
+    end
+end
+fprintf('Max of OtfFromPsf using wvfGet(wvf0,''otf'') at %d, %d\n',bestI,bestJ);
+
+%% Get parameters needed for plotting comparisons below
+% 
+% This also illustrates some wvfGets
 arcminutes       = wvfGet(wvf0,'psf angular samples','min',wList);
 arcminpersample  = wvfGet(wvf0,'ref psf sample interval');
 arcminpersample1 = wvfGet(wvf0,'psf arcmin per sample',wList);
@@ -97,24 +151,32 @@ end
 if (arcminpersample2 ~= arcminpersample1)
     error('Default units of get on ''psfanglepersample'' unexpectedly changed');
 end
-ptbSampleIndex = find(abs(arcminutes) < 2);
+ptbSampleIndex = find(abs(arcminutes) < maxMIN);
 radians = (pi/180)*(arcminutes/60);
 
-% Compare to what we get from PTB AiryPattern function -- should match
+% Compare to what we get from PTB AiryPattern function
+% The PTB function returns a normalized Airy pattern, so
+% on the left we scale to match the wvf version.
 ptbPSF = AiryPattern(radians,calcPupilMM ,calcWavelength);
-%plot(arcminutes(ptbSampleIndex),ptbPSF(ptbSampleIndex),'b','LineWidth',2);
-xlabel('Arc Minutes');
-ylabel('Normalized PSF');
-title(sprintf('Diffraction limited, %0.1f mm pupil, %0.f nm',calcPupilMM,calcWavelength));
-sliceFig = gcf;
+figure(sliceFig);
+subplot(1,2,1);
+plot(arcminutes(ptbSampleIndex),max(uData_wvfSlice.y(:))*ptbPSF(ptbSampleIndex),'b','LineWidth',2);
+subplot(1,2,2);
+plot(arcminutes(ptbSampleIndex),ptbPSF(ptbSampleIndex),'b','LineWidth',2);
+
+%% Stash some info for validation
 theTolerance = mean(ptbPSF(:))*toleranceFraction;
 UnitTest.validationData('ptbPSF', ptbPSF, ...
     'UsingTheFollowingVariableTolerancePairs', ...
     'ptbPSF', theTolerance);
 
-%% Do the same thing using isetbio OI functions
+%% Compute diffraction limited PSF for same conditions using OI
 %
-% The 'diffraction limited' case generates diffraction limited optics,
+% We are going to do this several different ways, all of which should give
+% the same answer in the end, possibly up to normalization of area under
+% PSF.
+%
+% The 'diffraction limited' OI case generates diffraction limited optics,
 % not using zcoeffs.  Because it defaults to parameters for some camera,
 % we need to match up human parameters.  Our match here to the wvf struct
 % is approximate, as that is based on wvf default for um per degree of 300.
@@ -128,64 +190,309 @@ optics = opticsSet(optics,'flength',fLength);   % Roughly human
 optics = opticsSet(optics,'fnumber',fNumber);   % Roughly human
 oi = oiSet(oi,'optics',optics);
 
-% Plot the oi version
+% Plot the oi diffraction limited version, mainly to get the data.
+% Get rid of the close if you want to examine the mesh plot
 uData = oiPlot(oi,'psf',[],thisWave);
 set(gca,'xlim',[-10 10],'ylim',[-10 10]);
+close(gcf);
 
 % Pull out slice and add to slice plot
 figure(sliceFig); hold on;
 [r,c] = size(uData.x);
-mid = ceil(r/2);
-psfMid = uData.psf(mid,:);
-posMM = uData.x(mid,:)/1000;               % Microns to mm
-posMinutes = 60*(180/pi)*(atan2(posMM,opticsGet(optics,'flength','mm')));
-%plot(posMinutes,psfMid/max(psfMid(:)),'ko');
-plot(posMinutes,psfMid,'ko','MarkerFaceColor','k');
-xlabel('Arc min')
-set(gca,'xlim',[-2 2])
-grid on
-legend('WVF','ISETBIO OI, diff limited','PTB');
-UnitTest.validationData('wvf0', wvfGet(wvf0,'psf'));
+midRow = ceil(r/2);
+psfMidRow = uData.psf(midRow,:);
+posRowMM = uData.x(midRow,:)/1000;               % Microns to mm
+posRowMinutes = 60*(180/pi)*(atan2(posRowMM,opticsGet(optics,'flength','mm')));
+midCol = ceil(c/2);
+psfMidCol = uData.psf(:,midCol);
+posColMM = uData.y(:,midCol)/1000;               % Microns to mm
+posColMinutes = 60*(180/pi)*(atan2(posColMM,opticsGet(optics,'flength','mm')));
+figure(sliceFig);
+subplot(1,2,1);
+plot(posRowMinutes,psfMidRow,'ko','MarkerFaceColor','k','MarkerSize',12);
+figure(sliceFig);
+subplot(1,2,2);
+plot(posRowMinutes,psfMidRow/max(psfMidRow(:)),'ko','MarkerFaceColor','k','MarkerSize',12);
+
+% Report on sampling and normalization
+fprintf('OI DIFF LIMITED\n')
+if (posRowMinutes(1) == posColMinutes(1) & posRowMinutes(end) == posColMinutes(end))
+    fprintf('\tRow and column range MATCH\n');
+else
+    fprintf('\tRow and column range DO NOT MATCH\n');
+end
+if (posRowMinutes(2)-posRowMinutes(1) == posColMinutes(2)-posColMinutes(1))
+    fprintf('\tRow and column spacing MATCH\n');
+else
+    fprintf('\tRow and column spacing DO NOT MATCH\n');
+end
+if (length(posRowMinutes) == length(posColMinutes))
+    fprintf('\tRow and column number of pixels MATCH\n');
+else
+    fprintf('\tRow and column number of pixels DO NOT MATCH\n');
+end
+fprintf('\tRow sampling min, max, spacing (min): %0.2f, %0.2f, %0.4f, %d samples\n',min(posRowMinutes(:)),max(posRowMinutes(:)),posRowMinutes(2)-posRowMinutes(1),length(posRowMinutes));
+fprintf('\tCol sampling min, max, spacing (min): %0.2f, %0.2f, %0.4f, %d samples\n',min(posColMinutes(:)),max(posColMinutes(:)),posColMinutes(2)-posColMinutes(1),length(posColMinutes));
+psfIntegratedVol = sum(uData.psf(:))*(posRowMinutes(2)-posRowMinutes(1))*(posColMinutes(2)-posColMinutes(1))*length(posRowMinutes)*length(posColMinutes);
+fprintf('\tPSF volume %0.2f (raw sum) %0.2g (integrated)\n',sum(uData.psf(:)),psfIntegratedVol);
 
 %% Let's see if we can get the same answer through the human wvf oi methods.
-oi1 = oiCreate('human wvf');
-wvfForOi = wvfCreate('calc wavelengths',[400:10:700]);
+%
+% First optics psf method on the raw (uncomputed to a scene) oi
+% The oiPlot call is executed to get the data.
+oi1_psf = oiCreate('human wvf');
+wvfForOi = wvfCreate('calc wavelengths',400:10:700);
 wvfForOi = wvfCompute(wvfForOi,'humanlca',false);
-optics1 = wvf2optics(wvfForOi);
-oi1 = oiSet(oi1,'optics',optics1);
-oi1 = oiSet(oi1,'optics name','opticspsf');  
-uData1 = oiPlot(oi1,'psf',[],thisWave);
-title(sprintf('Point spread from modified wvf human (%d nm)',thisWave));
+optics1_psf = wvf2optics(wvfForOi);
+oi1_psf = oiSet(oi1_psf,'optics',optics1_psf);
+oi1_psf = oiSet(oi1_psf,'optics name','opticspsf');  
+uData1_psf = oiPlot(oi1_psf,'psf',[],thisWave);
+title(sprintf('Point spread from modified wvf human (opticspsf) (%d nm)',thisWave));
+close(gcf);
+
+% Check that the PSF corresponding to the OTF stored in the oi 
+% is real.  It would be bad if not.  Note the use of fftshit,
+% to handle the difference in ISETBio and PSF conventions about
+% where DC is in the OTF.  The routine OtfToPsf will throw
+% an error if the Psf is not awfully close to real.
+[~,~,psfCheckOptics] = OtfToPsf([],[],fftshift(optics1_psf.OTF.OTF(:,:,1)));
+[~,~,psfCheckOi] = OtfToPsf([],[],fftshift(oi1_psf.optics.OTF.OTF(:,:,1)));
 
 % Add to slice plot to compare
-[r,c] = size(uData1.x);
-mid = ceil(r/2);
-psfMid = uData1.psf(mid,:);
-posMM = uData1.x(mid,:)/1000;               % Microns to mm
-posMinutes = 60*(180/pi)*(atan2(posMM,opticsGet(optics1,'flength','mm')));
+[r,c] = size(uData1_psf.x);
+midRow = ceil(r/2);
+psfMidRow = uData1_psf.psf(midRow,:);
+posRowMM = uData1_psf.x(midRow,:)/1000;               % Microns to mm
+posRowMinutes = 60*(180/pi)*(atan2(posRowMM,opticsGet(optics1_psf,'flength','mm')));
+midCol = ceil(c/2);
+psfMidCol = uData1_psf.psf(:,midCol);
+posColMM = uData1_psf.y(:,midCol)/1000;               % Microns to mm
+posColMinutes = 60*(180/pi)*(atan2(posColMM,opticsGet(optics,'flength','mm')));
 figure(sliceFig);
-%plot(posMinutes,psfMid/max(psfMid(:)),'c<','MarkerFaceColor','c');
-plot(posMinutes,psfMid,'c<','MarkerFaceColor','c');
+subplot(1,2,1);
+plot(posRowMinutes,psfMidRow,'b<','MarkerFaceColor','b','MarkerSize',11);
+subplot(1,2,2);
+plot(posRowMinutes,psfMidRow/max(psfMidRow(:)),'b<','MarkerFaceColor','b','MarkerSize',12);
 
-% Compute on a scene and then get PSF again
-patchSize = 64;
-sceneFov = 1;
-scene = sceneCreate('macbeth d65',patchSize);
-scene = sceneSet(scene,'fov',sceneFov);
-oi2 = oiCompute(oi1,scene,'pad value','mean');
+% Report on sampling and normalization
+fprintf('OI PSF RAW\n')
+if (posRowMinutes(1) == posColMinutes(1) & posRowMinutes(end) == posColMinutes(end))
+    fprintf('\tRow and column range MATCH\n');
+else
+    fprintf('\tRow and column range DO NOT MATCH\n');
+end
+if (posRowMinutes(2)-posRowMinutes(1) == posColMinutes(2)-posColMinutes(1))
+    fprintf('\tRow and column spacing MATCH\n');
+else
+    fprintf('\tRow and column spacing DO NOT MATCH\n');
+end
+if (length(posRowMinutes) == length(posColMinutes))
+    fprintf('\tRow and column number of pixels MATCH\n');
+else
+    fprintf('\tRow and column number of pixels DO NOT MATCH\n');
+end
+fprintf('\tRow sampling min, max, spacing (min): %0.2f, %0.2f, %0.4f, %d samples\n',min(posRowMinutes(:)),max(posRowMinutes(:)),posRowMinutes(2)-posRowMinutes(1),length(posRowMinutes));
+fprintf('\tCol sampling min, max, spacing (min): %0.2f, %0.2f, %0.4f, %d samples\n',min(posColMinutes(:)),max(posColMinutes(:)),posColMinutes(2)-posColMinutes(1),length(posColMinutes));
+psfIntegratedVol = sum(uData.psf(:))*(posRowMinutes(2)-posRowMinutes(1))*(posColMinutes(2)-posColMinutes(1))*length(posRowMinutes)*length(posColMinutes);
+fprintf('\tPSF volume %0.2f (raw sum) %0.2g (integrated)\n',sum(uData.psf(:)),psfIntegratedVol);
+theOtf = oi1_psf.optics.OTF.OTF(:,:,1);
+maxOtf = -Inf;
+for ii = 1:size(theOtf,1)
+    for jj = 1:size(theOtf,2)
+        if (abs(theOtf(ii,jj)) > maxOtf)
+            bestI = ii;
+            bestJ = jj;
+            maxOtf = abs(theOtf(ii,jj));
+        end
+    end
+end
+fprintf('\tMax of OTF at %d, %d\n',bestI,bestJ);
 
-uData2 = oiPlot(oi2,'psf',[],thisWave);
+% Compute on the scene and plot to get the psf data
+%
+% The order of key functions called here is
+%   oiCompute
+%   opticsSICompute
+%   opticsPSF
+%   oiApplyPSF                    Sets up a wvf object from the oi, matched to the spatial properties of the scene.
+%                                 Computes PSF from the new wvf object, converts to OTF, stores this in the oi,
+%                                 and convolves in the frequency domain. The convolution is done with routine ImageConvFrequencyDomain
+
+oi1_psf = oiCompute(oi1_psf,scene,'pad value','mean');
+uData2_psf = oiPlot(oi1_psf,'psf',[],thisWave);
 title(sprintf('Point spread from modified wvf human after compute (%d nm)',thisWave));
+close(gcf);
 
 % Add to slice plot to compare
-[r,c] = size(uData2.x);
-mid = ceil(r/2);
-psfMid = uData2.psf(mid,:);
-posMM = uData2.x(mid,:)/1000;               % Microns to mm
-posMinutes = 60*(180/pi)*(atan2(posMM,opticsGet(optics1,'flength','mm')));
+[r,c] = size(uData2_psf.x);
+midRow = ceil(r/2);
+psfMidRow = uData2_psf.psf(midRow,:);
+posRowMM = uData2_psf.x(midRow,:)/1000;               % Microns to mm
+posRowMinutes = 60*(180/pi)*(atan2(posRowMM,opticsGet(optics1_psf,'flength','mm')));
+midCol = ceil(c/2);
+psfMidCol = uData2_psf.psf(:,midCol);
+posColMM = uData2_psf.y(:,midCol)/1000;               % Microns to mm
+posColMinutes = 60*(180/pi)*(atan2(posColMM,opticsGet(optics,'flength','mm')));
 figure(sliceFig);
-%plot(posMinutes,psfMid/max(psfMid(:)),'y>','MarkerFaceColor','y');
-plot(posMinutes,psfMid,'y>','MarkerFaceColor','y');
+subplot(1,2,1);
+plot(posRowMinutes,psfMidRow,'r>','MarkerFaceColor','r','MarkerSize',10);
+subplot(1,2,2);
+plot(posRowMinutes,psfMidRow/max(psfMidRow(:)),'r>','MarkerFaceColor','r','MarkerSize',10);
+
+% Report on sampling and normalization
+fprintf('OI PSF COMPUTE\n')
+if (posRowMinutes(1) == posColMinutes(1) & posRowMinutes(end) == posColMinutes(end))
+    fprintf('\tRow and column range MATCH\n');
+else
+    fprintf('\tRow and column range DO NOT MATCH\n');
+end
+if (posRowMinutes(2)-posRowMinutes(1) == posColMinutes(2)-posColMinutes(1))
+    fprintf('\tRow and column spacing MATCH\n');
+else
+    fprintf('\tRow and column spacing DO NOT MATCH\n');
+end
+if (length(posRowMinutes) == length(posColMinutes))
+    fprintf('\tRow and column number of pixels MATCH\n');
+else
+    fprintf('\tRow and column number of pixels DO NOT MATCH\n');
+end
+fprintf('\tRow sampling min, max, spacing (min): %0.2f, %0.2f, %0.4f, %d samples\n',min(posRowMinutes(:)),max(posRowMinutes(:)),posRowMinutes(2)-posRowMinutes(1),length(posRowMinutes));
+fprintf('\tCol sampling min, max, spacing (min): %0.2f, %0.2f, %0.4f, %d samples\n',min(posColMinutes(:)),max(posColMinutes(:)),posColMinutes(2)-posColMinutes(1),length(posColMinutes));
+psfIntegratedVol = sum(uData.psf(:))*(posRowMinutes(2)-posRowMinutes(1))*(posColMinutes(2)-posColMinutes(1))*length(posRowMinutes)*length(posColMinutes);
+fprintf('\tPSF volume %0.2f (raw sum) %0.2g (integrated)\n',sum(uData.psf(:)),psfIntegratedVol);
+
+%% Then the optics otf method
+%
+% This was the method used in ISETBio prior to the merge with ISETCam.
+oi1_otf = oiCreate('human wvf');
+optics1_otf = optics1_psf;
+oi1_otf = oiSet(oi1_otf,'optics',optics1_otf );
+oi1_otf = oiSet(oi1_otf,'optics name','opticsotf');  
+uData1_otf = oiPlot(oi1_otf,'psf',[],thisWave);
+title(sprintf('Point spread from modified wvf human (opticspsf) (%d nm)',thisWave));
+close(gcf);
+
+% Add to slice plot to compare
+[r,c] = size(uData1_otf.x);
+midRow = ceil(r/2);
+psfMidRow = uData1_otf.psf(midRow,:);
+posRowMM = uData1_otf.x(midRow,:)/1000;               % Microns to mm
+posRowMinutes = 60*(180/pi)*(atan2(posRowMM,opticsGet(optics1_otf,'flength','mm')));
+midCol = ceil(c/2);
+psfMidCol = uData1_otf.psf(:,midCol);
+posColMM = uData1_otf.y(:,midCol)/1000;               % Microns to mm
+posColMinutes = 60*(180/pi)*(atan2(posColMM,opticsGet(optics,'flength','mm')));
+figure(sliceFig);
+subplot(1,2,1);
+plot(posRowMinutes,psfMidRow,'ms','MarkerFaceColor','m','MarkerSize',9);
+subplot(1,2,2);
+plot(posRowMinutes,psfMidRow/max(psfMidRow(:)),'ms','MarkerFaceColor','m','MarkerSize',9);
+
+% Report on sampling an normalization
+fprintf('OI OTF RAW\n')
+if (posRowMinutes(1) == posColMinutes(1) & posRowMinutes(end) == posColMinutes(end))
+    fprintf('\tRow and column range MATCH\n');
+else
+    fprintf('\tRow and column range DO NOT MATCH\n');
+end
+if (posRowMinutes(2)-posRowMinutes(1) == posColMinutes(2)-posColMinutes(1))
+    fprintf('\tRow and column spacing MATCH\n');
+else
+    fprintf('\tRow and column spacing DO NOT MATCH\n');
+end
+if (length(posRowMinutes) == length(posColMinutes))
+    fprintf('\tRow and column number of pixels MATCH\n');
+else
+    fprintf('\tRow and column number of pixels DO NOT MATCH\n');
+end
+fprintf('\tRow sampling min, max, spacing (min): %0.2f, %0.2f, %0.4f, %d samples\n',min(posRowMinutes(:)),max(posRowMinutes(:)),posRowMinutes(2)-posRowMinutes(1),length(posRowMinutes));
+fprintf('\tCol sampling min, max, spacing (min): %0.2f, %0.2f, %0.4f, %d samples\n',min(posColMinutes(:)),max(posColMinutes(:)),posColMinutes(2)-posColMinutes(1),length(posColMinutes));
+psfIntegratedVol = sum(uData.psf(:))*(posRowMinutes(2)-posRowMinutes(1))*(posColMinutes(2)-posColMinutes(1))*length(posRowMinutes)*length(posColMinutes);
+fprintf('\tPSF volume %0.2f (raw sum) %0.2g (integrated)\n',sum(uData.psf(:)),psfIntegratedVol);
+theOtf = oi1_otf.optics.OTF.OTF(:,:,1);
+maxOtf = -Inf;
+for ii = 1:size(theOtf,1)
+    for jj = 1:size(theOtf,2)
+        if (abs(theOtf(ii,jj)) > maxOtf)
+            bestI = ii;
+            bestJ = jj;
+            maxOtf = abs(theOtf(ii,jj));
+        end
+    end
+end
+fprintf('\tMax of OTF at %d, %d\n',bestI,bestJ);
+
+% And now after oi compute on the scene
+%
+% The order of key functions called here is
+%   oiCompute
+%   opticsSICompute                Sets the angular size of the oi tomatch the scene.  This, I think, makes the frequency support of the oi
+%                                  different from what is stored in the optics structure, where the OTF lives.
+%   opticsOTF
+%   opticCalculateOTF              Computes the frequency support of the oi and calls customOTF to interpolate the OTF to that support.
+%   customOTF                      Interpolates the OTF stored in the oi to the frequency sampling passed.
+%   
+oi2_otf = oiCompute(oi1_otf,scene,'pad value','mean');
+
+% Plot to get data
+uData2_otf = oiPlot(oi2_otf,'psf',[],thisWave);
+title(sprintf('Point spread from modified wvf human after compute (%d nm)',thisWave));
+close(gcf);
+
+% Add to slice plot to compare
+[r,c] = size(uData2_otf.x);
+midRow = ceil(r/2);
+psfMidRow = uData2_otf.psf(midRow,:);
+posRowMM = uData2_otf.x(midRow,:)/1000;               % Microns to mm
+posRowMinutes = 60*(180/pi)*(atan2(posRowMM,opticsGet(optics1_psf,'flength','mm')));
+midCol = ceil(c/2);
+psfMidCol = uData2_otf.psf(:,midCol);
+posColMM = uData2_otf.y(:,midCol)/1000;               % Microns to mm
+posColMinutes = 60*(180/pi)*(atan2(posColMM,opticsGet(optics,'flength','mm')));
+figure(sliceFig);
+subplot(1,2,1);
+plot(posRowMinutes,psfMidRow,'gs','MarkerFaceColor','g','MarkerSize',8);
+subplot(1,2,2);
+plot(posRowMinutes,psfMidRow/max(psfMidRow(:)),'gs','MarkerFaceColor','g','MarkerSize',8);
+
+% Report on sampling an normalization
+fprintf('OI OTF COMPUTE\n')
+if (posRowMinutes(1) == posColMinutes(1) & posRowMinutes(end) == posColMinutes(end))
+    fprintf('\tRow and column range MATCH\n');
+else
+    fprintf('\tRow and column range DO NOT MATCH\n');
+end
+if (posRowMinutes(2)-posRowMinutes(1) == posColMinutes(2)-posColMinutes(1))
+    fprintf('\tRow and column spacing MATCH\n');
+else
+    fprintf('\tRow and column spacing DO NOT MATCH\n');
+end
+if (length(posRowMinutes) == length(posColMinutes))
+    fprintf('\tRow and column number of pixels MATCH\n');
+else
+    fprintf('\tRow and column number of pixels DO NOT MATCH\n');
+end
+fprintf('\tRow sampling min, max, spacing (min): %0.2f, %0.2f, %0.4f, %d samples\n',min(posRowMinutes(:)),max(posRowMinutes(:)),posRowMinutes(2)-posRowMinutes(1),length(posRowMinutes));
+fprintf('\tCol sampling min, max, spacing (min): %0.2f, %0.2f, %0.4f, %d samples\n',min(posColMinutes(:)),max(posColMinutes(:)),posColMinutes(2)-posColMinutes(1),length(posColMinutes));
+psfIntegratedVol = sum(uData.psf(:))*(posRowMinutes(2)-posRowMinutes(1))*(posColMinutes(2)-posColMinutes(1))*length(posRowMinutes)*length(posColMinutes);
+fprintf('\tPSF volume %0.2f (raw sum) %0.2g (integrated)\n',sum(uData.psf(:)),psfIntegratedVol);
+
+%% Tidy up slice figure
+figure(sliceFig);
+subplot(1,2,1);
+set(gca,'xlim',[-2 2]);
+grid on;
+xlabel('Arc Minutes');
+ylabel('PSF');
+title(sprintf('Diffraction limited, %0.1f mm pupil, %0.f nm',calcPupilMM,calcWavelength));
+legend({'WVF','PTB AIRY SCALED TO WVF','OI DIFF LIMITED','OI PSF RAW','OI PSF COMPUTE','OI OTF RAW','OI OTF COMPUTE'});
+subplot(1,2,2);
+set(gca,'xlim',[-2 2]);
+grid on;
+xlabel('Arc Minutes');
+ylabel('Normalized PSF');
+title(sprintf('Diffraction limited, %0.1f mm pupil, %0.f nm',calcPupilMM,calcWavelength));
+legend({'WVF','PTB AIRY','OI DIFF LIMITED','OI PSF RAW','OI PSF COMPUTE','OI OTF RAW','OI OTF COMPUTE'});
 
 %% Repeat the PSF calculation with a wavelength offset
 %
