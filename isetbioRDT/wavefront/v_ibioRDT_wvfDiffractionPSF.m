@@ -48,10 +48,26 @@ maxMIN = 2;
 wList = wvfGet(wvf0,'calc wave');
 
 %% Create an ISETBio scene, which we will need below
-patchSize = 64;
+%
+% We make this a spatial delta function against a uniform background.
+% Better style would be to use sets and gets on the photons.
+sceneSize = 256;
+sceneMiddleRow = floor(sceneSize/2)+1;
+pixelsBetweenLines = 5;
+bgPhotons = 100;
+deltaPhotons = 1000;
+deltaWidthPixels = 4;
 sceneFov = 1;
-scene = sceneCreate('macbeth d65',patchSize);
+% patchSize = 64; scene = sceneCreate('macbeth d65',patchSize);
+scene = sceneCreate('grid lines',sceneSize,pixelsBetweenLines);
 scene = sceneSet(scene,'fov',sceneFov);
+thePhotons = sceneGet(scene,'photons');
+thePhotons = bgPhotons*ones(size(thePhotons));
+for ww = 1:size(thePhotons,3)
+    thePhotons(sceneMiddleRow-deltaWidthPixels:sceneMiddleRow+deltaWidthPixels,sceneMiddleRow-deltaWidthPixels:sceneMiddleRow+deltaWidthPixels,ww) = deltaPhotons;
+end
+scene = sceneSet(scene,'photons',thePhotons);
+chkPhotons = sceneGet(scene,'photons');
 
 %% Calculate the PSF
 %
@@ -317,11 +333,19 @@ fprintf('\tMax of OTF at %d, %d\n',bestI,bestJ);
 %   oiApplyPSF                    Sets up a wvf object from the oi, matched to the spatial properties of the scene.
 %                                 Computes PSF from the new wvf object, converts to OTF, stores this in the oi,
 %                                 and convolves in the frequency domain. The convolution is done with routine ImageConvFrequencyDomain
-
-oi1_psf = oiCompute(oi1_psf,scene,'pad value','mean');
-uData2_psf = oiPlot(oi1_psf,'psf',[],thisWave);
+oi2_psf = oiCompute(oi1_psf,scene,'pad value','mean');
+uData2_psf = oiPlot(oi2_psf,'psf',[],thisWave);
 title(sprintf('Point spread from modified wvf human after compute (%d nm)',thisWave));
 close(gcf);
+
+% Plot a slice of the computed oi photons
+theWl = 550;
+wls = oiGet(oi2_psf,'wave');
+wlIndex = find(wls == theWl);
+oiSliceFigure = figure; clf; hold on;
+oiPhotons2_psf = oiGet(oi2_psf,'photons');
+oiPositions2_psf = 60*oiGet(oi2_psf,'angular support');
+plot(oiPositions2_psf(sceneMiddleRow,:,1),oiPhotons2_psf(sceneMiddleRow,:,wlIndex),'ro','MarkerFaceColor','r','MarkerSize',10);
 
 % Add to slice plot to compare
 [r,c] = size(uData2_psf.x);
@@ -430,9 +454,15 @@ fprintf('\tMax of OTF at %d, %d\n',bestI,bestJ);
 %                                  different from what is stored in the optics structure, where the OTF lives.
 %   opticsOTF
 %   opticCalculateOTF              Computes the frequency support of the oi and calls customOTF to interpolate the OTF to that support.
-%   customOTF                      Interpolates the OTF stored in the oi to the frequency sampling passed.
-%   
+%   customOTF                      Interpolates the OTF stored in the oi to the frequency sampling passed. 
 oi2_otf = oiCompute(oi1_otf,scene,'pad value','mean');
+figure(oiSliceFigure); hold on;
+oiPhotons2_otf = oiGet(oi2_otf,'photons');
+oiPositions2_otf = 60*oiGet(oi2_otf,'angular support');
+plot(oiPositions2_otf(sceneMiddleRow,:,1),oiPhotons2_otf(sceneMiddleRow,:,wlIndex),'go','MarkerFaceColor','g','MarkerSize',10);
+xlabel('Position (min)');
+ylabel('Photons');
+title('OI comparison, spatial delta funciton input');
 
 % Plot to get data
 uData2_otf = oiPlot(oi2_otf,'psf',[],thisWave);
