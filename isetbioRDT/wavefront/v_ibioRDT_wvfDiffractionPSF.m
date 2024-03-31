@@ -54,11 +54,10 @@ wList = wvfGet(wvf0,'calc wave');
 sceneSize = 256;
 sceneMiddleRow = floor(sceneSize/2)+1;
 pixelsBetweenLines = 5;
-bgPhotons = 100;
+bgPhotons = 0;
 deltaPhotons = 1000;
-deltaWidthPixels = 4;
-sceneFov = 1;
-% patchSize = 64; scene = sceneCreate('macbeth d65',patchSize);
+deltaWidthPixels = 0;
+sceneFov = 5;
 scene = sceneCreate('grid lines',sceneSize,pixelsBetweenLines);
 scene = sceneSet(scene,'fov',sceneFov);
 thePhotons = sceneGet(scene,'photons');
@@ -68,6 +67,7 @@ for ww = 1:size(thePhotons,3)
 end
 scene = sceneSet(scene,'photons',thePhotons);
 chkPhotons = sceneGet(scene,'photons');
+figure; imagesc(chkPhotons(:,:,16));
 
 %% Calculate the PSF
 %
@@ -342,10 +342,17 @@ close(gcf);
 theWl = 550;
 wls = oiGet(oi2_psf,'wave');
 wlIndex = find(wls == theWl);
-oiSliceFigure = figure; clf; hold on;
+oiSliceFigure = figure; clf; 
+set(gcf,'Position',[100 100 1500 750]);
 oiPhotons2_psf = oiGet(oi2_psf,'photons');
 oiPositions2_psf = 60*oiGet(oi2_psf,'angular support');
-plot(oiPositions2_psf(sceneMiddleRow,:,1),oiPhotons2_psf(sceneMiddleRow,:,wlIndex),'ro','MarkerFaceColor','r','MarkerSize',10);
+oiNumberRows_psf = size(oiPhotons2_psf,1);
+oiMiddleRow_psf = floor(oiNumberRows_psf/2) + 1;
+subplot(1,2,1); hold on;
+plot(oiPositions2_psf(oiMiddleRow_psf,:,1),oiPhotons2_psf(oiMiddleRow_psf,:,wlIndex),'ro','MarkerFaceColor','r','MarkerSize',10);
+subplot(1,2,2); hold on;
+plot(oiPositions2_psf(oiMiddleRow_psf,:,1),oiPhotons2_psf(oiMiddleRow_psf,:,wlIndex),'ro','MarkerFaceColor','r','MarkerSize',10);
+% figure; imagesc(oiPhotons2_psf(:,:,16));
 
 % Add to slice plot to compare
 [r,c] = size(uData2_psf.x);
@@ -407,9 +414,9 @@ psfMidCol = uData1_otf.psf(:,midCol);
 posColMM = uData1_otf.y(:,midCol)/1000;               % Microns to mm
 posColMinutes = 60*(180/pi)*(atan2(posColMM,opticsGet(optics,'flength','mm')));
 figure(sliceFig);
-subplot(1,2,1);
+subplot(1,2,1); hold on;
 plot(posRowMinutes,psfMidRow,'ms','MarkerFaceColor','m','MarkerSize',9);
-subplot(1,2,2);
+subplot(1,2,2); hold on;
 plot(posRowMinutes,psfMidRow/max(psfMidRow(:)),'ms','MarkerFaceColor','m','MarkerSize',9);
 
 % Report on sampling an normalization
@@ -456,13 +463,28 @@ fprintf('\tMax of OTF at %d, %d\n',bestI,bestJ);
 %   opticCalculateOTF              Computes the frequency support of the oi and calls customOTF to interpolate the OTF to that support.
 %   customOTF                      Interpolates the OTF stored in the oi to the frequency sampling passed. 
 oi2_otf = oiCompute(oi1_otf,scene,'pad value','mean');
-figure(oiSliceFigure); hold on;
+figure(oiSliceFigure);
 oiPhotons2_otf = oiGet(oi2_otf,'photons');
 oiPositions2_otf = 60*oiGet(oi2_otf,'angular support');
-plot(oiPositions2_otf(sceneMiddleRow,:,1),oiPhotons2_otf(sceneMiddleRow,:,wlIndex),'go','MarkerFaceColor','g','MarkerSize',10);
+oiNumberRows_otf = size(oiPhotons2_otf,1);
+oiMiddleRow_otf = floor(oiNumberRows_otf/2) + 1;
+subplot(1,2,1);
+plot(oiPositions2_otf(oiMiddleRow_otf,:,1),oiPhotons2_otf(oiMiddleRow_otf,:,wlIndex),'go','MarkerFaceColor','g','MarkerSize',8);
 xlabel('Position (min)');
 ylabel('Photons');
 title('OI comparison, spatial delta funciton input');
+xlim([-maxMIN maxMIN]);
+ylim([0 1.5*max(oiPhotons2_otf(oiMiddleRow_otf,:,wlIndex))]);
+legend('PSF method', 'OTF method');
+subplot(1,2,2);
+plot(oiPositions2_otf(oiMiddleRow_otf,:,1),oiPhotons2_otf(oiMiddleRow_otf,:,wlIndex),'go','MarkerFaceColor','g','MarkerSize',8);
+xlabel('Position (min)');
+ylabel('Photons');
+title('OI comparison, spatial delta funciton input');
+xlim([-10*maxMIN 10*maxMIN]);
+ylim([0 0.1*max(oiPhotons2_otf(oiMiddleRow_otf,:,wlIndex))]);
+legend('PSF method', 'OTF method');
+% figure; imagesc(oiPhotons2_otf(:,:,16));
 
 % Plot to get data
 uData2_otf = oiPlot(oi2_otf,'psf',[],thisWave);
