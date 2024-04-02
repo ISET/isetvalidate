@@ -587,8 +587,11 @@ lcaDiopters = wvfLCAFromWavelengthDifference(wvfGet(wvf1,'measured wl'),wList);
 lcaMicrons = wvfDefocusDioptersToMicrons(...
     lcaDiopters, wvfGet(wvf1,'measured pupil diameter'));
 
-% Add in the lca defocus to the existing defocus term. That happens to be
-% zero to start with, but we code for the more general case.
+% Add the lca defocus to the existing defocus term. That happens to be
+% zero to start with, but we code for the more general case.  Doing
+% this offsets the LCA that gets added in with 'humanlca' at true as
+% in the wvfCompute just below, so we end up at diffraction limited for 
+% the calculated wavelength.
 wvf1 = wvfSet(wvf1,'zcoeffs',wvfGet(wvf1,'zcoeffs',{'defocus'})+lcaMicrons,{'defocus'});
 wvf1 = wvfCompute(wvf1,'humanlca',true);
 w = wvfGet(wvf1,'calc wave');
@@ -608,14 +611,14 @@ pupilSize = wvfGet(wvf1,'calc pupil size','mm');
 % pass through the more coarsely computed points.
 %
 % In the plot created below, the result of this one is the thin green line, which 
-% you can examine and see passing through the sample points for the red and blue
+% you can examine and see passing through the sample points for the blue and red 
 % curves, which are coarser.
 wvf17Samples = 1001;
 wvf17 = wvfSet(wvf17,'measured wl',wList);
 wvf17 = wvfSet(wvf17,'calc wave',wList);
 wvf17 = wvfSet(wvf17,'number spatial samples',wvf17Samples);
 wvf17 = wvfSet(wvf17,'ref psf sample interval',wvfGet(wvf17,'ref psf sample interval')/4);
-wvf17 = wvfCompute(wvf17);
+wvf17 = wvfCompute(wvf17,'humanlca',true);
 
 % There should be no difference here between wvf1 and wvf17, because we corrected for the
 % chromatic aberration in both cases, once by adding the appropriate defocus explicitly,
@@ -625,8 +628,8 @@ wvf17 = wvfCompute(wvf17);
 [~,h] = wvfPlot(wvf1,'1d psf angle normalized','unit','min','wave',w,'plot range',maxMIN);
 set(h,'Color','r','LineWidth',4);
 hold on
-%[~,h] = wvfPlot(wvf17,'1d psf angle normalized','unit','min','wave',w,'plot range',maxMIN,'window',false);
-[~,h] = wvfPlot(wvf17,'1d psf angle','unit','min','wave',w,'plot range',maxMIN,'window',false);
+[~,h] = wvfPlot(wvf17,'1d psf angle normalized','unit','min','wave',w,'plot range',maxMIN,'window',false);
+%[~,h] = wvfPlot(wvf17,'1d psf angle','unit','min','wave',w,'plot range',maxMIN,'window',false);
 set(h,'Color','g','LineWidth',3);
 ptbPSF1 = AiryPattern(radians,pupilSize,w);
 plot(arcminutes(ptbSampleIndex),ptbPSF1(ptbSampleIndex),'b','LineWidth',2);

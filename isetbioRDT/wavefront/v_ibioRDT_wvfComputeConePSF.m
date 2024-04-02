@@ -174,14 +174,6 @@ arcminutes1 = wvfGet(wvfParams1,'psf arcmin per sample',wls(1))*((1:wvfGet(wvfPa
 arcminutes = wvfGet(wvfParams1,'psf angular samples','min',wls(1));
 UnitTest.assertIsZero(max(abs(arcminutes(:)-arcminutes1(:))),'Angular samples compare',0);
 
-% Let's compare with what happens when we do this through the optics and oi
-% methods
-optics1 = wvf2optics(wvfParams1); 
-oi1 = oiCreate('human wvf');
-oiSet(oi1,'optics',optics);
-oi1 = oiSet(oi1,'optics name','opticsotf');  
-oi = oiCompute(oi,scene,'pad value','mean');
-
 %% Center and circularly average if desired
 if (CENTER)
     lpsf = psfCenter(conePsf1(:,:,1));
