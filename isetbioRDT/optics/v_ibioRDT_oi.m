@@ -27,10 +27,18 @@ function ValidationFunction(runTimeParams)
     toleranceFraction = 0.0001;
 
     % Create a scene to check oi function
-    patchSize = 64;
-    sceneFov = 1;
-    scene = sceneCreate('macbeth d65',patchSize);
-    scene = sceneSet(scene,'fov',sceneFov);
+    %
+    % The default scene, which was used to produce the validation data, 
+    % is somewhat undersampled as the fov is large and the number of pixels
+    % fairly small.  Replace the sceneCreate with the commented out code
+    % to explore more reasonable spatial sampling.
+    %
+    % patchSize = 64;
+    % sceneFov = 1;
+    % scene = sceneCreate('macbeth d65',patchSize);
+    % scene = sceneSet(scene,'fov',sceneFov);
+    scene = sceneCreate;
+
     theScenePhotons = sceneGet(scene,'photons');
     theTolerance = mean(theScenePhotons(:))*toleranceFraction;
     UnitTest.validationData('theScenePhotons',theScenePhotons, ...
@@ -47,8 +55,10 @@ function ValidationFunction(runTimeParams)
     oi = oiCreate('diffraction limited');
     oi = oiCompute(oi,scene,'pad value','mean');
     if (runTimeParams.generatePlots)
+        oiPlot(oi,'otf',[],420);
+        title('Diffraction limited 420 nm');
         oiPlot(oi,'otf',[],550); 
-        oiPlot(oi,'otf',[],450); 
+        title('Diffraction limited 420 nm');
     end
     theOiPhotons = oiGet(oi,'photons');
 
@@ -74,9 +84,8 @@ function ValidationFunction(runTimeParams)
         title('OpticsOtf Method 550 nm')
     end
     theOiPhotons = oiGet(oi,'photons');
-    mean(theOiPhotons(:))
-    max(theOiPhotons(:))
-
+    fprintf('OTF method mean/max photons: %0.3g, %0.3g\n',mean(theOiPhotons(:)),max(theOiPhotons(:)));
+    
     % Repeat with new PSF method
     %
     % This is the new method in isetcam.  The psf
@@ -92,11 +101,10 @@ function ValidationFunction(runTimeParams)
         title('OpticsPsf Method 550 nm')
     end
     theOiPhotons1 = oiGet(oi1,'photons');
-    mean(theOiPhotons1(:))
-    max(theOiPhotons1(:))
+    fprintf('PSF method mean/max photons: %0.3g, %0.3g\n',mean(theOiPhotons1(:)),max(theOiPhotons1(:)));
 
     % The PSFs should all sum to 1, which they do
-    if (abs(sum(uData420.psf(:))-1) > 1e-6)
+    if ((sum(uData420.psf(:))-1) > 1e-6)
         error('420 nm PSF from OTF method does not sum to 1');
     end
     if (abs(sum(uData4201.psf(:))-1) > 1e-6)
@@ -109,13 +117,12 @@ function ValidationFunction(runTimeParams)
         error('550 nm PSF from PSF method does not sum to 1');
     end
 
-    % Check volume in new psf over same range as old psf.
-    maxOpticsOtfMethodSupport = max([uData420.x(:) ; uData420.y(:)]);
-    index = find(uData4201.x(:) <= maxOpticsOtfMethodSupport & uData4201.y(:) <= maxOpticsOtfMethodSupport);
-    sum(uData4201.psf(index))
-    sum(uData5501.psf(index))
-
-    % Compare slice of PSF for two methods
+    % Compare slice of PSF for two methods.  These differ in scale
+    % because they are normalized over different support.  See
+    % v_ibioRDT_wvfDiffractionPSF for extensive code comparing various
+    % aspects of the two methods, for the diffraction limited PSF case.
+    % That code shows they have the same shape, and that they result in the
+    % same image when the input is a delta function.
     index = find(uData420.y == min(abs(uData420.y(:))));
     index1 = find(uData4201.y == min(abs(uData4201.y(:))));
     figure; clf; set(gcf,'Position',[100 100 1500 600]);
@@ -137,10 +144,9 @@ function ValidationFunction(runTimeParams)
     legend({'Original OTF method','New PSF method'});
     title('550 nm');
 
-    % December, 2023. After wvfGet change.
-    % assert(abs( mean(theOiPhotons(:))/6.9956e+13 - 1) < 1e-4);
-    % abs(mean(theOiPhotons(:))/6.9956e+13 - 1)
-    % abs(mean(theOiPhotons1(:))/6.9956e+13 - 1)
+    % April, 2024. These asserts both pass.
+    assert(abs( mean(theOiPhotons(:))/6.9956e+13 - 1) < 1e-4);
+    assert(abs( mean(theOiPhotons1(:))/6.9956e+13 - 1) < 1e-4);
     
     theTolerance = mean(theOiPhotons(:))*toleranceFraction;
     UnitTest.validationData('humanWVFFromScenePhotons', theOiPhotons, ...
