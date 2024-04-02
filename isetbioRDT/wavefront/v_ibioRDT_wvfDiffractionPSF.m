@@ -22,6 +22,13 @@ close all;
 % Tolerance fraction
 toleranceFraction = 0.0002;
 
+%% Do diff limited for wvf human oi
+%
+% You can set this to false to see human optics rather than diffraction
+% limited optics for the wvf human oi case.  Just for looking.  It should
+% be true for this validation to work correctly as intended.
+DIFFLIMITEDOI = true;
+
 %% Some informative text
 UnitTest.validationRecord('SIMPLE_MESSAGE', 'Check diffraction limited PSFs.');
 
@@ -109,10 +116,12 @@ UnitTest.assertIsZero(max(abs(measWavelength(:)-calcWavelength(:))),'Measured an
 %
 % This is done by a wvf method.
 sliceFig = figure; clf;
-set(gcf,'Position',[10 10 1500 750]);
-subplot(1,2,1); hold on
+set(gcf,'Position',[10 10 2200 750]);
+subplot(1,3,1); hold on;
 uData_wvfSlice = wvfPlot(wvf0,'1d psf angle','unit','min','wave',wList,'plot range',maxMIN,'window',false);
-subplot(1,2,2); hold on
+subplot(1,3,2); hold on;
+uData_wvfSlice = wvfPlot(wvf0,'1d psf angle','unit','min','wave',wList,'plot range',maxMIN,'window',false);
+subplot(1,3,3); hold on
 wvfPlot(wvf0,'1d psf angle normalized','unit','min','wave',wList,'plot range',maxMIN,'window',false);
 
 % Stash wvf0 psf for validation
@@ -176,9 +185,11 @@ radians = (pi/180)*(arcminutes/60);
 % on the left we scale to match the wvf version.
 ptbPSF = AiryPattern(radians,calcPupilMM ,calcWavelength);
 figure(sliceFig);
-subplot(1,2,1);
+subplot(1,3,1); hold on;
 plot(arcminutes(ptbSampleIndex),max(uData_wvfSlice.y(:))*ptbPSF(ptbSampleIndex),'b','LineWidth',2);
-subplot(1,2,2);
+subplot(1,3,2);
+plot(arcminutes(ptbSampleIndex),max(uData_wvfSlice.y(:))*ptbPSF(ptbSampleIndex),'b','LineWidth',2);
+subplot(1,3,3);
 plot(arcminutes(ptbSampleIndex),ptbPSF(ptbSampleIndex),'b','LineWidth',2);
 
 %% Stash some info for validation
@@ -214,7 +225,7 @@ set(gca,'xlim',[-10 10],'ylim',[-10 10]);
 close(gcf);
 
 % Pull out slice and add to slice plot
-figure(sliceFig); hold on;
+figure(sliceFig);
 [r,c] = size(uData.x);
 midRow = ceil(r/2);
 psfMidRow = uData.psf(midRow,:);
@@ -225,10 +236,12 @@ psfMidCol = uData.psf(:,midCol);
 posColMM = uData.y(:,midCol)/1000;               % Microns to mm
 posColMinutes = 60*(180/pi)*(atan2(posColMM,opticsGet(optics,'flength','mm')));
 figure(sliceFig);
-subplot(1,2,1);
+subplot(1,3,1);
+plot(arcminutes(ptbSampleIndex),max(uData_wvfSlice.y(:))*ptbPSF(ptbSampleIndex),'b','LineWidth',2);
+subplot(1,3,2);
 plot(posRowMinutes,psfMidRow,'ko','MarkerFaceColor','k','MarkerSize',14);
 figure(sliceFig);
-subplot(1,2,2);
+subplot(1,3,3);
 plot(posRowMinutes,psfMidRow/max(psfMidRow(:)),'ko','MarkerFaceColor','k','MarkerSize',14);
 
 % Report on sampling and normalization
@@ -261,7 +274,9 @@ oi1_psf = oiCreate('human wvf');
 wvfForOi = wvfCreate('calc wavelengths',400:10:700);
 wvfForOi = wvfCompute(wvfForOi,'humanlca',false);
 optics1_psf = wvf2optics(wvfForOi);
-oi1_psf = oiSet(oi1_psf,'optics',optics1_psf);
+if (DIFFLIMITEDOI)
+    oi1_psf = oiSet(oi1_psf,'optics',optics1_psf);
+end
 oi1_psf = oiSet(oi1_psf,'optics name','opticspsf');  
 uData1_psf = oiPlot(oi1_psf,'psf',[],thisWave);
 title(sprintf('Point spread from modified wvf human (opticspsf) (%d nm)',thisWave));
@@ -286,9 +301,11 @@ psfMidCol = uData1_psf.psf(:,midCol);
 posColMM = uData1_psf.y(:,midCol)/1000;               % Microns to mm
 posColMinutes = 60*(180/pi)*(atan2(posColMM,opticsGet(optics,'flength','mm')));
 figure(sliceFig);
-subplot(1,2,1);
+subplot(1,3,1);
 plot(posRowMinutes,psfMidRow,'b<','MarkerFaceColor','b','MarkerSize',12);
-subplot(1,2,2);
+subplot(1,3,2);
+plot(posRowMinutes,psfMidRow,'b<','MarkerFaceColor','b','MarkerSize',12);
+subplot(1,3,3);
 plot(posRowMinutes,psfMidRow/max(psfMidRow(:)),'b<','MarkerFaceColor','b','MarkerSize',12);
 
 % Report on sampling and normalization
@@ -372,9 +389,11 @@ psfMidCol = uData2_psf.psf(:,midCol);
 posColMM = uData2_psf.y(:,midCol)/1000;               % Microns to mm
 posColMinutes = 60*(180/pi)*(atan2(posColMM,opticsGet(optics,'flength','mm')));
 figure(sliceFig);
-subplot(1,2,1);
+subplot(1,3,1);
 plot(posRowMinutes,psfMidRow,'r>','MarkerFaceColor','r','MarkerSize',11);
-subplot(1,2,2);
+subplot(1,3,2);
+plot(posRowMinutes,psfMidRow,'r>','MarkerFaceColor','r','MarkerSize',11);
+subplot(1,3,3);
 plot(posRowMinutes,psfMidRow/max(psfMidRow(:)),'r>','MarkerFaceColor','r','MarkerSize',11);
 
 % Report on sampling and normalization
@@ -404,7 +423,9 @@ fprintf('\tPSF volume %0.2f (raw sum) %0.2g (integrated)\n',sum(uData.psf(:)),ps
 % This was the method used in ISETBio prior to the merge with ISETCam.
 oi1_otf = oiCreate('human wvf');
 optics1_otf = optics1_psf;
-oi1_otf = oiSet(oi1_otf,'optics',optics1_otf );
+if (DIFFLIMITEDOI)
+    oi1_otf = oiSet(oi1_otf,'optics',optics1_otf );
+end
 oi1_otf = oiSet(oi1_otf,'optics name','opticsotf');  
 uData1_otf = oiPlot(oi1_otf,'psf',[],thisWave);
 title(sprintf('Point spread from modified wvf human (opticspsf) (%d nm)',thisWave));
@@ -421,9 +442,11 @@ psfMidCol = uData1_otf.psf(:,midCol);
 posColMM = uData1_otf.y(:,midCol)/1000;               % Microns to mm
 posColMinutes = 60*(180/pi)*(atan2(posColMM,opticsGet(optics,'flength','mm')));
 figure(sliceFig);
-subplot(1,2,1); hold on;
+subplot(1,3,1);
 plot(posRowMinutes,psfMidRow,'ys','MarkerFaceColor','y','MarkerSize',8);
-subplot(1,2,2); hold on;
+subplot(1,3,2); hold on;
+plot(posRowMinutes,psfMidRow,'ys','MarkerFaceColor','y','MarkerSize',8);
+subplot(1,3,3); hold on;
 plot(posRowMinutes,psfMidRow/max(psfMidRow(:)),'ys','MarkerFaceColor','y','MarkerSize',8);
 
 % Report on sampling an normalization
@@ -520,9 +543,11 @@ psfMidCol = uData2_otf.psf(:,midCol);
 posColMM = uData2_otf.y(:,midCol)/1000;               % Microns to mm
 posColMinutes = 60*(180/pi)*(atan2(posColMM,opticsGet(optics,'flength','mm')));
 figure(sliceFig);
-subplot(1,2,1);
+subplot(1,3,1);
 plot(posRowMinutes,psfMidRow,'gs','MarkerFaceColor','g','MarkerSize',6);
-subplot(1,2,2);
+subplot(1,3,2);
+plot(posRowMinutes,psfMidRow,'gs','MarkerFaceColor','g','MarkerSize',6);
+subplot(1,3,3);
 plot(posRowMinutes,psfMidRow/max(psfMidRow(:)),'gs','MarkerFaceColor','g','MarkerSize',6);
 
 % Report on sampling an normalization
@@ -549,14 +574,20 @@ fprintf('\tPSF volume %0.2f (raw sum) %0.2g (integrated)\n',sum(uData.psf(:)),ps
 
 %% Tidy up slice figure
 figure(sliceFig);
-subplot(1,2,1);
+subplot(1,3,1);
+grid on;
+xlabel('Arc Minutes');
+ylabel('PSF');
+title({sprintf('Diffraction limited, %0.1f mm pupil, %0.f nm',calcPupilMM,calcWavelength) ; sprintf('Scene fov %0.1f degs; scene pixels %d, bgPhotons %d, deltaPhotons %d',sceneFov,sceneSize,bgPhotons,deltaPhotons)});
+legend({'WVF','PTB AIRY SCALED TO WVF','OI DIFF LIMITED','OI PSF RAW','OI PSF COMPUTE','OI OTF RAW','OI OTF COMPUTE'});
+subplot(1,3,2);
 set(gca,'xlim',[-2 2]);
 grid on;
 xlabel('Arc Minutes');
 ylabel('PSF');
 title({sprintf('Diffraction limited, %0.1f mm pupil, %0.f nm',calcPupilMM,calcWavelength) ; sprintf('Scene fov %0.1f degs; scene pixels %d, bgPhotons %d, deltaPhotons %d',sceneFov,sceneSize,bgPhotons,deltaPhotons)});
 legend({'WVF','PTB AIRY SCALED TO WVF','OI DIFF LIMITED','OI PSF RAW','OI PSF COMPUTE','OI OTF RAW','OI OTF COMPUTE'});
-subplot(1,2,2);
+subplot(1,3,3);
 set(gca,'xlim',[-2 2]);
 grid on;
 xlabel('Arc Minutes');
