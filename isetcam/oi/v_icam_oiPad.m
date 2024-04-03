@@ -1,11 +1,14 @@
 %% v_oiPad
 %
-% Validate that the oiPad function does not change the sample spacing,
+% Validate that the oiPad function in two ways.
+% 
+% First, we check that padding does not change the sample spacing,
 % just the size of the oi data.  This is tested for the diffraction
 % limited, shift-invariant and ray trace models.
 %
-% Then compute with different pad values at the border (zero, mean,
-% border).
+% Second, we compute with different pad values at the border (zero,
+% mean, border).  We test this padvalue operation for both the
+% opticspsf and opticsotf paths.
 %
 % BW, SCIEN Stanford, 2018
 
@@ -17,14 +20,13 @@ s = sceneCreate('slanted bar',96);
 s = sceneSet(s,'fov',1);
 ieAddObject(s);
 
-%% Make oi for testing
+%% Make DL oi for testing
 oi = oiCreate('diffraction limited');
 oi = oiCompute(oi,s);
 oiGet(oi,'fov');
 baseSpacing = oiGet(oi,'sample spacing');
 
 %% Verify that padding does not change the sample spacing
-
 for padding = 10:10:100
     oip = oiPad(oi,[padding,padding]);
     % oiGet(oip,'fov')
@@ -33,7 +35,7 @@ for padding = 10:10:100
 end
 disp('v_oiPad succeeds for diffraction limited');
 
-%% Make oi for testing
+%% Make SIL oi for testing
 oi = oiCreate('shift invariant');
 oi = oiCompute(oi,s);
 oiGet(oi,'fov');
@@ -42,7 +44,6 @@ sz = oiGet(oi,'size');
 % oiWindow(oi);
 
 %% Verify that padding does not change the sample spacing
-
 for padding = 10:10:100
     oip = oiPad(oi,[padding,padding]);
     % oiGet(oip,'fov')
@@ -70,23 +71,33 @@ end
 disp('v_oiPad succeeds for ray trace');
 ieDeleteObject(s);
 
-%%  Different pad values
+%%  Different pad values for OTF and PSF compute paths
+
 scene = sceneCreate('ringsrays');
 oi = oiCreate('wvf');
-oi = oiCompute(oi,scene,'pad value','zero','crop',false);
-oiWindow(oi);
 
-%%
+% Set opticsotf path.
+oi = oiSet(oi,'optics name','opticsotf');
 oi = oiCompute(oi,scene,'pad value','mean','crop',false);
+oi = oiSet(oi,'name','Mean pad OTF');
 oiWindow(oi);
 
-%%
-oi = oiCompute(oi,scene,'pad value','border','crop',false);
+%
+oi = oiSet(oi,'optics name','opticsotf');
+oi = oiCompute(oi,scene,'pad value','zero','crop',false);
+oi = oiSet(oi,'name','Zero pad OTF');
 oiWindow(oi);
-%%
-oi = oiCompute(oi,scene,'pad value','zero','crop',true);
+
+% Set PSF path
+oi = oiSet(oi,'optics name','opticspsf');
+oi = oiCompute(oi,scene,'pad value','mean','crop',false);
+oi = oiSet(oi,'name','Mean pad PSF');
 oiWindow(oi);
-%%
-oi = oiCompute(oi,scene,'pad value','mean','crop',true);
+
+%
+oi = oiSet(oi,'optics name','opticspsf');
+oi = oiCompute(oi,scene,'pad value','zero','crop',false);
+oi = oiSet(oi,'name','Zero pad PSF');
 oiWindow(oi);
+
 %% END
