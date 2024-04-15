@@ -353,13 +353,30 @@ fprintf('\tMax of OTF at %d, %d\n',bestI,bestJ);
 % stores this in the oi, and convolves in the frequency domain. The
 % convolution is done with routine ImageConvFrequencyDomain
 %
+%{
+oi = oiCreate('human wvf');
+scene = sceneCreate('macbeth d65');
+scene = sceneCreate('slanted edge');
+scene = sceneCreate('grid lines');
+scene = sceneCreate('line d65');
+scene = sceneCreate('point array');
+
+oi = oiCompute(oi,scene,'pad value','mean','crop',false);
+sz = oiGet(oi,'size');
+oiPlot(oi,'illuminance hline',round([1 sz(2)/2]));
+%}
 % The red points in this figure
 oi2_psf = oiCompute(oi1_psf,scene,'pad value','mean');
-uData2_psf = oiPlot(oi2_psf,'psf',[],thisWave);
-title(sprintf('Point spread from modified wvf human after compute (%d nm)',thisWave));
-close(gcf);
+% uData2_psf = oiPlot(oi2_psf,'psf',[],thisWave);
+% title(sprintf('Point spread from modified wvf human after compute (%d nm)',thisWave));
+% close(gcf);
 
-% Plot a slice of the computed oi photons
+%% Plot a slice of the computed oi photons
+
+% Here is the problem
+oiPlot(oi2_psf,'illuminance hline',round([1 319/2]));
+
+%{
 theWl = 550;
 wls = oiGet(oi2_psf,'wave');
 wlIndex = find(wls == theWl);
@@ -378,6 +395,9 @@ plot(oiPositions2_psf(oiMiddleRow_psf,:,1),oiPhotons2_psf(oiMiddleRow_psf,:,wlIn
 subplot(1,3,3); hold on;
 plot(oiPositions2_psf(oiMiddleRow_psf,:,1),oiPhotons2_psf(oiMiddleRow_psf,:,wlIndex),'r','LineWidth',1);
 plot(oiPositions2_psf(oiMiddleRow_psf,:,1),oiPhotons2_psf(oiMiddleRow_psf,:,wlIndex),'ro','MarkerFaceColor','r','MarkerSize',11);
+%}
+
+%%
 % figure; imagesc(oiPhotons2_psf(:,:,16)); axis('square');
 % title('PSF method photons in OI wlband index 16');
 %{
