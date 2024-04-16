@@ -366,8 +366,6 @@ scene = sceneCreate('point array');
 oi = oiCompute(oi,scene,'pad value','mean','crop',false);
 sz = oiGet(oi,'size');
 oiPlot(oi,'illuminance hline',round([1 sz(2)/2]));
-
-oi = oiCreate('human wvf');
  
 %}
 % The red points in this figure
