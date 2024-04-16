@@ -354,7 +354,9 @@ fprintf('\tMax of OTF at %d, %d\n',bestI,bestJ);
 % convolution is done with routine ImageConvFrequencyDomain
 %
 %{
+
 oi = oiCreate('human wvf');
+
 scene = sceneCreate('macbeth d65');
 scene = sceneCreate('slanted edge');
 scene = sceneCreate('grid lines');
@@ -364,6 +366,9 @@ scene = sceneCreate('point array');
 oi = oiCompute(oi,scene,'pad value','mean','crop',false);
 sz = oiGet(oi,'size');
 oiPlot(oi,'illuminance hline',round([1 sz(2)/2]));
+
+oi = oiCreate('human wvf');
+ 
 %}
 % The red points in this figure
 oi2_psf = oiCompute(oi1_psf,scene,'pad value','mean');
