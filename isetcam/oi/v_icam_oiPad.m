@@ -1,16 +1,15 @@
 %% v_oiPad
 %
-% Validate that the oiPad function in two ways.
+% Validate the oiPad function in two ways.
 % 
 % First, we check that padding does not change the sample spacing,
-% just the size of the oi data.  This is tested for the diffraction
-% limited, shift-invariant and ray trace models.
+% just the row/col size of the oi data.  This is tested for the
+% diffraction limited, shift-invariant and ray trace models.
 %
 % Second, we compute with different pad values at the border (zero,
-% mean, border).  We test this padvalue operation for both the
+% mean, border).  We test this 'padvalue' operation for both the
 % opticspsf and opticsotf paths.
 %
-% BW, SCIEN Stanford, 2018
 
 %%
 ieInit
