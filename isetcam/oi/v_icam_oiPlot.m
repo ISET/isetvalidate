@@ -4,12 +4,16 @@
 %
 % Copyright Imageval Consulting, LLC, 2015
 
+%%
 ieInit;
 
 %% Initialize the oi structure
-scene = sceneCreate;
-scene = sceneSet(scene,'fov',4);
-oi = oiCreate; oi = oiCompute(oi,scene);
+scene = sceneCreate; scene = sceneSet(scene,'fov',4);
+oi = oiCreate('wvf'); 
+oi = oiCompute(oi,scene);
+
+%%
+[uData, g] = oiPlot(oi,'irradiance photons roi',[10 10 10 10]);
 
 %%
 [uData, g] = oiPlot(oi,'vline',[20 20]);
@@ -39,9 +43,6 @@ drawnow;
 %%
 uData = oiPlot(oi,'irradiance fft',[],450);
 drawnow;
-%%  Get some roiLocs
-% uData = oiPlot(oi,'irradiance energy roi');
-
 %%
 uData = oiPlot(oi,'psf 550','um');
 drawnow;
@@ -51,6 +52,5 @@ drawnow;
 %%
 uData = oiPlot(oi,'ls wavelength');
 drawnow;
-%%
-drawnow;
+
 %% End
