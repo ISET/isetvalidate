@@ -15,9 +15,9 @@ ieInit;
 % scene = sceneCreate('slanted edge');
 
 % The agreement is better as imSize is smaller
-% imSize = 512; scene = sceneCreate('grid lines',imSize,imSize/4);
+imSize = 256; scene = sceneCreate('grid lines',imSize,imSize/4);
 % scene = sceneCreate('macbeth d65');
-scene = sceneCreate('line d65',255);  % Shift
+% scene = sceneCreate('line d65',255);  % Shift
 % scene = sceneCreate('line d65',256);  % No shift
 
 scene = sceneSet(scene,'fov',1);
