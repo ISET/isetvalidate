@@ -59,7 +59,7 @@ function ieValidate(repo,typeToRun,varargin)
 
     ieValidate('isetcam','tutorials');
     ieValidate('isetbio','tutorials');
-    ieValidate('csfgenerator,'tutorials');
+    ieValidate('csfgenerator','tutorials');
 
     ieValidate('isetcam','scripts');
 
