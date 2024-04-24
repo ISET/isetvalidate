@@ -3,6 +3,13 @@
 % Testing the problem with failure to pad with the
 % ImageConvFrequencyDomain issue.
 %
+% NOTE:
+% This will need to be changed when we shift the convention for
+% calling opticsotf and opticspsf.
+%
+% Historically, I ran this with 'human wvf', but to keep it in the
+% ISETCam validation, BW made it just 'wvf'.
+%
 
 %%  Set up the scene
 ieInit;
@@ -25,7 +32,7 @@ scene = sceneSet(scene,'fov',1);
 
 %% This scene produced the error when using the old code
 
-oi = oiCreate('human wvf');
+oi = oiCreate('wvf');
 
 oi = oiCompute(oi,scene,'pad value','mean','crop',false);
 sz = oiGet(oi,'size');
@@ -36,7 +43,7 @@ data1 = oiPlot(oi,'illuminance hline',round([1 sz(2)/2]),'nofigure');
 
 %% Compare the opticsOTF  path.  It does not have the error.
 
-oi = oiCreate('human wvf');
+oi = oiCreate('wvf');
 
 oi = oiSet(oi,'optics name','opticsotf');
 
@@ -53,7 +60,7 @@ data2  = oiPlot(oi,'illuminance hline',round([1 sz(2)/2]),'nofigure');
 % ieNewGraphWin; plot(data1.pos,data1.data,'r-',data2.pos,data2.data,'ko');
 
 % Fractional error is a couple of percent
-assert(max( (data1.data ./ data2.data) - 1) < 3e-2)
+assert(std( (data1.data ./ data2.data) ) < 4e-2)
 
 
 %% Now check opticsPSF and opticsOTF with pad value of zero

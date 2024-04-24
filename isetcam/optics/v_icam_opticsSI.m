@@ -1,5 +1,9 @@
-%% v_opticsSI
+%% v_icam_opticsSI
 %
+% Deprecated.  We now implement shift invariant using the wvf methods
+% for everything.  We do not have a custom PSF method any more.
+%
+%% OLD 
 % Create a shift-invariant optics structure with custom PSF data.
 %
 % The structure is created using a set of point spread functions.  The
@@ -40,7 +44,7 @@ siFile = fullfile(tempdir,'customFile.mat');
 ieSaveSIDataFile(psf,wave,umPerSample,siFile);
 
 %% Read the custom data and put it into an optics structure.
-oi     = oiCreate;
+oi     = oiCreate('wvf');
 optics = siSynthetic('custom',oi,siFile,fullfile(tempdir,'deleteMe'));
 
 % Make sure the program knows you want to use shift invariant

@@ -1,7 +1,14 @@
 %%  Check that the image sensor transform gets something close
 %
+% It does in this case, but I have to say I don't like the fits much.
+% I do wonder if we should be using a slightly more general function,
+% beyond the linear (or even affine) mapping.
+%
+% See also
+%  s_autoLightGroups (isetauto)
 
-%%
+%%  Try with an RGBW sensor
+
 s = sensorCreate('rgbw');
 sensorQE = sensorGet(s,'spectral qe');
 wave = sensorGet(s,'wave');
@@ -20,18 +27,18 @@ ieNewGraphWin; plot(wave,pred,'--',wave,targetQE,'k-');
 
 %% Use the transform and compare XYZ with the scene XYZ
 
-scene = sceneCreate;
-scene = sceneSet(scene,'fov',5);
-
+scene    = sceneCreate;
+scene    = sceneSet(scene,'fov',5);
 sceneXYZ = sceneGet(scene,'xyz');
 
 oi = oiCreate('wvf');
-oi = oiCompute(oi,scene,'crop',true,'pixel size',2e-6); 
+oi = oiCompute(oi,scene,'crop',true,'pixel size',1.2e-6); 
 % oiWindow(oi);
 
 %%
 sensor = sensorCreate('rgbw');
-%{ 
+
+% { 
 % With these filters we get positions with a ZERO for the red
 % channel.  That shouldn't happen.  This is a small image.
 % With the normaly rgbw we get a green edge, so the problem is already
@@ -55,11 +62,7 @@ ip = ipCreate;
 ip = ipCompute(ip,sensor);
 % ipWindow(ip);
 
-%% This does a very poor job with gaussianlBGRWwithIR filters
-
-% In fact, some of the R and B values go to zero, just like the
-% problem with the auto scene.  So a good case to debug.
-
+%%
 T  = ieColorTransform(sensor,'XYZ','D65','mcc');
 sensorData = ipGet(ip,'sensor data');
 sensorXYZ = imageLinearTransform(sensorData,T);
