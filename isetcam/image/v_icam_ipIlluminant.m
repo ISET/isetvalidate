@@ -102,7 +102,14 @@ assert(abs(mean(double(m(:)))/0.421070790946420 - 1) < 1e-1);
 m = ipGet(vci{nIlluminant},'srgb');
 assert(abs(mean(double(m(:)))/0.434562233057239 - 1) < 1e-1);
 
-%% Now put in the transform method
-% IN PROGRESS
+%% Now fix the transform and rerun.  The result should be the same.
+
+vci{1} = ipSet(vci{1},'transform method','current');
+ip = ipCompute(vci{1},nikon);
+ipWindow(ip);
+
+m2 = ipGet(ip,'srgb');
+assert(mean(m2(:))/mean(m(:)) - 1 < 1e-5);
+
 
 %%
