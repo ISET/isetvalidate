@@ -1,5 +1,5 @@
 
-WVF NOT IN OI ANYMORE
+WVF NOT IN OI ANYMORE (in dev and devPSF branches)
 
 1) It is now an error to call 
 	oi = oiSet(oi,'wvf', wvf);
@@ -30,7 +30,7 @@ as a dynamic thing.  (See 2 just above.)
 
 4) We looked for but did not find any actual calls to oiSet(...,'wvf',...)
 
-OICOMPUTE UPDATED
+OICOMPUTE UPDATED (in devPSF branches)
 
 1) Add a computeMethod field to the oi.  Allow sets and gets of this.
 	Options are 'opticspsf', 'opticsotf', and 'humanmw'
