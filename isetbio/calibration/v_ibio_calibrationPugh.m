@@ -40,8 +40,8 @@ scene = sceneSet(scene,'mean luminance', meanluminance);   % Cd/m2
 sceneWindow(scene);
  
 %% create an optical image of human eye
-oi = oiCreate('human');
-optics = opticsCreate('human', 1e-3);  % 1 mm
+oi = oiCreate('human mw');
+optics = opticsCreate('human mw', 1e-3);  % 1 mm
 oi = oiSet(oi,'optics',optics);
  
 oi = oiCompute(oi,scene,'pad value','mean');

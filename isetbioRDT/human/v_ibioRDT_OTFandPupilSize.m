@@ -34,11 +34,11 @@ function ValidationFunction(runTimeParams)
         pupilDiameterInMillimeters = examinedPupilDiametersInMillimeters(pupilSizeIndex);
         pupilRadiusInMeters = pupilDiameterInMillimeters/2.0/1000.0;
         
-        %% Create human optics with examined pupil radius
-        optics = opticsCreate('human', pupilRadiusInMeters);
+        % %% Create human optics with examined pupil radius
+        optics = opticsCreate('human mw', pupilRadiusInMeters);
         
-        %% Initialize optical image with desired optics
-        oi = oiCreate('human');
+        % %% Initialize optical image with desired optics
+        oi = oiCreate('human mw');
         oi = oiSet(oi, 'optics', optics);
         
         %% Compute optical image for given scene

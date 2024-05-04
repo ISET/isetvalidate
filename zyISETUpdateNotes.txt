@@ -1,0 +1,70 @@
+
+WVF NOT IN OI ANYMORE (in dev and devPSF branches)
+
+1) It is now an error to call 
+	oi = oiSet(oi,'wvf', wvf);
+If you do, you will get an error message telling you to change
+it to
+	oi = oiSet(oi,'optics wvf', wvf);
+which will help make it clear in calling code where the wvf actually lives.
+
+2) We currently continue to allow
+	oi = oiSet(oi,'wvf paramname',wvfparamval);
+but this now does the set on the wvf that is in the optics structure.
+It is an error to try to set if there is no wvf in the optics structure.
+
+We do not exectute a wvfCompute on the updated wvf. Nor do we enforce
+that the value set into the wvf is consistent with any redundant values
+in the oi or other parts of the optics. So, any user who
+is mucking with a wvf that is buried in an oi better know what they are doing.
+
+It is possible we should simply not allow these sets.
+
+3) We also refrained from implementing 
+	opticsSet(optics,'wvf param',val)
+	opticsGet(optics,'wvf param')
+as synonyms for getting the wvf, setting one of its params, and then
+setting that back into the optics.  We think we want to limit how
+much we encourage anyone to think of the wvf attached to the oi/optics
+as a dynamic thing.  (See 2 just above.)
+
+4) We looked for but did not find any actual calls to oiSet(...,'wvf',...)
+
+OICOMPUTE UPDATED (in devPSF branches)
+
+1) Add a computeMethod field to the oi.  Allow sets and gets of this.
+	Options are 'opticspsf', 'opticsotf', and 'humanmw'
+	
+2) Adjust oiCompute to look at and use this field.
+
+3) Find all instances of 'opticspsf' and 'opticsotf' in calling code and
+change to use new field rather than the old one.
+
+OICOMPUTE PADDING
+
+OICOMPUTE OTHER
+
+1) We should go through code and stop using 'human' and be explicit
+about 'human wvf' or 'human mw'.
+
+WVF [NOT YET DONE - SHOULD DO ON A BRANCH]
+
+1) Make wvfCompute respect the 'customLca' field of the wvf, rather than
+passing 'humanlca' at compute time.
+
+1a) Think about default for padding in oiCompute.
+
+2) Fix up all calls to wvfCompute so that we're sure the 'customLca' field
+has been set to match what the flag was doing previously, and disallow the
+flg.
+
+3) Think about how we want to create wvf fields, and in particular when we
+should make it use human lca at create time.
+
+4) Think about whether something should happen automatically with respect
+to the human lens, when building an oi/optics from a wvf, as determined
+by how the lca field is set.
+
+5) Take a close look at how lca is handled as oi's are created.  We think we
+sorted all this out previously, but we should review that the new scheme
+doesn't break the logic.
