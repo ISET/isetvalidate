@@ -27,7 +27,7 @@ for pupilSizeIndex = 1:numel(pupilDiametersInMillimeters)
     pupilRadiusInMeters = pupilDiametersInMillimeters(pupilSizeIndex)/2.0/1000.0;
 
     %% Create human optics with given pupil radius
-    optics = opticsCreate('human', pupilRadiusInMeters);
+    optics = opticsCreate('human mw', pupilRadiusInMeters);
 
     %% Initialize optical image with above optics
     oi = oiCreate('human mw');
