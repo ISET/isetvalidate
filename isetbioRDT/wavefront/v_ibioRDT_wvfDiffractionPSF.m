@@ -277,7 +277,7 @@ optics1_psf = wvf2optics(wvfForOi);
 if (DIFFLIMITEDOI)
     oi1_psf = oiSet(oi1_psf,'optics',optics1_psf);
 end
-oi1_psf = oiSet(oi1_psf,'optics name','opticspsf');  
+oi1_psf = oiSet(oi1_psf,'compute method','opticspsf');  
 uData1_psf = oiPlot(oi1_psf,'psf',[],thisWave);
 title(sprintf('Point spread from modified wvf human (opticspsf) (%d nm)',thisWave));
 close(gcf);
@@ -426,7 +426,7 @@ optics1_otf = optics1_psf;
 if (DIFFLIMITEDOI)
     oi1_otf = oiSet(oi1_otf,'optics',optics1_otf );
 end
-oi1_otf = oiSet(oi1_otf,'optics name','opticsotf');  
+oi1_otf = oiSet(oi1_otf,'compute method','opticsotf');  
 uData1_otf = oiPlot(oi1_otf,'psf',[],thisWave);
 title(sprintf('Point spread from modified wvf human (opticspsf) (%d nm)',thisWave));
 close(gcf);

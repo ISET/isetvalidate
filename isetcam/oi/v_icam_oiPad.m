@@ -76,25 +76,25 @@ scene = sceneCreate('ringsrays');
 oi = oiCreate('wvf');
 
 % Set opticsotf path.
-oi = oiSet(oi,'optics name','opticsotf');
+oi = oiSet(oi,'compute method','opticsotf');
 oi = oiCompute(oi,scene,'pad value','mean','crop',false);
 oi = oiSet(oi,'name','Mean pad OTF');
 oiWindow(oi);
 
 %
-oi = oiSet(oi,'optics name','opticsotf');
+oi = oiSet(oi,'compute method','opticsotf');
 oi = oiCompute(oi,scene,'pad value','zero','crop',false);
 oi = oiSet(oi,'name','Zero pad OTF');
 oiWindow(oi);
 
 % Set PSF path
-oi = oiSet(oi,'optics name','opticspsf');
+oi = oiSet(oi,'compute method','opticspsf');
 oi = oiCompute(oi,scene,'pad value','mean','crop',false);
 oi = oiSet(oi,'name','Mean pad PSF');
 oiWindow(oi);
 
 %
-oi = oiSet(oi,'optics name','opticspsf');
+oi = oiSet(oi,'compute method','opticspsf');
 oi = oiCompute(oi,scene,'pad value','zero','crop',false);
 oi = oiSet(oi,'name','Zero pad PSF');
 oiWindow(oi);

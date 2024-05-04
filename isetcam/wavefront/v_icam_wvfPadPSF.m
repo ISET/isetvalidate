@@ -45,7 +45,7 @@ data1 = oiPlot(oi,'illuminance hline',round([1 sz(2)/2]),'nofigure');
 
 oi = oiCreate('wvf');
 
-oi = oiSet(oi,'optics name','opticsotf');
+oi = oiSet(oi,'compute method','opticsotf');
 
 oi = oiCompute(oi,scene,'pad value','mean','crop',false);
 sz = oiGet(oi,'size');
@@ -67,7 +67,7 @@ assert(std( (data1.data ./ data2.data) ) < 4e-2)
 
 % Use the non-human, diffraction limited, wvf.
 oi = oiCreate('wvf');
-oi = oiSet(oi,'optics name','opticspsf');
+oi = oiSet(oi,'optics compute method','opticspsf');
 
 oi = oiCompute(oi,scene,'pad value','zero','crop',false);
 sz = oiGet(oi,'size');

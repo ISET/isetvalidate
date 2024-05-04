@@ -75,7 +75,7 @@ function ValidationFunction(runTimeParams)
     % 
     % 'opticsotf' method is the original ISETBio method
     oi = oiCreate('wvf human');
-    oi = oiSet(oi,'optics name','opticsotf');  
+    oi = oiSet(oi,'compute method','opticsotf');  
     oi = oiCompute(oi,scene,'pad value','mean');
     if (runTimeParams.generatePlots)
         uData420 = oiPlot(oi,'psf',[],420); xlim([-60 60]); ylim([-60 60]); zlim([0 5e-4]);
@@ -92,7 +92,7 @@ function ValidationFunction(runTimeParams)
     % is undersampled and LCA does not seem to be
     % turned on.
     oi1 = oiCreate('wvf human');
-    oi1 = oiSet(oi1,'optics name','opticspsf');  
+    oi1 = oiSet(oi1,'compute method','opticspsf');  
     oi1 = oiCompute(oi1,scene,'pad value','mean');
     if (runTimeParams.generatePlots)
         uData4201 = oiPlot(oi1,'psf',[],420); xlim([-60 60]); ylim([-60 60]); zlim([0 5e-4]);
