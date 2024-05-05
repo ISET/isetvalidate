@@ -6,20 +6,21 @@
 
 % Default
 wvf = wvfCreate;
-wvfGet(wvf,'focal length')
+assert(wvfGet(wvf,'focal length')==17.1883);
 
-wvfGet(wvf,'focal length','um')
-wvfGet(wvf,'focal length','m')
-wvfGet(wvf,'focal length','mm')
+assert(abs(wvfGet(wvf,'focal length','um') - 1.718830000000000e+04) < 1e-1);
+wvfGet(wvf,'focal length','m');
+wvfGet(wvf,'focal length','mm');
 
 % um per degree changes with focal length
-wvfGet(wvf,'um per degree')
+assert(abs(wvfGet(wvf,'um per degree')-300) < 1);
+
 wvf = wvfSet(wvf,'focal length',3.9,'mm');
-wvfGet(wvf,'um per degree')
+assert(abs(wvfGet(wvf,'um per degree')-68.069568767918554) < 1e-3);
 
 % Print the focal length with different units
-wvfGet(wvf,'focal length','mm')
-wvfGet(wvf,'focal length','m')
+assert(abs(wvfGet(wvf,'focal length','mm')-3.9) < 1e-3);
+wvfGet(wvf,'focal length','m');
 
 %% Now test f-number sets and gets
 

@@ -16,7 +16,7 @@ sceneMacbethD65 = sceneCreate('macbethd65');
 %% sceneGet
 
 % To manipulate the data in a scene, you can extract variables
-sceneGet(sceneMacbethD65,'meanLuminance')
+% sceneGet(sceneMacbethD65,'meanLuminance');
 
 % To access directly the photons in the image, do this:
 photons = sceneGet(sceneMacbethD65,'photons');
@@ -36,15 +36,16 @@ assert(abs(mean(meanPhotons(:)) / 3.7624e+15 - 1) < tolerance,'Mean photon error
 % To see a general description of the scene, the one printed in
 % the upper right of the window, we use this
 txt = sceneDescription(sceneMacbethD65);
-disp(txt);
+assert(ischar(txt));
 
 % Many other quantites can be stored or derived, such as the
 % horizontal field of view in degrees
-fprintf('FOV: %f\n',sceneGet(sceneMacbethD65,'fov'))
+fov = sceneGet(sceneMacbethD65,'fov');
 
 % To change the field of view
 sceneMacbethD65 = sceneSet(sceneMacbethD65,'fov',20);
-fprintf('FOV: %f\n',sceneGet(sceneMacbethD65,'fov'))
+assert(sceneGet(sceneMacbethD65,'fov')==20);
+
 %% Different types of scenes
 
 % There are many types of scenes.  Here is a simple one that is
@@ -68,5 +69,6 @@ assert(support.x(1)/(-104.5762) - 1 < tolerance);
 rows = round(sceneGet(sceneTest,'rows')/2);
 assert(rows == 128,'Row test failed')
 scenePlot(sceneTest,'radiance hline',[1,rows]);
+drawnow;
 
 %% END

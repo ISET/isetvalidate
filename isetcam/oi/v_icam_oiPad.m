@@ -32,7 +32,7 @@ for padding = 10:10:100
     newSpacing = oiGet(oip,'sample spacing');
     assert(max(abs(newSpacing - baseSpacing)) < 1e-10)
 end
-disp('v_oiPad succeeds for diffraction limited');
+% disp('v_oiPad succeeds for diffraction limited');
 
 %% Make SIL oi for testing
 oi = oiCreate('shift invariant');
@@ -49,7 +49,7 @@ for padding = 10:10:100
     newSpacing = oiGet(oip,'sample spacing');
     assert(max(abs(newSpacing - baseSpacing)) < 1e-10)
 end
-disp('v_oiPad succeeds for shift invariant');
+% disp('v_oiPad succeeds for shift invariant');
 %%  Now check for the ray trace oi case, which failed at one time
 
 % Fewer wavelengths for speed
