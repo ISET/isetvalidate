@@ -36,7 +36,7 @@ drawnow;
 
 %%
 uData = sensorPlot(sensor,'electrons hist',[15 15 45 45]);
-sensorPlot(sensor,'electrons hist',uData.roiLocs)
+sensorPlot(sensor,'electrons hist',uData.roiLocs);
 drawnow;
 
 %%

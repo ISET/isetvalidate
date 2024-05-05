@@ -34,18 +34,19 @@ rect = [6 6 29 29];  % Middle part
 oi = oiCrop(oi,rect);
 % ieAddObject(oi); oiWindow
 
-%% Compare the variance of the photon noise and the mean level
+%% Compare the mean of the photons with and without noise
 photons = oiGet(oi,'photons');
-pMean = photons(:,:,10);  mean(pMean(:));
-
 noisyPhotons = oiGet(oi,'photons with noise');
-pNoise = noisyPhotons(:,:,10) - photons(:,:,10);
-% vcNewGraphWin; histogram(pNoise(:))
+assert(abs(mean(photons,'all')/mean(noisyPhotons,'all') - 1) < 1e-2);
 
-% This should be close to 1
-t = var(pNoise(:))/mean(pMean(:));
-fprintf('Should be near 1:  %f\n',t);
-% assert(abs(t - 1) < 0.1)
+% ieNewGraphWin; histogram(pNoise(:))
+
+%% For one wavelength, the variance of the noise should be equal to the mean
+
+p = photons(:,:,10); p = p(:);
+n = noisyPhotons(:,:,10); n = n(:);
+meanPhotons = mean(p,'all');
+varPhotons  = var(p - n);
+assert(abs(meanPhotons/varPhotons - 1) < 0.1)
 
 %%
-drawnow;

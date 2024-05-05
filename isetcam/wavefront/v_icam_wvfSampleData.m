@@ -58,13 +58,15 @@ nCols = ceil(nSubjects/nRows);
 % Stiles Crawford
 DOSCE = 0;
 sceWavelength = 550;
-if (DOSCE), wvfP.sceParams = sceCreate(sceWavelength,'berendschot_data');
-else        wvfP.sceParams = sceCreate(sceWavelength,'none');
+if (DOSCE),  wvfP.sceParams = sceCreate(sceWavelength,'berendschot_data');
+else,        wvfP.sceParams = sceCreate(sceWavelength,'none');
 end
 
-%%
+%% Test Strehl ratios
+ratios = [0.033, 0.103];
+
 for ii = 1:nSubjects
-    fprintf('** Subject %d\n',ii)
+    % fprintf('** Subject %d\n',ii)
     
     % Compute the diffraction limited version of the PSF
     wvfP = wvfSet(wvfP,'zcoeffs',zeros(61,1));
@@ -83,8 +85,8 @@ for ii = 1:nSubjects
     hold on;
     
     strehlDirect = max(udataS.y(:))/max(udataD.y(:));
-    fprintf('Strehl ratio with no defocus:  %.3f\n',strehlDirect);
-    
+    assert(abs(ratios(ii) - strehlDirect) < 1e-3);
+   
     wvfPlot(wvfP,'image psf','unit','um','wave',wList,'plotrange',20);
     
 end
