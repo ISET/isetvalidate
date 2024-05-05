@@ -9,54 +9,55 @@ ieInit
 
 %%
 scene = sceneCreate('macbeth d65');
-sceneWindow(scene);
+% sceneWindow(scene);
 %  cornerPoints = chartCornerpoints(scene,true);
 cornerPoints = [1    65
     96    64
     96     1
     1     1];
 scene = sceneSet(scene,'corner points',cornerPoints);
-sceneGet(scene,'corner points')
+cPoints = sceneGet(scene,'corner points');
+assert(isequal(cPoints,cornerPoints));
+
 % The MCC is 4 x 5
 rects = chartRectangles(cornerPoints,4,6,0.5);
 scene = sceneSet(scene,'chart rectangles',rects);
-sceneGet(scene,'chart rects')
-tic
-chartRectsDraw(scene,rects);
-toc
+newRects = sceneGet(scene,'chart rects');
+assert(isequal(rects,newRects));
+
+sceneWindow(scene); chartRectsDraw(scene,rects);
 
 %% Now the oi
 oi = oiCreate;
 oi = oiCompute(oi,scene);
 oi = oiCrop(oi,'border');
-oiWindow(oi);
 
 cornerPoints = chartCornerpoints(oi,true);
 rects = chartRectangles(cornerPoints,4,6,0.5);
 oi = oiSet(oi,'chart rectangles',rects);
-oiGet(oi,'chart rects')
-tic
-chartRectsDraw(oi,rects);
-toc
+newRects = oiGet(oi,'chart rects');
+assert(isequal(rects,newRects));
+oiWindow(oi); chartRectsDraw(oi,rects);
+
 
 %% Now the sensor
+
 sensor = sensorCreate;
 sensor = sensorSet(sensor,'fov',1.3*sceneGet(scene,'fov'),oi);
 sensor = sensorCompute(sensor,oi);
-sensorWindow(sensor);
 
 % cornerPoints = chartCornerpoints(sensor);
-cornerPoints = [    9   228
-    309   229
-    307    33
-    9    31];
-
+cornerPoints = ...
+    [38   208
+    276   210
+    276    50
+    39    48];
 rects = chartRectangles(cornerPoints,4,6,0.5);
 sensor = sensorSet(sensor,'chart rectangles',rects);
-sensorGet(sensor,'chart rects')
-tic
-chartRectsDraw(sensor,rects);
-toc
+newRects = sensorGet(sensor,'chart rects');
+assert(isequal(rects,newRects));
+
+sensorWindow(sensor); chartRectsDraw(sensor,rects);
 
 %% IP
 
@@ -64,24 +65,17 @@ ip = ipCreate;
 ip = ipCompute(ip,sensor);
 
 % ipWindow; cornerPoints = chartCornerpoints(ip);
-cornerPoints = [9   228
-    310   228
-    307    31
-    10    32];
-
+cornerPoints = ...
+    [39   207
+   278   209
+   278    50
+    39    50];
 rects = chartRectangles(cornerPoints,4,6,0.5);
 ip = ipSet(ip,'chart rectangles',rects);
-ipGet(ip,'chart rects')
+newRects = ipGet(ip,'chart rects');
+assert(isequal(rects,newRects));
 
-%%  The uiaxes typically do not draw in this case without a pause.
-%
-% Worth debugging.
-
-ipWindow(ip);
-pause(2);
-tic
-chartRectsDraw(ip,rects);
-toc
+ipWindow(ip); chartRectsDraw(ip,rects);
 
 %% END
 

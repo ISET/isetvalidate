@@ -53,13 +53,13 @@ fnumber = 8;
 oi  = oiSet(oi,'optics fnumber', fnumber);
 uOI = oiCompute(oi,uScene);
 
-fprintf('\n\nSize Time (f/# %.1f)\n------\n',fnumber)
+% fprintf('\n\nSize Time (f/# %.1f)\n------\n',fnumber)
 for ii=1:length(pSize)
     thisSensor = sensorSet(sensor,'pixel size constant fill factor',pSize(ii));
     thisSensor = sensorCompute(thisSensor,uOI);
     e = sensorGet(thisSensor,'electrons');
-    % assert( abs(((nanmean(e(:)) - expected)/100)) < tolerance);
-    fprintf('%.2f %2f %f\n',pSize(ii)*1e6,sensorGet(thisSensor,'exp time','sec'),nanmean(e(:)));
+    assert( abs(((mean(e(:),'omitnan') - expected)/100)) < tolerance);
+    % fprintf('%.2f %2f %f\n',pSize(ii)*1e6,sensorGet(thisSensor,'exp time','sec'),mean(e(:),'omitmissing'));
 end
 
 % sensorWindow(thisSensor);
@@ -71,13 +71,13 @@ fnumber = 2.4;
 oi  = oiSet(oi,'optics fnumber', fnumber);
 uOI = oiCompute(oi,uScene);
 
-fprintf('\n\nSize Time (f/# %.1f)\n------\n',fnumber)
+% fprintf('\n\nSize Time (f/# %.1f)\n------\n',fnumber)
 for ii=1:length(pSize)
     thisSensor = sensorSet(sensor,'pixel size constant fill factor',pSize(ii));
     thisSensor = sensorCompute(thisSensor,uOI);
     e = sensorGet(thisSensor,'electrons');
     assert( abs(((mean(e(:),'omitnan') - expected)/100)) < tolerance);
-    fprintf('%.2f %2f %f\n',pSize(ii)*1e6,sensorGet(thisSensor,'exp time','sec'),nanmean(e(:)));
+    % fprintf('%.2f %2f %f\n',pSize(ii)*1e6,sensorGet(thisSensor,'exp time','sec'),mean(e(:),'omitnan'));
 end
 
 %%  Big aperture.  Exposure times become quite short.
@@ -85,13 +85,13 @@ fnumber = 1.2;
 oi  = oiSet(oi,'optics fnumber', fnumber);
 uOI = oiCompute(oi,uScene);
 
-fprintf('\n\nSize Time (f/# %.1f)\n------\n',fnumber)
+% fprintf('\n\nSize Time (f/# %.1f)\n------\n',fnumber)
 for ii=1:length(pSize)
     thisSensor = sensorSet(sensor,'pixel size constant fill factor',pSize(ii));
     thisSensor = sensorCompute(thisSensor,uOI);
     e = sensorGet(thisSensor,'electrons');
     assert( abs((mean(e(:),'omitnan') - expected)/100) < tolerance);
-    fprintf('%.2f %2f %f\n',pSize(ii)*1e6,sensorGet(thisSensor,'exp time','sec'),nanmean(e(:)));
+    % fprintf('%.2f %2f %f\n',pSize(ii)*1e6,sensorGet(thisSensor,'exp time','sec'),mean(e(:),'omitnan'));
 end
 
 %%
