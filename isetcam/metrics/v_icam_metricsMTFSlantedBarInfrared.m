@@ -126,11 +126,6 @@ ip = ipCompute(ip,sensor);
 % Have the user select the edge.
 masterRect = [39    25    51    65];
 
-% This changed around December 2023.  Not sure why.  Probably some
-% object changed size? (BW)
-% Then it changed back.
-% masterRect = [166    82   226   303];
-
 % It is also possible to estimate the rectangle automatically using
 % ISOFindSlantedBar, which is called in ieISO12233()
 
@@ -138,7 +133,6 @@ masterRect = [39    25    51    65];
 
 roiLocs = ieRect2Locs(masterRect);
 
-% BUG HERE
 barImage = vcGetROIData(ip,roiLocs,'results');
 c = masterRect(3)+1;
 r = masterRect(4)+1;
@@ -186,8 +180,6 @@ assert(abs(mtf.mtf50 - 77) <= 3);
 
 % ipWindow(ip);
 % h = ieDrawShape(ip,'rectangle',mtf.rect);
-
-%%
-drawnow;
+% drawnow;
 
 %% END
