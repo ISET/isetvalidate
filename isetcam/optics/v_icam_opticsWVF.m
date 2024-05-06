@@ -43,7 +43,8 @@ fLengthMM = 10;
 fNumber = 3;
 pupilMM = fLengthMM/fNumber;
 wvf = wvfSet(wvf,'focal length',fLengthMM);
-wvf  = wvfCompute(wvf,'human lca', false);
+wvf = wvfSet(wvf,'customLca','none');
+wvf  = wvfCompute(wvf);
 
 pRange = 10;  % Microns
 wvfPlot(wvf,'psf','unit','um','plot range',pRange,'airy disk',true);
@@ -94,7 +95,8 @@ wvf  = wvfSet(wvf,'focal length',fLengthMM);  % 17 mm focal length for deg per m
 wvfWave = wvfGet(wvf,'wave');
 
 % Calculate without human LCA
-wvf  = wvfCompute(wvf,'human lca',false);
+wvf = wvfSet(wvf,'customLca','none');
+wvf  = wvfCompute(wvf);
 
 % Convert wvf to OI format
 oi = wvf2oi(wvf);
@@ -149,8 +151,8 @@ identityLine; grid on; xlabel('oiCompute'); ylabel('wvfApply');
 %% Setting a defocus on the wvf structure
 defocus = 1;  % Diopters
 wvfD = wvfSet(wvf,'zcoeff',defocus,'defocus');
-
-wvfD = wvfCompute(wvfD,'human lca',false);
+wvfD = wvfSet(wvfD,'customLca','none');
+wvfD = wvfCompute(wvfD);
 pRange = 20;
 plotWave = 700;
 wvfPlot(wvfD,'psf','unit','um','wave',plotWave,'plot range',pRange);
@@ -167,8 +169,8 @@ photons550 = oiGet(oiD,'photons',550);
 assert((sum(photons550(:))/1.7800e+21) - 1 < 1e-3);
 
 %% Now recompute and include human longitudinal chromatic aberration
-
-wvfDCA = wvfCompute(wvfD,'human lca',true);
+wvfDCA = wvfSet(wvfD,'customLca','human');
+wvfDCA = wvfCompute(wvfDCA);
 oiDCA = oiCompute(wvfDCA,gridScene);
 oiDCA = oiSet(oiDCA,'name','Defocus and LCA');
 oiWindow(oiDCA);
@@ -179,10 +181,9 @@ wvfVA = wvfSet(wvf,'zcoeff',0.5,'defocus');
 wvfVA = wvfSet(wvfVA,'zcoeff',-0.5,'vertical_astigmatism');
 
 % We need to re-compute.
-wvfVA  = wvfCompute(wvfVA,'human lca', true);
-
+wvfVA = wvfSet(wvfVA,'customLca','human');
+wvfVA  = wvfCompute(wvfVA);
 oi = oiCompute(wvfVA,gridScene);
-
 photons550 = oiGet(oi,'photons',550);
 assert((sum(photons550(:))/1.7800e+21) - 1 < 1e-3);
 
