@@ -80,10 +80,11 @@ chkPhotons = sceneGet(scene,'photons');
 %% Calculate the PSF
 %
 % This function computes the PSF by first computing the pupil function.  In
-% the default wvf object, the Zernicke coefficients match diffraction.  By
-% default, 'humanlca' is false for the wvfCompute function, but we set it
-% here for clarity as to what we are doing.
-wvf0 = wvfCompute(wvf0,'humanlca',false);
+% the default wvf object, the Zernicke coefficients match diffraction.  We 
+% explicilty manipulate LCA method so we don't have to count on the default
+% being right.
+wvf0 = wvfSet(wvf0,'customLca','none');
+wvf0 = wvfCompute(wvf0);
 
 % Grab the psf
 psf = wvfGet(wvf0,'psf');
@@ -272,7 +273,8 @@ fprintf('\tPSF volume %0.2f (raw sum) %0.2g (integrated)\n',sum(uData.psf(:)),ps
 % The oiPlot call is executed to get the data.
 oi1_psf = oiCreate('human wvf');
 wvfForOi = wvfCreate('calc wavelengths',400:10:700);
-wvfForOi = wvfCompute(wvfForOi,'humanlca',false);
+wvfForOi = wvfSet(wvfForOi,'customLca','none');
+wvfForOi = wvfCompute(wvfForOi);
 optics1_psf = wvf2optics(wvfForOi);
 if (DIFFLIMITEDOI)
     oi1_psf = oiSet(oi1_psf,'optics',optics1_psf);
@@ -599,7 +601,7 @@ legend({'WVF','PTB AIRY','OI DIFF LIMITED','OI PSF RAW','OI PSF COMPUTE','OI OTF
 %
 % This section checks that if we add an explicit observer defocus correction,
 % in this case the amount needed to correct for chromatic aberration, we
-% get the same result as when we compute asking for 'humanlca'.  It is a pretty
+% get the same result as when we compute asking for 'human' LCA.  It is a pretty
 % small test of the function wvfLCAFromWavelengthDifference relative to the measured
 % wavelength, as well as that we still understand how to control the wvf
 % calculations after the move to isetcam.
@@ -620,11 +622,12 @@ lcaMicrons = wvfDefocusDioptersToMicrons(...
 
 % Add the lca defocus to the existing defocus term. That happens to be
 % zero to start with, but we code for the more general case.  Doing
-% this offsets the LCA that gets added in with 'humanlca' at true as
+% this offsets the LCA that gets added in with 'human' as LCA
 % in the wvfCompute just below, so we end up at diffraction limited for 
 % the calculated wavelength.
 wvf1 = wvfSet(wvf1,'zcoeffs',wvfGet(wvf1,'zcoeffs',{'defocus'})+lcaMicrons,{'defocus'});
-wvf1 = wvfCompute(wvf1,'humanlca',true);
+wvf1 = wvfSet(wvf1,'customLca','human');
+wvf1 = wvfCompute(wvf1);
 w = wvfGet(wvf1,'calc wave');
 pupilSize = wvfGet(wvf1,'calc pupil size','mm');
 
@@ -649,11 +652,12 @@ wvf17 = wvfSet(wvf17,'measured wl',wList);
 wvf17 = wvfSet(wvf17,'calc wave',wList);
 wvf17 = wvfSet(wvf17,'number spatial samples',wvf17Samples);
 wvf17 = wvfSet(wvf17,'ref psf sample interval',wvfGet(wvf17,'ref psf sample interval')/4);
-wvf17 = wvfCompute(wvf17,'humanlca',true);
+wvf17 = wvfSet(wvf17,'customLca','human');
+wvf17 = wvfCompute(wvf17);
 
 % There should be no difference here between wvf1 and wvf17, because we corrected for the
 % chromatic aberration in both cases, once by adding the appropriate defocus explicitly,
-% and the other by turning on 'humanlca' for wvfCompute.  The green curve is smoother
+% and the other by turning on 'human' for LCA.  The green curve is smoother
 % and deviates in between the coarser samples of the red and blue curves,
 % but you can see that the function being computed is in good agreement.
 [~,h] = wvfPlot(wvf1,'1d psf angle normalized','unit','min','wave',w,'plot range',maxMIN);
