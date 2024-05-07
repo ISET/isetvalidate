@@ -40,7 +40,7 @@ maxMIN = 6;
 
 % Set values in millimeters
 wvfP = wvfCreate('measured pupil',6,'calculated pupil',3);
-wvfP = wvfSet(wvfP,'customLca','human');
+wvfP = wvfSet(wvfP,'lcaMethod','human');
 wvfP = wvfCompute(wvfP);
 wList = wvfGet(wvfP,'wave');
 
@@ -70,7 +70,7 @@ for ii = 1:nSubjects
     
     % Compute the diffraction limited version of the PSF
     wvfP = wvfSet(wvfP,'zcoeffs',zeros(61,1));
-    wvfP = wvfSet(wvfP,'customLca','human');
+    wvfP = wvfSet(wvfP,'lcaMethod','human');
     wvfP = wvfCompute(wvfP);
 
     % Diffraction limited
@@ -79,7 +79,7 @@ for ii = 1:nSubjects
     
     % Now, set it up for the typical subject
     wvfP = wvfSet(wvfP,'zcoeffs',theZernikeCoeffs(:,ii));
-    wvfP = wvfSet(wvfP,'customLca','human');
+    wvfP = wvfSet(wvfP,'lcaMethod','human');
     wvfP = wvfCompute(wvfP);
 
     [udataS, pData] = wvfPlot(wvfP,'1d psf angle','unit','min','wave',wList,'plotrange',maxMIN,'window',false);

@@ -83,7 +83,7 @@ chkPhotons = sceneGet(scene,'photons');
 % the default wvf object, the Zernicke coefficients match diffraction.  We 
 % explicilty manipulate LCA method so we don't have to count on the default
 % being right.
-wvf0 = wvfSet(wvf0,'customLca','none');
+wvf0 = wvfSet(wvf0,'lcaMethod','none');
 wvf0 = wvfCompute(wvf0);
 
 % Grab the psf
@@ -273,7 +273,7 @@ fprintf('\tPSF volume %0.2f (raw sum) %0.2g (integrated)\n',sum(uData.psf(:)),ps
 % The oiPlot call is executed to get the data.
 oi1_psf = oiCreate('human wvf');
 wvfForOi = wvfCreate('calc wavelengths',400:10:700);
-wvfForOi = wvfSet(wvfForOi,'customLca','none');
+wvfForOi = wvfSet(wvfForOi,'lcaMethod','none');
 wvfForOi = wvfCompute(wvfForOi);
 optics1_psf = wvf2optics(wvfForOi);
 if (DIFFLIMITEDOI)
@@ -626,7 +626,7 @@ lcaMicrons = wvfDefocusDioptersToMicrons(...
 % in the wvfCompute just below, so we end up at diffraction limited for 
 % the calculated wavelength.
 wvf1 = wvfSet(wvf1,'zcoeffs',wvfGet(wvf1,'zcoeffs',{'defocus'})+lcaMicrons,{'defocus'});
-wvf1 = wvfSet(wvf1,'customLca','human');
+wvf1 = wvfSet(wvf1,'lcaMethod','human');
 wvf1 = wvfCompute(wvf1);
 w = wvfGet(wvf1,'calc wave');
 pupilSize = wvfGet(wvf1,'calc pupil size','mm');
@@ -652,7 +652,7 @@ wvf17 = wvfSet(wvf17,'measured wl',wList);
 wvf17 = wvfSet(wvf17,'calc wave',wList);
 wvf17 = wvfSet(wvf17,'number spatial samples',wvf17Samples);
 wvf17 = wvfSet(wvf17,'ref psf sample interval',wvfGet(wvf17,'ref psf sample interval')/4);
-wvf17 = wvfSet(wvf17,'customLca','human');
+wvf17 = wvfSet(wvf17,'lcaMethod','human');
 wvf17 = wvfCompute(wvf17);
 
 % There should be no difference here between wvf1 and wvf17, because we corrected for the

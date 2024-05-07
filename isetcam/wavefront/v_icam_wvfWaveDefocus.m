@@ -38,7 +38,7 @@ nWave = wvfGet(wvfP,'n wave');
 wList = wvfGet(wvfP,'wave');
 
 %% Compute and plot the default
-wvfP = wvfSet(wvfP,'customLca','human');
+wvfP = wvfSet(wvfP,'lcaMethod','human');
 wvfParams = wvfCompute(wvfP);
 
 %% Plot the series of lines
