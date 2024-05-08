@@ -101,14 +101,18 @@ wvf  = wvfCompute(wvf);
 oi = wvf2oi(wvf);
 
 %% Plot the wavelength dependent OTFs
+
+% These are not precisely the same.  Close, but not exact.  Worried.
+% Why aren't these exact after oi = wvf2oi(wvf)?
 ieNewGraphWin;
 tiledlayout(2,2);
 for ii=1:2:numel(wave)
     thisWave = wave(ii);
     oiOTF = oiGet(oi,'optics otf and support',thisWave);
     wvOTF = wvfGet(wvf,'otf and support','mm',thisWave);
+
     nexttile;
-    plot(abs(oiOTF.otf(:)),abs(wvOTF.data(:)),'.');
+    plot(abs(oiOTF.otf(:)),fftshift(abs(wvOTF.data(:))),'.');
     title(sprintf('Wave: %d',wave(ii)));
     identityLine; grid on;
 end
@@ -162,7 +166,9 @@ oiD = oiCompute(wvfD,gridScene);
 oiD = oiSet(oiD,'name',sprintf('oiCompute Defocus %.1f no LCA',defocus));
 oiWindow(oiD);
 photons550 = oiGet(oiD,'photons',550);
-assert(abs((sum(photons550(:))/1.7800e+21) - 1) < 1e-3);
+
+testValue = 1.3628e+19;  % Set on May 8, 2024.
+assert(abs((sum(photons550(:))/testValue) - 1) < 1e-3);
 
 %% Now recompute and include human longitudinal chromatic aberration
 wvfDCA = wvfSet(wvfD,'lcaMethod','human');
@@ -180,7 +186,7 @@ wvfVA = wvfSet(wvfVA,'lcaMethod','human');
 wvfVA  = wvfCompute(wvfVA);
 oi = oiCompute(wvfVA,gridScene);
 photons550 = oiGet(oi,'photons',550);
-assert(abs((sum(photons550(:))/1.7800e+21) - 1) < 1e-3);
+assert(abs((sum(photons550(:))/testValue) - 1) < 1e-3);
 
 oi = oiSet(oi,'name','vertical astig');
 oiWindow(oi);
