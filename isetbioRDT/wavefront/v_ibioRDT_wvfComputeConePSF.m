@@ -154,12 +154,14 @@ end
 
 %% Compute LMS psfs both for a subject and diffraction limited
 wvfParams1 = wvf0;
-wvfParams1 = wvfCompute(wvfParams1,'computesce',DOSCE,'human lca',true);
+wvfParams1 = wvfSet(wvfParams1,'lcaMethod','human');
+wvfParams1 = wvfCompute(wvfParams1,'computesce',DOSCE);
 conePsf1   = wvfGet(wvfParams1,'cone psf');
 
 wvfParams2 = wvf0;
 wvfParams2 = wvfSet(wvfParams2,'zcoeffs',0);
-wvfParams2 = wvfCompute(wvfParams2,'computesce',DOSCE,'human lca',true);
+wvfParams2 = wvfSet(wvfParams2,'lcaMethod','human');
+wvfParams2 = wvfCompute(wvfParams2,'computesce',DOSCE);
 conePsf2   = wvfGet(wvfParams2,'cone psf');
 
 % This bit is a sanity check that our code yields constant sampling in the psf domain.

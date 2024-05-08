@@ -40,23 +40,21 @@ OICOMPUTE UPDATED (in devPSF branches)
 3) Find all instances of 'opticspsf' and 'opticsotf' in calling code and
 change to use new field rather than the old one.
 
-OICOMPUTE PADDING
 
-OICOMPUTE OTHER
-
-1) We should go through code and stop using 'human' and be explicit
-about 'human wvf' or 'human mw'.
-
-WVF [NOT YET DONE - SHOULD DO ON A BRANCH]
+WVF [DONE ON devPsf]
 
 1) Make wvfCompute respect the 'customLca' field of the wvf, rather than
 passing 'humanlca' at compute time.
 
-1a) Think about default for padding in oiCompute.
-
 2) Fix up all calls to wvfCompute so that we're sure the 'customLca' field
 has been set to match what the flag was doing previously, and disallow the
 flg.
+
+3) Take a close look at how lca is handled as oi's are created.  We think we
+sorted all this out previously, but we should review that the new scheme
+doesn't break the logic.
+
+1a) Think about default for padding in oiCompute.
 
 3) Think about how we want to create wvf fields, and in particular when we
 should make it use human lca at create time.
@@ -65,6 +63,7 @@ should make it use human lca at create time.
 to the human lens, when building an oi/optics from a wvf, as determined
 by how the lca field is set.
 
-5) Take a close look at how lca is handled as oi's are created.  We think we
-sorted all this out previously, but we should review that the new scheme
-doesn't break the logic.
+5) We should go through code and stop using 'human' and be explicit
+about 'human wvf' or 'human mw'.
+
+
