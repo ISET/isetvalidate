@@ -37,7 +37,7 @@ assert(abs(sum(tmp(:)))/109 -1 < 1e-4);
 %% Make a scene and show some oiGets and oiCompute work
 scene = sceneCreate('gridlines',256);
 scene = sceneSet(scene,'fov',1);
-oi = oiCreate('shift invariant');
+oi = oiCreate('wvf');
 oi = oiCompute(oi,scene);
 
 uData = oiPlot(oi,'illuminance mesh linear');
