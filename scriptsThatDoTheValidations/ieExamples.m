@@ -41,7 +41,7 @@ function result = ieExamples(repo,varargin)
 %  12/15/23  dhb, fh  Add ISETBioCSFGenerator option
 
 p = inputParser;
-p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio','csfgenerator'})));
+p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio','csfgenerator','psych221'})));
 p.addParameter('select','all',@ischar);
 p.addParameter('print',true,@islogical);
 
@@ -58,6 +58,11 @@ switch repo
     case 'csfgenerator'
         disp(select)
         [result.names, result.status ] = ExecuteExamplesInDirectory(csfGeneratorRootPath,'verbose',false);
+    case 'psych221'
+        % No examples yet.  But some day.
+        disp(select)
+        [result.names, result.status ] = ExecuteExamplesInDirectory(psych221RootPath,'verbose',false);
+        
     otherwise
         error('Not yet supported %s\n',repo);
 end

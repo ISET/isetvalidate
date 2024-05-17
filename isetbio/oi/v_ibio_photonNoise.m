@@ -11,10 +11,10 @@
 scene = sceneCreate('uniform');
 scene = sceneSet(scene,'fov',20);  % Pretty big
 scene = sceneAdjustLuminance(scene,10^-11);
-% vcAddAndSelectObject(scene); sceneWindow
+% sceneWindow(scene);
 
 %% Create and crop out center of OI
-oi = oiCreate('human'); 
+oi = oiCreate('wvf human'); 
 
 % No lens shading
 optics = oiGet(oi,'optics');
@@ -43,3 +43,4 @@ t = var(pNoise(:))/mean(pMean(:));
 sprintf('Should be near 1:  %f\n',t)
 assert(abs(t - 1) < 0.1)
 
+%%

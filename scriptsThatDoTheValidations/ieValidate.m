@@ -70,6 +70,8 @@ function ieValidate(repo,typeToRun,varargin)
 
     ieValidate('isetbiordt','validations');
 
+    ieValidate('isetcam','examples');
+
 %}
 
 % History:
@@ -81,7 +83,7 @@ function ieValidate(repo,typeToRun,varargin)
 
 p = inputParser;
 p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio','csfgenerator','iset3d','psych221','isetbiordt'})));
-p.addRequired('typeToRun',@(x)(ismember(ieParamFormat(x),{'tutorials','scripts','validations'})));
+p.addRequired('typeToRun',@(x)(ismember(ieParamFormat(x),{'tutorials','scripts','validations','examples'})));
 p.parse(repo,typeToRun,varargin{:});
 
 % Specify repos we can test.  For each, also need to provide
@@ -121,6 +123,9 @@ switch (availRepos{selectedRepoNum})
             case 'validations'
                 topLevelDir = fullfile(isetvalidateRootPath);
                 subDir = 'isetcam';
+            case 'examples'
+                ieExamples('isetcam');
+                return;
         end
 
     case 'isetbio'
@@ -134,6 +139,9 @@ switch (availRepos{selectedRepoNum})
             case 'validations'
                 topLevelDir = isetvalidateRootPath;
                 subDir = 'isetbio';
+            case 'examples'
+                ieExamples('isetbio');
+                return;
         end
 
     case 'csfgenerator'
@@ -179,6 +187,10 @@ switch (availRepos{selectedRepoNum})
             case 'validations'
                 topLevelDir = isetvalidateRootPath;
                 subDir = 'psych221';
+            case 'examples'
+                ieExamples('psych221');
+                return;
+
         end
 
     case 'ptb'
