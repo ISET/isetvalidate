@@ -1,22 +1,13 @@
-function ieValidate(repo,typeToRun,varargin)
+function report = ieValidate(repo,typeToRun,varargin)
 % Run all tutorials/scripts/validations for a repo and print out which worked and which did not
 %
-% NOTES:
-%
-% * BW/ZL made various fixes for isetcam, iset3d.  But they are
-% not yet tested.
-%
-% * Also, there was a bug about finding the right subdirectory.  We
-% might have broken the path for isetbio?  But there does not appear
-% to be a 'validation' subdirectory anywhere.
-%
 % Syntax:
-%    ieValidate(repo,typeToRun)
+%    report = ieValidate(repo,typeToRun)
 %
 % Description:
 %   Run all of the tutorials/scripts/validations for a specified repo
 %   and print out a report at the end as to whether they threw errors,
-%   or not.
+%   or not.  The report is also returned
 %
 %   The path to the tutorials is setup in the source of this routine, as
 %   are various strings that will cause something to be skipped if it is in
@@ -38,6 +29,8 @@ function ieValidate(repo,typeToRun,varargin)
 %   Before running isetbiordt, you need to install the critical data.
 %   See below.
 %
+% Outputs
+%  report
 %
 %  ISETBIORDT - For historical testing, we have a script and method to
 %   install the old ISETBio RDT data locally. (validateRDTSetup).  We use
@@ -272,7 +265,7 @@ ieSessionSet('wait bar',0);
 initClear = ieSessionGet('init clear');
 ieSessionSet('init clear',true);
 
-UnitTest.runProjectTutorials(p, scriptsToSkip, 'All');
+[status, report] = UnitTest.runProjectTutorials(p, scriptsToSkip, 'All');
 
 % Restore
 ieSessionSet('init clear',initClear);
