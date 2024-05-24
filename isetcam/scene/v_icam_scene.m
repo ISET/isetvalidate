@@ -11,15 +11,21 @@
 %
 
 %% Check GUI control
+
 scene = sceneCreate;
 sceneWindow(scene);
 sceneSet(scene,'gamma',0.5);
 sceneSet(scene,'gamma',1);
+mn = sceneGet(scene,'mean luminance');
 
 %% Check sceneCombine
+
 scene = sceneCombine(sceneCreate,sceneCreate,'direction','horizontal');
-sceneWindow(scene);
-drawnow;
+mn2 = sceneGet(scene,'mean luminance');
+assert(abs(mn/mn2 - 1) < 1e-5);
+
+% sceneWindow(scene);
+% drawnow;
 
 %%
 

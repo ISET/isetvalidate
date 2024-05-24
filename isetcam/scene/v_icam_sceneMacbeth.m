@@ -32,7 +32,6 @@ scene = sceneCreate('macbeth c');
 tmp = sceneGet(scene,'photons');
 assert(sum(tmp(:))/7.3973e+20 - 1 < 1e-5);
 
-
 scene = sceneCreate('macbeth tungsten');
 tmp = sceneGet(scene,'photons');
 assert(sum(tmp(:))/8.2817e+20 - 1 < 1e-5);
@@ -43,7 +42,6 @@ assert(sum(tmp(:))/4.7760e+20 - 1 < 1e-5);
 
 wave = 390:900;
 scene = sceneCreate('macbeth equal energy infrared',[],wave);
-% ieAddObject(scene); sceneWindow;
 assert(isequal(scene.spectrum.wave,390:900),'Bad IR scene create');
 
 fprintf('done\n');
