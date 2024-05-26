@@ -26,7 +26,7 @@ wave  = sceneGet(scene,'wave');
 
 % Hiroshi's rig
 primaries = ieReadSpectra('LED6-Melanopsin-HH.mat',wave);
-ieNewGraphWin; plotRadiance(wave,primaries);
+% ieNewGraphWin; plotRadiance(wave,primaries);
 
 % Add up the six primaries.
 illEnergy = primaries * ones(6,1);
@@ -95,5 +95,4 @@ fprintf('Absorptions: %.1f for pixel size (%.2f %.2f).  Should be near 750K\n',m
 
 % Check that we are within about 5 percent
 assert( abs(mean(elROI)/7.5e+5 - 1) < 0.05);
-
 %% END
