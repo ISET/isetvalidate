@@ -1,30 +1,5 @@
 %% Comparing oi methods and wvf methods numerically
 %
-% Historically, ISET used diffraction limited calculations directly as
-% a special case.
-%
-% About 15 years ago, we added the ability to build general shift invariant
-% representations based on wavefront aberrations specified by Zernike
-% polynomials. These shift invariant representations can be diffraction
-% limited (no aberrations) or with various simple aberrations (astigmatism,
-% coma, defocus).
-%
-% The code in ISETBio was firmly based on the human data, including the
-% human longitudinal chromatic aberration and the Stiles-Crawford effect.
-% These were always set as the default wavefront creation.
-%
-% With the merge of ISETBio wavefront into ISETCam, we no longer
-% impose the specific human features, such as longitudinal chromatic
-% aberration, on the wavefront.  These are now optional.
-%
-% This validation script test the general wavefront calculations and the
-% original ISETCam diffraction limited calculation (dlMTF).  The dlMTF code
-% has been tested, and we show that the wavefront version matches the
-% results.
-%
-% At the end of this script, we adjust the Zernike polynomial coefficients
-% to produce different defocus and other wavefront aberrations.
-%
 % See also
 %
 
@@ -50,17 +25,16 @@ wvfPlot(wvf,'psf','unit','um','plot range',pRange,'airy disk',true);
 title(sprintf('Calculated pupil diameter %.1f mm',pupilMM));
 
 %% Compare wvf and oi methods directly
+
 wvfData = wvfPlot(wvf,'psf xaxis','unit','um','plot range',10);
 
-% Convert to OI and plot the same slice.
-% except for a small scale factor.  Which I don't understand
 oi = wvf2oi(wvf);
 uData = oiGet(oi,'optics psf xaxis');
 hold on;
 plot(uData.samp,uData.data,'gs');
 legend({'wvf','Airy','oi'});
 
-% Checksum
+% Check the summation
 assert(abs(sum(uData.data(:)) - 0.157166317909746) < 1e-3);
 
 %% Get the otf data from the OI and WVF computed two ways
@@ -68,14 +42,7 @@ assert(abs(sum(uData.data(:)) - 0.157166317909746) < 1e-3);
 % Compare the two OTF data sets directly.
 wvfOTF = wvfGet(wvf,'otf');
 oiOTF  = oiGet(oi,'optics otf');
-
-% Plot oiOTF versus wvfOTF.  We used to need an fftshift in here,
-% but no longer.
-ieNewGraphWin;
-% oiOTFS = fftshift(oiOTF);
-plot(abs(oiOTF(:)),abs(wvfOTF(:)),'.','MarkerSize',12);
-identityLine;
-title('OTF: oi converted to wvf')
+assert(max(abs(oiOTF(:))-abs(wvfOTF(:))) < 1e-6); 
 
 % Checksum good to within 1 part in a thousand This changed slightly
 % (1.0831 to 1.085) with the Merge of ISETCam/ISETBio. Keeping an eye
@@ -100,23 +67,6 @@ wvf  = wvfCompute(wvf);
 % Convert wvf to OI format
 oi = wvf2oi(wvf);
 
-%% Plot the wavelength dependent OTFs
-
-% These are not precisely the same.  Close, but not exact.  Worried.
-% Why aren't these exact after oi = wvf2oi(wvf)?
-ieNewGraphWin;
-tiledlayout(2,2);
-for ii=1:2:numel(wave)
-    thisWave = wave(ii);
-    oiOTF = oiGet(oi,'optics otf and support',thisWave);
-    wvOTF = wvfGet(wvf,'otf and support','mm',thisWave);
-
-    nexttile;
-    plot(abs(oiOTF.otf(:)),fftshift(abs(wvOTF.data(:))),'.');
-    title(sprintf('Wave: %d',wave(ii)));
-    identityLine; grid on;
-end
-
 %%  Show that the diffraction limited OTFs differ by wavelength
 ieNewGraphWin([],'wide');
 otf = oiPlot(oi,'otf',[],wave(1),'mm','no window');
@@ -125,6 +75,7 @@ title(sprintf('Wave: %d',wave(1)));
 otf = oiPlot(oi,'otf',[],wave(end),'mm','no window');
 subplot(1,2,2); mesh(otf.fx,otf.fy,abs(otf.otf));
 title(sprintf('Wave: %d',wave(end)));
+drawnow;
 
 %% Compute with the oi and the wvf
 gridScene = sceneCreate('grid lines',384,128);
@@ -137,7 +88,7 @@ oi = oiCompute(oi,gridScene);
 oi = oiSet(oi,'name',sprintf('oi f/# %.2f',oiGet(oi,'fnumber')));
 oiWindow(oi);
 
-% This is the oi computed directly with the wvfP using wvfApply
+%% This is the oi computed directly with the wvfP using wvfApply
 oiWVF = oiCompute(wvf,gridScene);
 oiWindow(oiWVF);
 
@@ -145,9 +96,7 @@ oiWindow(oiWVF);
 photons1 = oiGet(oi,'photons');
 photons2 = oiGet(oiWVF,'photons');
 
-ieNewGraphWin;
-plot(photons1(:),photons2(:),'.');
-identityLine; grid on; xlabel('oiCompute'); ylabel('wvfApply');
+assert(abs(mean(photons1,'all') - mean(photons2,'all')) < 1e-6);
 
 %% Setting a defocus on the wvf structure
 defocus = 1;  % Diopters

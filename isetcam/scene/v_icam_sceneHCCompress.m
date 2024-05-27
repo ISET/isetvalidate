@@ -14,11 +14,12 @@
 %
 %    doc('hypercube')
 %
+% Copyright ImagEval Consultants, LLC, 2012
+%
 % See also:  hcBasis, scenePlot, sceneFromFile,
 %   ieSaveMultiSpectralImage, s_scene2ImageData,
 %   s_scene2SampledScene, s_renderScene,
 %
-% Copyright ImagEval Consultants, LLC, 2012
 
 %%
 ieInit
