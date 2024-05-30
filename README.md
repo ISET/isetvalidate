@@ -10,12 +10,12 @@ The advantages of this approach are
 The disadvantage is that people who want to create or use validations need to download this additional repo and include it on their path, as well as obtain a separate repo with the validation data.
 And you need the repository [UnitTestToolbox](https://github.com/UnitTestToolbox.git) on your path. We have noticed, however, that most people do not work on validations.
 
-The validations for different repositories are run through the gateway method, ieValidate().  This function can test the validations, scripts, tutorials, and examples in an ISET style repository.  For example,
+The validations for different repositories are run through the gateway method, ieValidate().  This function can test the validations, scripts, tutorials, and examples in an ISET style repository.  For example, we can run
 
 *  ieValidate('isetcam','validations')
 *  ieValidate('isetbio','scripts')
 *  ieValidate('isetcam','examples')
-*  ieValidate('iset3d','validations')
+*  ieValidate('iset3d','tutorials')
 
 
 # History
