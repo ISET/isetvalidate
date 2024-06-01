@@ -1,20 +1,31 @@
 # isetvalidate
-In July 2023, we started to (a) remove the validation code and data from individual repositories, and (b) merge them into this repository (isetvalidate).
+In July 2023, we started to (a) remove the validation code and data from individual repositories, and (b) merge them into this repository [SETvalidate](https://github.com/ISET/isetvalidate).
 
 The advantages of this approach are
 
   * individual repositories are simpler
   * changes to validation scripts, do not require a git push/pull in the main repo
-  * we can improve the features of the validation scripts and use them across different repos
+  * we can improve the basic features of the validation scripts and apply them across multiple repos
 
 The disadvantage is that people who want to create or use validations need to download this additional repo and include it on their path, as well as obtain a separate repo with the validation data.
-And you need the repository UnitTestToolbox on your path (https://github.com/UnitTestToolbox.git).
+And you need the repository [UnitTestToolbox](https://github.com/isetbio/UnitTestToolbox) on your path. We have noticed, however, that most people do not work on validations.
 
-By moving the code and data for validation into this repository, we believe we will feel liberated to expand the validations, including more testing of the Examples. 
+The validations for different repositories are run through the gateway method, ieValidate().  This function can test the validations, scripts, tutorials, and examples in an ISET style repository.  For example, we can run
 
-The validation data is available at the repository https://github.com/isetbio/isetvalidatedata.git.  You need to clone this to somewhere on your computer to run the validations against the data.
+*  ieValidate('isetcam','validations')
+*  ieValidate('isetbio','scripts')
+*  ieValidate('isetcam','examples')
+*  ieValidate('iset3d','tutorials')
 
-In this respository, there are different directories with validation scripts.  We describe these below.
+
+# History
+
+The original validation data is available at the repository https://github.com/isetbio/isetvalidatedata.git.  You need to clone this to somewhere on your computer to run the validations against the historical data.  DHB and BW extensively tested the new ISETBio/ISETCam organization, using validation scripts, as we refactored the code into cleaners ISETBio and ISETCam repositories.  We do not think others will need these data or to perform these tests.
+
+Some of us have downloaded the original ISETBio validation data and can validate isetbiordt.
+
+
+## Ancient History (will be deprecated)
 
 ISETBIOORIG -  Copy of the validation scripts from the master branch prior to the ISETBio/ISETCam integration. These were only slightly modified by DHB to simplify the validation.  For example, we no longer check every element of every structure because we know those have changed.  So we validate the numerical data (key properties).  If the photons match at the end, we are good. These are mostly serving as a reference, as the master branch of ISETBio still includes them and when validating on that branch the ones within the branch are the ones to move. We will transition to these versions soon enough.
 
