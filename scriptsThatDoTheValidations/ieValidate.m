@@ -267,10 +267,20 @@ ieSessionSet('wait bar',0);
 initClear = ieSessionGet('init clear');
 ieSessionSet('init clear',true);
 
-[~, report] = UnitTest.runProjectTutorials(p, scriptsToSkip, 'All');
+[~, reportTemp] = UnitTest.runProjectTutorials(p, scriptsToSkip, 'All');
 
 % Restore
 ieSessionSet('init clear',initClear);
 ieSessionSet('wait bar',wbarFlag);
+
+% This has the effect that if you call the function from the command
+% line and don't assign its output to anything and don't put in a
+% semi-colon, you don't get the report string dumped out.  The reason we
+% want this is that the report string is already printed out with the
+% broken ones in color, and if we print it out again that version rolls off
+% the screen.
+if (nargout > 0)
+    report = reportTemp;
+end
 
 end
