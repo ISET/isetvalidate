@@ -74,18 +74,23 @@ function report = ieValidate(repo,typeToRun,varargin)
 %   12/15/23  dhb  Integrate tutorials/scripts/validations.
 %   12/20/23  dhb  Generalized setup to handle bugs identified by BAW.
 
+%% Specify repos we can test.  
+% 
+% For each, also need to provide the name of the function that gives the
+% repository root path and the path to the tutorial directory under that
+% path.
+
+availRepos = {'isetbio' 'isetcam', 'csfgenerator','iset3d',...
+    'psych221','ptb','isetbiordt','isetfundamentals'};
+repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', ...
+    'csfGeneratorRootPath','piRootPath','psych221RootPath',...
+    'iefundamentalsRootPath'};
+%%
+
 p = inputParser;
-p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio','csfgenerator','iset3d','psych221','isetbiordt'})));
+p.addRequired('repo',@(x)(ismember(ieParamFormat(x),availRepos)));
 p.addRequired('typeToRun',@(x)(ismember(ieParamFormat(x),{'tutorials','scripts','validations','examples'})));
 p.parse(repo,typeToRun,varargin{:});
-
-% Specify repos we can test.  For each, also need to provide
-% the name of the function that gives the repository root path
-% and the path to the tutorial directory under that path.
-%
-% I took a guess at the correct root path for iset3d and psych221
-availRepos = {'isetbio' 'isetcam', 'csfgenerator','iset3d','psych221','ptb','isetbiordt'};
-repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', 'csfGeneratorRootPath','piRootPath','psych221RootPath',''};
 
 % Figure out where we want to go today
 knownRepo = false;
@@ -183,7 +188,15 @@ switch (availRepos{selectedRepoNum})
             case 'examples'
                 ieExamples('psych221');
                 return;
+        end
 
+    case 'isetfundamentals'
+        switch typeToRun
+            case 'validations'
+                topLevelDir = isetvalidateRootPath;
+                subDir = 'isetfundamentals';
+            otherwise
+                warning('Only validations are implemented for isetfundamentals now.')
         end
 
     case 'ptb'
