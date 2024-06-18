@@ -53,12 +53,13 @@ function report = ieValidate(repo,typeToRun,varargin)
     ieValidate('isetcam','tutorials');
     ieValidate('isetbio','tutorials');
     ieValidate('csfgenerator','tutorials');
-
+    
     ieValidate('isetcam','scripts');
 
     ieValidate('isetcam','validations');
     ieValidate('isetbio','validations');
     ieValidate('iset3d','validations');
+    ieValidate('iset3d-tiny','validations');
     ieValidate('psych221','validations');
 
     ieValidate('isetbiordt','validations');
@@ -80,10 +81,10 @@ function report = ieValidate(repo,typeToRun,varargin)
 % repository root path and the path to the tutorial directory under that
 % path.
 
-availRepos = {'isetbio' 'isetcam', 'csfgenerator','iset3d',...
+availRepos = {'isetbio' 'isetcam', 'csfgenerator','iset3d','iset3d-tiny'...
     'psych221','ptb','isetbiordt','isetfundamentals'};
 repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', ...
-    'csfGeneratorRootPath','piRootPath','psych221RootPath',...
+    'csfGeneratorRootPath','piRootPath','piRootPath','psych221RootPath',...
     'iefundamentalsRootPath'};
 %%
 
@@ -172,6 +173,10 @@ switch (availRepos{selectedRepoNum})
                 subDir = 'iset3d';
         end
 
+    case 'iset3d-tiny'
+        disp('NYI');
+        return;
+        
     case 'psych221'
         switch (typeToRun)
             case 'tutorials'
