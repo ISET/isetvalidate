@@ -22,7 +22,7 @@ translationEnd = [.05 .05 0]; % Arbitrary
 thisR.set('camera motion translate start',[0 0 0]);
 thisR.set('camera motion translate end',translationEnd);
 
-piWRS(thisR);
+customWRS(thisR,'camera_Trans');
 
 % Now rotation
 thisR = piRecipeCreate(useScene);
@@ -46,7 +46,7 @@ thisR.set('camera motion rotate end',rotationMatrixEnd);
 thisR.set('camera motion translate start',[0 0 0]);
 thisR.set('camera motion translate end',[0 0 0]);
 
-piWRS(thisR);
+customWRS(thisR,'camera_Rot_Trans');
 
 
 %% Now test object motion
@@ -63,7 +63,7 @@ assetRotation = [0 0 10];
 piAssetMotionAdd(thisR,asset , ...
     'rotation', assetRotation);
 
-piWRS(thisR);
+customWRS(thisR,'asset_motion');
 
 %% Now test object motion with standard positioning
 %%%% NOTE: Adding an AssetTranslate here
@@ -76,14 +76,14 @@ piWRS(thisR);
 % What happens if we simply have a rotation
 piAssetRotate(thisR, asset, [15 15 15]);
 
-piWRS(thisR);
+customWRS(thisR,'asset_motion_movement');
 
 %% Now test both camera and object motion
 %  Start with the scene we have, that has object motion
 thisR.set('camera motion translate start',[0 0 0]);
 thisR.set('camera motion translate end',translationEnd);
 
-piWRS(thisR);
+customWRS(thisR,'asset_and_camera');
 
 %% Try using shutter times to control position
 %  this is how we are trying to do burst sequences
@@ -95,17 +95,27 @@ piAssetMotionAdd(thisR,asset , ...
 
 thisR.set('shutteropen', .00);
 thisR.set('shutterclose', .05);
-piWRS(thisR);
+customWRS(thisR,'shutter00_05');
 
 thisR.set('shutteropen', .05);
 thisR.set('shutterclose', .10);
-piWRS(thisR);
+customWRS(thisR,'shutter05_10');
 
+thisR.set('shutteropen', .00);
+thisR.set('shutterclose', .10);
+customWRS(thisR,'shutter00_10');
+
+%% Customize output file & scene name for easier tracing
 function customWRS(thisR, outputName)
-    sOutputFileName = thisR.outputFile;
-    cOutputFileName = ...
-        replace()
+    [p, ~, e] = fileparts(thisR.outputFile);
+        outFileName = ['Test_' outputName e];
+    thisR.outputFile = fullfile(p,outFileName);
+    thisR.name = ['Test: ' outputName];
+    
+    % Now run the regular wrs
+    piWRS(thisR);
 end
+
 %% Select correct version of PBRT
 %% Set up correct docker image
 % isetdocker ignores the docker container we pass and uses presets
