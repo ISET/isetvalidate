@@ -3,6 +3,7 @@
 %
 %   v_iset3d_motion
 %
+% D. Cardinal, Stanford University, June, 2024
 
 %%
 ieInit
@@ -88,32 +89,53 @@ customWRS(thisR,'asset_and_camera');
 %% Try using shutter times to control position
 %  this is how we are trying to do burst sequences
 thisR = piRecipeCreate(useScene);
+%{
 piAssetMotionAdd(thisR,asset, ...
     'translation', assetTranslation);
 piAssetMotionAdd(thisR,asset , ...
     'rotation', assetRotation);
+%}
+exposureTime = .05;
+shutterStart = 0;
+epsilon = .0001; %minimum offset
 
-thisR.set('shutteropen', .00);
-thisR.set('shutterclose', .05);
-customWRS(thisR,'shutter00_05');
+thisR.set('shutteropen', shutterStart);
+thisR.set('shutterclose', shutterStart + exposureTime);
 
-thisR.set('shutteropen', .05);
-thisR.set('shutterclose', .10);
-customWRS(thisR,'shutter05_10');
+% customWRS calls piWRS, but sets the output file name
+%           and scene name to make tracing simpler
+scene_00_05 = customWRS(thisR,'shutter00_05');
 
-thisR.set('shutteropen', .00);
-thisR.set('shutterclose', .10);
-customWRS(thisR,'shutter00_10');
+thisR.set('shutteropen', shutterStart + exposureTime + epsilon);
+thisR.set('shutterclose', shutterStart + 2*exposureTime + epsilon);
+
+scene_06_10 = customWRS(thisR,'shutter06_10');
+
+thisR.set('shutteropen', shutterStart);
+thisR.set('shutterclose', shutterStart + 2 * exposureTime);
+scene_00_10 = customWRS(thisR,'shutter00_10');
+
+% Check to see if summed scenes look the same
+scene_burst = sceneAdd(scene_00_05, scene_06_10);
+[sensorLong, sensorBurst] = sceneCompare(scene_00_10,scene_burst, .05);
+[ssimVal, ssimMap] = ssim(sensorLong.data.volts, sensorBurst.data.volts);
+
+% show results:
+fprintf('SSIM: %f\n',ssimVal)
+figure;
+imshowpair(sensorLong.data.volts,sensorBurst.data.volts,'diff')
+%imshowpair(sensorLong.data.volts,sensorBurst.data.volts,'falsecolor')
+
 
 %% Customize output file & scene name for easier tracing
-function customWRS(thisR, outputName)
+function scene = customWRS(thisR, outputName)
     [p, ~, e] = fileparts(thisR.outputFile);
         outFileName = ['Test_' outputName e];
     thisR.outputFile = fullfile(p,outFileName);
     thisR.name = ['Test: ' outputName];
     
     % Now run the regular wrs
-    piWRS(thisR);
+    scene = piWRS(thisR);
 end
 
 %% Select correct version of PBRT
