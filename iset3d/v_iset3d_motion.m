@@ -117,13 +117,20 @@ scene_00_10 = customWRS(thisR,'shutter00_10');
 
 % Check to see if summed scenes look the same
 scene_burst = sceneAdd(scene_00_05, scene_06_10);
-[sensorLong, sensorBurst] = sceneCompare(scene_00_10,scene_burst, .05);
+[sensorLong, sensorBurst] = sceneCompare(scene_00_10,scene_burst, .001);
 [ssimVal, ssimMap] = ssim(sensorLong.data.volts, sensorBurst.data.volts);
 
 % show results:
 fprintf('SSIM: %f\n',ssimVal)
 figure;
 imshowpair(sensorLong.data.volts,sensorBurst.data.volts,'diff')
+
+[sensorLong1, sensorLong2]= sceneCompare(scene_00_10,scene_00_10, .1);
+[ssimVal, ssimMap] = ssim(sensorLong1.data.volts, sensorLong2.data.volts);
+% show results:
+fprintf('SSIM for identical: %f\n',ssimVal)
+figure;
+imshowpair(sensorLong1.data.volts,sensorLong2.data.volts,'diff')
 %imshowpair(sensorLong.data.volts,sensorBurst.data.volts,'falsecolor')
 
 
@@ -135,7 +142,8 @@ function scene = customWRS(thisR, outputName)
     thisR.name = ['Test: ' outputName];
     
     % Now run the regular wrs
-    scene = piWRS(thisR);
+    % Make sure to turn off mean luminance!!
+    scene = piWRS(thisR, 'mean luminance', -1);
 end
 
 %% Select correct version of PBRT
