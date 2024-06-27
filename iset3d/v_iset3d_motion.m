@@ -95,7 +95,7 @@ piAssetMotionAdd(thisR,asset, ...
 piAssetMotionAdd(thisR,asset , ...
     'rotation', assetRotation);
 %}
-exposureTime = .05;
+exposureTime = .005;
 shutterStart = 0;
 epsilon = .0001; %minimum offset
 
@@ -117,13 +117,21 @@ scene_00_10 = customWRS(thisR,'shutter00_10');
 
 % Check to see if summed scenes look the same
 scene_burst = sceneAdd(scene_00_05, scene_06_10);
-[sensorLong, sensorBurst] = sceneCompare(scene_00_10,scene_burst, .001);
+
+% Shutter doesn't seem to affect photon count
+scene_00_10 = sceneAdd(scene_00_10, scene_00_10);
+
+[sensorLong, sensorBurst] = sceneCompare(scene_00_10,scene_burst, .0001);
 [ssimVal, ssimMap] = ssim(sensorLong.data.volts, sensorBurst.data.volts);
 
 % show results:
 fprintf('SSIM: %f\n',ssimVal)
 figure;
 imshowpair(sensorLong.data.volts,sensorBurst.data.volts,'diff')
+%{
+max(sensorLong.data.volts,[],'all')
+max(sensorBurst.data.volts,[],'all')
+%}
 
 [sensorLong1, sensorLong2]= sceneCompare(scene_00_10,scene_00_10, .1);
 [ssimVal, ssimMap] = ssim(sensorLong1.data.volts, sensorLong2.data.volts);
