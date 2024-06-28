@@ -18,8 +18,12 @@ useScene = 'lettersatdepth';
 thisR = piRecipeCreate(useScene);
 
 %% First test camera motion
-% Start with translation
-translationEnd = [.05 .05 0]; % Arbitrary
+% Start with translation (m/s)
+% For reference the Letter A is .07 x .07 meters, and -.05, .01, .56 in
+% position
+ASize = .07;
+shiftA = ASize * 500; % moves its width in 2 seconds
+translationEnd = [shiftA shiftA 0]; % Arbitrary
 thisR.set('camera motion translate start',[0 0 0]);
 thisR.set('camera motion translate end',translationEnd);
 
@@ -30,7 +34,7 @@ thisR = piRecipeCreate(useScene);
 rotationMatrixStart = piRotationMatrix;
 rotationMatrixEnd = piRotationMatrix;
 
-desiredRotation = [0 0 10]; % Arbitrary
+desiredRotation = [0 0 720]; % Arbitrary
 rotationMatrixEnd(1,1) = rotationMatrixStart(1,1) ...
     + desiredRotation(3);
 rotationMatrixEnd(1,2) = rotationMatrixStart(1,2) ...
@@ -56,11 +60,11 @@ thisR.hasActiveTransform = true;
 getDocker(thisR); % Need CPU version
 
 asset = 'A_O'; % could use any of the letters
-assetTranslation = [.3 .3 0];
+assetTranslation = [30 30 0];
 piAssetMotionAdd(thisR,asset, ...
     'translation', assetTranslation);
 
-assetRotation = [0 0 10];
+assetRotation = [0 0 360];
 piAssetMotionAdd(thisR,asset , ...
     'rotation', assetRotation);
 
@@ -75,7 +79,7 @@ customWRS(thisR,'asset_motion');
 %%piAssetTranslate(thisR,asset,[.1 .1 0]);
 
 % What happens if we simply have a rotation
-piAssetRotate(thisR, asset, [15 15 15]);
+piAssetRotate(thisR, asset, assetRotation);
 
 customWRS(thisR,'asset_motion_movement');
 
@@ -89,39 +93,59 @@ customWRS(thisR,'asset_and_camera');
 %% Try using shutter times to control position
 %  this is how we are trying to do burst sequences
 thisR = piRecipeCreate(useScene);
-%{
 piAssetMotionAdd(thisR,asset, ...
     'translation', assetTranslation);
 piAssetMotionAdd(thisR,asset , ...
     'rotation', assetRotation);
-%}
-exposureTime = .005;
+
+exposureTime = .001; % currently this needs to be short enough to avoid long exposure from blowing out.
+exposureMultiplier = 1000; %only used for creating integer file names
+
+numFrames = 3; % Arbitrary, > 1
+totalDuration = exposureTime * numFrames;
 shutterStart = 0;
-epsilon = .0001; %minimum offset
+epsilon = 0; % minimum offset (not currenty needed)
+sceneBurst = []; % so we can check for isempty()
 
-thisR.set('shutteropen', shutterStart);
-thisR.set('shutterclose', shutterStart + exposureTime);
+for ii = 1:numFrames
+    shutterOpen = shutterStart + (exposureTime * (ii-1));
+    shutterClose =  shutterStart + (exposureTime * ii);
+    thisR.set('shutteropen', shutterOpen);
+    thisR.set('shutterclose', shutterClose);
 
-% customWRS calls piWRS, but sets the output file name
-%           and scene name to make tracing simpler
-scene_00_05 = customWRS(thisR,'shutter00_05');
+    % customWRS calls piWRS, but sets the output file name
+    %           and scene name to make tracing simpler
+    outputFile = sprintf('shutter_%03d_%03d',shutterOpen*exposureMultiplier, ...
+        shutterClose*exposureMultiplier);
 
-thisR.set('shutteropen', shutterStart + exposureTime + epsilon);
-thisR.set('shutterclose', shutterStart + 2*exposureTime + epsilon);
+    % Now render, show, and write output file
+    currentScene = customWRS(thisR,outputFile);
 
-scene_06_10 = customWRS(thisR,'shutter06_10');
+    if isempty(sceneBurst)
+        sceneBurst = currentScene;
 
-thisR.set('shutteropen', shutterStart);
-thisR.set('shutterclose', shutterStart + 2 * exposureTime);
-scene_00_10 = customWRS(thisR,'shutter00_10');
+        % First time through take our "long" exposure
+        shutterClose = shutterStart + (exposureTime*numFrames);
+        thisR.set('shutterClose', shutterClose);
+        outputFile = sprintf('shutter_%03d_%03d',shutterOpen*exposureMultiplier, ...
+            shutterClose*exposureMultiplier);
+        sceneLong = customWRS(thisR, outputFile);
+    else
 
-% Check to see if summed scenes look the same
-scene_burst = sceneAdd(scene_00_05, scene_06_10);
+        sceneBurst = sceneAdd(sceneBurst, currentScene);
 
-% Shutter doesn't seem to affect photon count
-scene_00_10 = sceneAdd(scene_00_10, scene_00_10);
+        % Shutter doesn't seem to affect photon count
+        % so we add up the scenes as we go
+        sceneLong = sceneAdd(sceneLong, sceneLong);
+    end
 
-[sensorLong, sensorBurst] = sceneCompare(scene_00_10,scene_burst, .0001);
+end
+
+[sensorLong, sensorBurst] = sceneCompare(sceneLong,sceneBurst, totalDuration);
+% class of volts has to match for ssim (maybe fix in ssim?)
+sensorLong.data.volts = double(sensorLong.data.volts);
+sensorBurst.data.volts = double(sensorBurst.data.volts);
+
 [ssimVal, ssimMap] = ssim(sensorLong.data.volts, sensorBurst.data.volts);
 
 % show results:
@@ -131,27 +155,22 @@ imshowpair(sensorLong.data.volts,sensorBurst.data.volts,'diff')
 %{
 max(sensorLong.data.volts,[],'all')
 max(sensorBurst.data.volts,[],'all')
-%}
 
-[sensorLong1, sensorLong2]= sceneCompare(scene_00_10,scene_00_10, .1);
-[ssimVal, ssimMap] = ssim(sensorLong1.data.volts, sensorLong2.data.volts);
-% show results:
-fprintf('SSIM for identical: %f\n',ssimVal)
-figure;
-imshowpair(sensorLong1.data.volts,sensorLong2.data.volts,'diff')
-%imshowpair(sensorLong.data.volts,sensorBurst.data.volts,'falsecolor')
+mean(sensorLong.data.volts,'all')
+mean(sensorBurst.data.volts,'all')
+%}
 
 
 %% Customize output file & scene name for easier tracing
 function scene = customWRS(thisR, outputName)
-    [p, ~, e] = fileparts(thisR.outputFile);
-        outFileName = ['Test_' outputName e];
-    thisR.outputFile = fullfile(p,outFileName);
-    thisR.name = ['Test: ' outputName];
-    
-    % Now run the regular wrs
-    % Make sure to turn off mean luminance!!
-    scene = piWRS(thisR, 'mean luminance', -1);
+[p, ~, e] = fileparts(thisR.outputFile);
+outFileName = ['Test_' outputName e];
+thisR.outputFile = fullfile(p,outFileName);
+thisR.name = ['Test: ' outputName];
+
+% Now run the regular wrs
+% Make sure to turn off mean luminance!!
+scene = piWRS(thisR, 'mean luminance', -1);
 end
 
 %% Select correct version of PBRT
