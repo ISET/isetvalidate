@@ -14,8 +14,7 @@ fprintf('Testing camera and object motion\n');
 %% Start with a simple scene & asset(s)
 %  and set basic parameters for rendering
 
-useScene = 'lettersatdepth';
-thisR = piRecipeCreate(useScene);
+thisR = resetScene();
 
 %% First test camera motion
 % Start with translation, by default is meters per frame
@@ -29,7 +28,7 @@ thisR.set('camera motion translate end',translationEnd);
 customWRS(thisR,'camera_Trans');
 
 % Now rotation
-thisR = piRecipeCreate(useScene);
+thisR = resetScene();
 rotationMatrixStart = piRotationMatrix;
 rotationMatrixEnd = piRotationMatrix;
 
@@ -57,7 +56,7 @@ customWRS(thisR,'camera_Rot_Trans');
 
 
 %% Now test object motion
-thisR = piRecipeCreate(useScene);
+thisR = resetScene();
 thisR.hasActiveTransform = true;
 getDocker(thisR); % Need CPU version
 
@@ -97,7 +96,7 @@ customWRS(thisR,'asset_and_camera');
 %% Try using shutter times to control position
 %  this is how we do burst sequences
 
-thisR = piRecipeCreate(useScene);
+thisR = resetScene();
 thisR.hasActiveTransform = true;
 getDocker(thisR); % Need CPU version
 
@@ -204,4 +203,12 @@ else
     useDocker = dockerGPU;
 end
 end
+
+function thisR = resetScene()
+useScene = 'lettersForMotionTests.pbrt';
+%useScene = 'lettersAtDepth.pbrt';
+thisR = piRead(useScene);
+thisR.metadata.rendertype = {'radiance', 'depth'};
+end
+
 
