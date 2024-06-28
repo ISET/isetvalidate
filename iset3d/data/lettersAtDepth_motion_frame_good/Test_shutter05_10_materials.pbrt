@@ -1,0 +1,6 @@
+# Exported by piMaterialWrite on 2024/6/25 11:51:46.79 
+Texture "checker_1" "spectrum" "checkerboard" "rgb tex1" [0.3000 0.3000 0.3000] "rgb tex2" [0.0000 0.0000 0.0000] "float uscale" [64.0000] "float vscale" [64.0000]
+Material "coateddiffuse" "rgb reflectance" [0.1005 0.1193 0.1400]
+MakeNamedMaterial "White" "string type" [ "diffuse" ] "rgb reflectance" [1.0000 1.0000 1.0000]
+MakeNamedMaterial "WallMaterial" "string type" [ "diffuse" ] "texture reflectance" "checker_1"
+MakeNamedMaterial "GroundMaterial" "string type" [ "diffuse" ] "texture reflectance" "checker_1"

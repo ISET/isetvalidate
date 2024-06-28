@@ -1,0 +1,35 @@
+# PBRT file created with piWrite on 2024/6/28 11:39:11.20 
+# PBRT version = 4 
+
+ActiveTransform StartTime 
+Translate 0.00 0.00 0.00 
+ActiveTransform EndTime 
+Translate 0.07 0.07 0.00 
+ActiveTransform All 
+LookAt 0.000000 0.010000 0.000000 0.000000 0.010000 1.000000 0.000000 1.000000 0.000000 
+
+# camera 
+Camera "perspective" 
+  "float fov" [30.000000] 
+
+# sampler 
+Sampler "halton" 
+  "integer pixelsamples" [32] 
+
+# film 
+Film "gbuffer" 
+  "integer yresolution" [320] 
+  "integer xresolution" [320] 
+  "bool saveRadiance" true 
+  "bool saveRadianceAsBasis" false 
+  "bool saveDepth" true 
+
+# integrator 
+Integrator "path" 
+  "integer maxdepth" [1] 
+
+WorldBegin 
+Include "Test_asset_and_camera_materials.pbrt" 
+ 
+Include "Test_asset_and_camera_geometry.pbrt" 
+ 
