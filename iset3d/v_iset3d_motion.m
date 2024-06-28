@@ -18,11 +18,10 @@ useScene = 'lettersatdepth';
 thisR = piRecipeCreate(useScene);
 
 %% First test camera motion
-% Start with translation (m/s)
+% Start with translation, by default is meters per frame
 % For reference the Letter A is .07 x .07 meters, and -.05, .01, .56 in
 % position
-ASize = .07;
-shiftA = ASize * 500; % moves its width in 2 seconds
+shiftA = .07; % one 'diagonal' of the Letter A
 translationEnd = [shiftA shiftA 0]; % Arbitrary
 thisR.set('camera motion translate start',[0 0 0]);
 thisR.set('camera motion translate end',translationEnd);
@@ -34,7 +33,8 @@ thisR = piRecipeCreate(useScene);
 rotationMatrixStart = piRotationMatrix;
 rotationMatrixEnd = piRotationMatrix;
 
-desiredRotation = [0 0 720]; % Arbitrary
+% Camera rotation is by default absolute
+desiredRotation = [0 0 30]; % Arbitrary
 rotationMatrixEnd(1,1) = rotationMatrixStart(1,1) ...
     + desiredRotation(3);
 rotationMatrixEnd(1,2) = rotationMatrixStart(1,2) ...
@@ -48,8 +48,10 @@ thisR.set('camera motion rotate end',rotationMatrixEnd);
 %%%% NOTE: We get an error in piWrite() here, because
 %          it wants a position for the ActiveTransform
 %    So we add a null translate and it runs...
+
+% We can of course add an actual translation if desired
 thisR.set('camera motion translate start',[0 0 0]);
-thisR.set('camera motion translate end',[0 0 0]);
+thisR.set('camera motion translate end',[0 .07 0]);
 
 customWRS(thisR,'camera_Rot_Trans');
 
@@ -60,11 +62,13 @@ thisR.hasActiveTransform = true;
 getDocker(thisR); % Need CPU version
 
 asset = 'A_O'; % could use any of the letters
-assetTranslation = [30 30 0];
+
+% We're not using shutter times yet, so values are total desired
+assetTranslation = [.1 .1 0];
 piAssetMotionAdd(thisR,asset, ...
     'translation', assetTranslation);
 
-assetRotation = [0 0 360];
+assetRotation = [0 0 90];
 piAssetMotionAdd(thisR,asset , ...
     'rotation', assetRotation);
 
@@ -91,13 +95,14 @@ thisR.set('camera motion translate end',translationEnd);
 customWRS(thisR,'asset_and_camera');
 
 %% Try using shutter times to control position
-%  this is how we are trying to do burst sequences
-thisR = piRecipeCreate(useScene);
-piAssetMotionAdd(thisR,asset, ...
-    'translation', assetTranslation);
-piAssetMotionAdd(thisR,asset , ...
-    'rotation', assetRotation);
+%  this is how we do burst sequences
 
+thisR = piRecipeCreate(useScene);
+thisR.hasActiveTransform = true;
+getDocker(thisR); % Need CPU version
+
+%% Set parameters for our burst
+asset = 'A_O'; % could use any of the letters
 exposureTime = .001; % currently this needs to be short enough to avoid long exposure from blowing out.
 exposureMultiplier = 1000; %only used for creating integer file names
 
@@ -106,6 +111,15 @@ totalDuration = exposureTime * numFrames;
 shutterStart = 0;
 epsilon = 0; % minimum offset (not currenty needed)
 sceneBurst = []; % so we can check for isempty()
+
+% We're using shutter times yet, so values are m/s
+assetTranslation = [.04*exposureMultiplier .04*exposureMultiplier 0];
+piAssetMotionAdd(thisR,asset, ...
+    'translation', assetTranslation);
+
+assetRotation = [0 0 45]; % Check if this is d/s so we need to multiply?
+piAssetMotionAdd(thisR,asset , ...
+    'rotation', assetRotation);
 
 for ii = 1:numFrames
     shutterOpen = shutterStart + (exposureTime * (ii-1));
