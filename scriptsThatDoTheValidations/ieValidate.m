@@ -20,7 +20,7 @@ function report = ieValidate(repo,typeToRun,varargin)
 %
 % Inputs:
 %   repo - name of repository. 
-%       One of {'isetcam','isetbio','isetbiordt','csfgenerator', 'iset3d', 'psych221'}
+%       One of {'isetcam','isetbio','isetbiordt','csfgenerator', 'iset3d', 'iset3d-tiny', 'psych221'}
 %   typeToRun - One of {'tutorials', 'scripts', 'validations'}
 %       Not all combinations of repo/typeToRun are available.  The
 %       examples block in the source for this routine indicates those
@@ -59,6 +59,7 @@ function report = ieValidate(repo,typeToRun,varargin)
     ieValidate('isetcam','validations');
     ieValidate('isetbio','validations');
     ieValidate('iset3d','validations');
+    ieValidate('iset3d-tiny','validations');
     ieValidate('psych221','validations');
 
     ieValidate('isetbiordt','validations');
@@ -75,7 +76,7 @@ function report = ieValidate(repo,typeToRun,varargin)
 %   12/20/23  dhb  Generalized setup to handle bugs identified by BAW.
 
 p = inputParser;
-p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio','csfgenerator','iset3d','psych221','isetbiordt'})));
+p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio','csfgenerator','iset3d','iset3d-tiny','psych221','isetbiordt'})));
 p.addRequired('typeToRun',@(x)(ismember(ieParamFormat(x),{'tutorials','scripts','validations','examples'})));
 p.parse(repo,typeToRun,varargin{:});
 
@@ -84,8 +85,8 @@ p.parse(repo,typeToRun,varargin{:});
 % and the path to the tutorial directory under that path.
 %
 % I took a guess at the correct root path for iset3d and psych221
-availRepos = {'isetbio' 'isetcam', 'csfgenerator','iset3d','psych221','ptb','isetbiordt'};
-repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', 'csfGeneratorRootPath','piRootPath','psych221RootPath',''};
+availRepos = {'isetbio' 'isetcam', 'csfgenerator','iset3d','iset3d-tiny','psych221','ptb','isetbiordt'};
+repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', 'csfGeneratorRootPath','piRootPath','piRootPath','psych221RootPath',''};
 
 % Figure out where we want to go today
 knownRepo = false;
@@ -167,6 +168,21 @@ switch (availRepos{selectedRepoNum})
                 subDir = 'iset3d';
         end
 
+    case 'iset3d-tiny'
+       switch(typeToRun)
+            case 'tutorials'
+                topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                subDir = 'tutorials';
+                error('Not sure whether tutorials currently exist for iset3d-tiny');
+            case 'scripts'
+                topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                subDir = 'scripts';
+                error('Not sure whether currently exist for iset3d-tiny');
+            case 'validations'
+                topLevelDir = isetvalidateRootPath;
+                subDir = 'iset3d-tiny';
+       end
+    
     case 'psych221'
         switch (typeToRun)
             case 'tutorials'
