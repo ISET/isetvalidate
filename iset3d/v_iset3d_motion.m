@@ -173,6 +173,8 @@ mean(sensorLong.data.volts,'all')
 mean(sensorBurst.data.volts,'all')
 %}
 
+%% ------------------------------------------------------------
+% END OF MAIN SCRIPT
 
 %% Customize output file & scene name for easier tracing
 function scene = customWRS(thisR, outputName)
