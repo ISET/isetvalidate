@@ -105,14 +105,15 @@ asset = 'A_O'; % could use any of the letters
 exposureTime = .001; % currently this needs to be short enough to avoid long exposure from blowing out.
 exposureMultiplier = 1000; %only used for creating integer file names
 
-numFrames = 3; % Arbitrary, > 1
+numFrames = 7; % Arbitrary, > 1
 totalDuration = exposureTime * numFrames;
 shutterStart = 0;
 epsilon = 0; % minimum offset (not currenty needed)
 sceneBurst = []; % so we can check for isempty()
+sceneLong = []; % so we can sum frames into it
 
 % We're using shutter times yet, so values are m/s
-assetTranslation = [.04*exposureMultiplier .04*exposureMultiplier 0];
+assetTranslation = [.01*exposureMultiplier .01*exposureMultiplier 0];
 piAssetMotionAdd(thisR,asset, ...
     'translation', assetTranslation);
 
@@ -142,14 +143,14 @@ for ii = 1:numFrames
         thisR.set('shutterClose', shutterClose);
         outputFile = sprintf('shutter_%03d_%03d',shutterOpen*exposureMultiplier, ...
             shutterClose*exposureMultiplier);
-        sceneLong = customWRS(thisR, outputFile);
+        sceneLongBaseline = customWRS(thisR, outputFile);
+        sceneLong = sceneLongBaseline;
     else
 
         sceneBurst = sceneAdd(sceneBurst, currentScene);
 
-        % Shutter doesn't seem to affect photon count
-        % so we add up the scenes as we go
-        sceneLong = sceneAdd(sceneLong, sceneLong);
+        sceneLong = sceneAdd(sceneLong, sceneLongBaseline);
+        
     end
 
 end
