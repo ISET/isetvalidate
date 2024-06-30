@@ -1,7 +1,32 @@
-%% Test camera and object motion
-% (maybe split them apart if we get enough tests)
+%% Test camera and asset motion
 %
-%   v_iset3d_motion
+%   v_iset3d_motion (currently v2, using a custom test scene)
+%
+% Tests for:
+% - Asset Rotation and Translation
+% - Asset Motion (rotation and translation)
+% - Camera Motion
+% - Camera + Asset Motion
+%
+% - Burst of short exposures versus one longer exposure
+%   for Asset motion and Asset + Camera Motion
+%
+% v2 -- 6/30/24 -- custom test scene, add asset+camera motion
+% v1 -- 6/27/24 -- uses LettersAtDepth, basic tests
+%
+% Notes:
+%  Currently choose scene in resetScene() but asset names
+%  are coded to the default test scene
+%
+%  Set exposure time and numframes to generat images that can 
+%  be used to make a video clip
+%
+%  There are two places in the script that are commented out
+%  because they activate coding issues in piGeometryWrite()
+%  When we rewrite that, they should get fixed
+%
+%  Working .pbrt outputs are in isetvalidate/data, to use when
+%  there is a rewrite of piGeometryWrite as a baseline to compare
 %
 % D. Cardinal, Stanford University, June, 2024
 
@@ -117,15 +142,23 @@ asset = 'A_O'; % could use any of the letters
 exposureTime = .001; % currently this needs to be short enough to avoid long exposure from blowing out.
 exposureMultiplier = 1000; %only used for creating integer file names
 
+% Set how many burst frames we want to sum to a longer exposure
 numFrames = 7; % Arbitrary, > 1
+
+% Length of the long exposure (and of any video made from the burst)
 totalDuration = exposureTime * numFrames;
+
 shutterStart = 0;
-epsilon = 0; % minimum offset (not currenty needed)
+
+% Will contain scenes for the Asset motion case
 sceneBurst = []; % so we can check for isempty()
 sceneLong = []; % so we can sum frames into it
+
+% For the versions of the test scene that add camera motion
 sceneBurstCamera = [];
 sceneLongCamera = [];
-% We're using shutter times yet, so values are m/s
+
+% We're not using shutter times yet, so values are m/s
 assetTranslation = [.01*exposureMultiplier .01*exposureMultiplier 0];
 piAssetMotionAdd(thisR,asset, ...
     'translation', assetTranslation);
@@ -139,6 +172,9 @@ piAssetMotionAdd(thisRCamera,asset , ...
     'rotation', assetRotation);
 
 for ii = 1:numFrames
+
+    % Add shutter times so we can step asset and camera motion
+    % forward as we capture frames
     shutterOpen = shutterStart + (exposureTime * (ii-1));
     shutterClose =  shutterStart + (exposureTime * ii);
     thisR.set('shutteropen', shutterOpen);
@@ -146,15 +182,18 @@ for ii = 1:numFrames
     thisRCamera.set('shutteropen', shutterOpen);
     thisRCamera.set('shutterclose', shutterClose);
 
-    % customWRS calls piWRS, but sets the output file name
-    %           and scene name to make tracing simpler
+    % Set custom output file names for later analysis and
+    % potentially turning into a video clip
     outputFile = sprintf('shutter_%03d_%03d',shutterOpen*exposureMultiplier, ...
         shutterClose*exposureMultiplier);
 
     % Now render, show, and write output file
+    % customWRS calls piWRS, but sets the output file name
+    %           and scene name to make tracing simpler
     currentScene = customWRS(thisR,outputFile);
 
-        outputFile = sprintf('camera_%03d_%03d',shutterOpen*exposureMultiplier, ...
+    % Now do the same for the version of the scene with camera motion
+    outputFile = sprintf('camera_%03d_%03d',shutterOpen*exposureMultiplier, ...
         shutterClose*exposureMultiplier);
     currentSceneCamera = customWRS(thisRCamera, outputFile);
 
@@ -191,15 +230,22 @@ for ii = 1:numFrames
 
 end
 
+% Compute the scene using a reasonable sensor
+% For validation this is a simple monochrome version
+% For video assembly, we'd presumably want to add a "real" sensor
 [sensorLong, sensorBurst] = sceneCompare(sceneLong,sceneBurst, totalDuration);
+
 % class of volts has to match for ssim (maybe fix in ssim?)
 sensorLong.data.volts = double(sensorLong.data.volts);
 sensorBurst.data.volts = double(sensorBurst.data.volts);
 
+% Use ssim as a quick check 
 [ssimVal, ssimMap] = ssim(sensorLong.data.volts, sensorBurst.data.volts);
 
+% Now do the same thing for the version of the scene with camera motion
 [sensorLongCamera, sensorBurstCamera] = sceneCompare(sceneLongCamera, ...
     sceneBurstCamera, totalDuration);
+
 % class of volts has to match for ssim (maybe fix in ssim?)
 sensorLongCamera.data.volts = double(sensorLong.data.volts);
 sensorBurstCamera.data.volts = double(sensorBurst.data.volts);
@@ -224,7 +270,7 @@ mean(sensorBurst.data.volts,'all')
 %}
 
 %% ------------------------------------------------------------
-% END OF MAIN SCRIPT
+% END OF MAIN SCRIPT -- SUPPORT FUNCTIONS FOLLOW
 
 %% Customize output file & scene name for easier tracing
 function scene = customWRS(thisR, outputName)
