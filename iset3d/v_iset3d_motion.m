@@ -14,7 +14,7 @@ fprintf('Testing camera and object motion\n');
 %% Start with a simple scene & asset(s)
 %  and set basic parameters for rendering
 
-thisR = resetScene();
+thisR = resetScene(); % get a clean test scene
 
 %% First test camera motion
 % Start with translation, by default is meters per frame
@@ -25,6 +25,8 @@ translationEnd = [shiftA shiftA 0]; % Arbitrary
 thisR.set('camera motion translate start',[0 0 0]);
 thisR.set('camera motion translate end',translationEnd);
 
+% calls piWRS but with a few flags preset
+% and a custom file / scene name
 customWRS(thisR,'camera_Trans');
 
 % Now rotation
@@ -57,6 +59,9 @@ customWRS(thisR,'camera_Rot_Trans');
 
 %% Now test object motion
 thisR = resetScene();
+
+% If we set .hasActiveTransform,
+% getDocker() makes sure we have a CPU version of PBRT
 thisR.hasActiveTransform = true;
 getDocker(thisR); % Need CPU version
 
@@ -100,6 +105,13 @@ thisR = resetScene();
 thisR.hasActiveTransform = true;
 getDocker(thisR); % Need CPU version
 
+%% Add scene with camera motion
+thisRCamera = resetScene();
+thisRCamera.hasActiveTransform = true;
+translationEnd = [.7 -.7 0];
+thisRCamera.set('camera motion translate start',[0 0 0]);
+thisRCamera.set('camera motion translate end',translationEnd);
+
 %% Set parameters for our burst
 asset = 'A_O'; % could use any of the letters
 exposureTime = .001; % currently this needs to be short enough to avoid long exposure from blowing out.
@@ -111,14 +123,19 @@ shutterStart = 0;
 epsilon = 0; % minimum offset (not currenty needed)
 sceneBurst = []; % so we can check for isempty()
 sceneLong = []; % so we can sum frames into it
-
+sceneBurstCamera = [];
+sceneLongCamera = [];
 % We're using shutter times yet, so values are m/s
 assetTranslation = [.01*exposureMultiplier .01*exposureMultiplier 0];
 piAssetMotionAdd(thisR,asset, ...
     'translation', assetTranslation);
+piAssetMotionAdd(thisRCamera,asset, ...
+    'translation', assetTranslation);
 
 assetRotation = [0 0 45]; % Check if this is d/s so we need to multiply?
 piAssetMotionAdd(thisR,asset , ...
+    'rotation', assetRotation);
+piAssetMotionAdd(thisRCamera,asset , ...
     'rotation', assetRotation);
 
 for ii = 1:numFrames
@@ -126,6 +143,8 @@ for ii = 1:numFrames
     shutterClose =  shutterStart + (exposureTime * ii);
     thisR.set('shutteropen', shutterOpen);
     thisR.set('shutterclose', shutterClose);
+    thisRCamera.set('shutteropen', shutterOpen);
+    thisRCamera.set('shutterclose', shutterClose);
 
     % customWRS calls piWRS, but sets the output file name
     %           and scene name to make tracing simpler
@@ -135,21 +154,38 @@ for ii = 1:numFrames
     % Now render, show, and write output file
     currentScene = customWRS(thisR,outputFile);
 
+        outputFile = sprintf('camera_%03d_%03d',shutterOpen*exposureMultiplier, ...
+        shutterClose*exposureMultiplier);
+    currentSceneCamera = customWRS(thisRCamera, outputFile);
+
     if isempty(sceneBurst)
         sceneBurst = currentScene;
+        sceneBurstCamera = currentSceneCamera;
 
         % First time through take our "long" exposure
         shutterClose = shutterStart + (exposureTime*numFrames);
         thisR.set('shutterClose', shutterClose);
+        thisRCamera.set('shutterClose', shutterClose);
+
         outputFile = sprintf('shutter_%03d_%03d',shutterOpen*exposureMultiplier, ...
             shutterClose*exposureMultiplier);
         sceneLongBaseline = customWRS(thisR, outputFile);
         sceneLong = sceneLongBaseline;
+
+        outputFile = sprintf('camera_%03d_%03d',shutterOpen*exposureMultiplier, ...
+        shutterClose*exposureMultiplier);
+        sceneLongBaselineCamera = customWRS(thisRCamera, outputFile);
+        sceneLongCamera = sceneLongBaselineCamera;
+
     else
 
+        % Accrue photon values from each exposure
+        % For long exposure just do an incremental sum
         sceneBurst = sceneAdd(sceneBurst, currentScene);
-
         sceneLong = sceneAdd(sceneLong, sceneLongBaseline);
+
+        sceneBurstCamera = sceneAdd(sceneBurstCamera, currentSceneCamera);
+        sceneLongCamera = sceneAdd(sceneLongCamera, sceneLongBaselineCamera);
         
     end
 
@@ -162,10 +198,23 @@ sensorBurst.data.volts = double(sensorBurst.data.volts);
 
 [ssimVal, ssimMap] = ssim(sensorLong.data.volts, sensorBurst.data.volts);
 
+[sensorLongCamera, sensorBurstCamera] = sceneCompare(sceneLongCamera, ...
+    sceneBurstCamera, totalDuration);
+% class of volts has to match for ssim (maybe fix in ssim?)
+sensorLongCamera.data.volts = double(sensorLong.data.volts);
+sensorBurstCamera.data.volts = double(sensorBurst.data.volts);
+
+[ssimValCamera, ssimMapCamera] = ssim(sensorLongCamera.data.volts, sensorBurstCamera.data.volts);
+
 % show results:
-fprintf('SSIM: %f\n',ssimVal)
+fprintf('SSIM Assets only: %f\n',ssimVal)
 figure;
 imshowpair(sensorLong.data.volts,sensorBurst.data.volts,'diff')
+
+fprintf('SSIM Assets & Camera: %f\n',ssimValCamera)
+figure;
+imshowpair(sensorLongCamera.data.volts,sensorBurstCamera.data.volts,'diff')
+
 %{
 max(sensorLong.data.volts,[],'all')
 max(sensorBurst.data.volts,[],'all')
