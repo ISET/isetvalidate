@@ -81,7 +81,6 @@ thisR.set('camera motion translate end',[0 .07 0]);
 
 customWRS(thisR,'camera_Rot_Trans');
 
-
 %% Now test object motion
 thisR = resetScene();
 
@@ -233,14 +232,42 @@ end
 % Compute the scene using a reasonable sensor
 % For validation this is a simple monochrome version
 % For video assembly, we'd presumably want to add a "real" sensor
-[sensorLong, sensorBurst] = sceneCompare(sceneLong,sceneBurst, totalDuration);
+% [sensorLong, sensorBurst] = sceneCompare(sceneLong,sceneBurst, totalDuration);
+
+% sceneWindow(sceneLong);
+% sceneWindow(sceneBurst);
+
+% [x,y] for location
+scenePlot(sceneLong,'luminance hline',[1 127]);
+scenePlot(sceneBurst,'luminance hline',[1 127]);
+
+
+%%  Calculate sensor responses and compare
+
+oiLong = oiCompute(oiCreate('wvf'),sceneLong);
+oiBurst = oiCompute(oiCreate('wvf'),sceneBurst,'crop',true);
+oiLongDenoise = piAIdenoise(oiLong);
+
+sensor = sensorCreate('monochrome');
+sensor = sensorSet(sensor,'fov',oiGet(oiBurst,'fov'),oiBurst);
+
+sensor = sensorSet(sensor,'exp time',0.0002);
+sensorLong = sensorCompute(sensor,oiLong);
+sensorLongDenoise = sensorCompute(sensor,oiLongDenoise);
+sensorBurst = sensorCompute(sensor,oiBurst);
+
+sensorWindow(sensorLong);
+sensorWindow(sensorLongDenoise);
+sensorWindow(sensorBurst);
+
 
 % class of volts has to match for ssim (maybe fix in ssim?)
-sensorLong.data.volts = double(sensorLong.data.volts);
-sensorBurst.data.volts = double(sensorBurst.data.volts);
+voltsLong = sensorGet(sensorLong,'volts');
+voltsBurst = sensorGet(sensorBurst,'volts');
 
 % Use ssim as a quick check 
 [ssimVal, ssimMap] = ssim(sensorLong.data.volts, sensorBurst.data.volts);
+ieNewGraphWin; imagesc(ssimMap);
 
 % Now do the same thing for the version of the scene with camera motion
 [sensorLongCamera, sensorBurstCamera] = sceneCompare(sceneLongCamera, ...
@@ -274,6 +301,7 @@ mean(sensorBurst.data.volts,'all')
 
 %% Customize output file & scene name for easier tracing
 function scene = customWRS(thisR, outputName)
+
 [p, ~, e] = fileparts(thisR.outputFile);
 outFileName = ['Test_' outputName e];
 thisR.outputFile = fullfile(p,outFileName);
@@ -282,10 +310,12 @@ thisR.name = ['Test: ' outputName];
 % Now run the regular wrs
 % Make sure to turn off mean luminance!!
 scene = piWRS(thisR, 'mean luminance', -1);
+
 end
 
 %% Select correct version of PBRT
-%% Set up correct docker image
+
+% Set up correct docker image
 % isetdocker ignores the docker container we pass and uses presets
 % so for now we have to clear out the container
 function useDocker = getDocker(thisR)
@@ -302,11 +332,16 @@ else
 end
 end
 
+
+%% --------------
+
 function thisR = resetScene()
+
 useScene = 'lettersForMotionTests.pbrt';
 %useScene = 'lettersAtDepth.pbrt';
 thisR = piRead(useScene);
 thisR.metadata.rendertype = {'radiance', 'depth'};
+
 end
 
 
