@@ -142,7 +142,7 @@ exposureTime = .001; % currently this needs to be short enough to avoid long exp
 exposureMultiplier = 1000; %only used for creating integer file names
 
 % Set how many burst frames we want to sum to a longer exposure
-numFrames = 7; % Arbitrary, > 1
+numFrames = 5; % Arbitrary, > 1
 
 % Length of the long exposure (and of any video made from the burst)
 totalDuration = exposureTime * numFrames;
@@ -205,6 +205,12 @@ for ii = 1:numFrames
         thisR.set('shutterClose', shutterClose);
         thisRCamera.set('shutterClose', shutterClose);
 
+        % To even out noise characteristics, we want * numFrames
+        % raysPerPixel for the long exposure
+        baseRPP = recipeGet(thisR, 'rays per pixel');
+        recipeSet(thisR, 'rays per pixel',baseRPP * numFrames);
+        recipeSet(thisRCamera, 'rays per pixel',baseRPP * numFrames);
+
         outputFile = sprintf('shutter_%03d_%03d',shutterOpen*exposureMultiplier, ...
             shutterClose*exposureMultiplier);
         sceneLongBaseline = customWRS(thisR, outputFile);
@@ -215,6 +221,9 @@ for ii = 1:numFrames
         sceneLongBaselineCamera = customWRS(thisRCamera, outputFile);
         sceneLongCamera = sceneLongBaselineCamera;
 
+        % Now reset rays per pixel
+        recipeSet(thisR, 'rays per pixel',baseRPP);
+        recipeSet(thisRCamera, 'rays per pixel',baseRPP);
     else
 
         % Accrue photon values from each exposure
@@ -237,64 +246,60 @@ end
 % sceneWindow(sceneLong);
 % sceneWindow(sceneBurst);
 
+% Sanity check for luminance levels
 % [x,y] for location
 scenePlot(sceneLong,'luminance hline',[1 127]);
 scenePlot(sceneBurst,'luminance hline',[1 127]);
 
 
 %%  Calculate sensor responses and compare
-
-oiLong = oiCompute(oiCreate('wvf'),sceneLong);
+oiLong = oiCompute(oiCreate('wvf'),sceneLong,'crop',true);
 oiBurst = oiCompute(oiCreate('wvf'),sceneBurst,'crop',true);
 oiLongDenoise = piAIdenoise(oiLong);
+oiBurstDenoise = piAIdenoise(oiBurst);
 
 sensor = sensorCreate('monochrome');
 sensor = sensorSet(sensor,'fov',oiGet(oiBurst,'fov'),oiBurst);
 
-sensor = sensorSet(sensor,'exp time',0.0002);
+% Can shorten exposure time if needed to prevent clipping
+sensor = sensorSet(sensor,'exp time',.0002);
 sensorLong = sensorCompute(sensor,oiLong);
 sensorLongDenoise = sensorCompute(sensor,oiLongDenoise);
 sensorBurst = sensorCompute(sensor,oiBurst);
+sensorBurstDenoise = sensorCompute(sensor,oiBurstDenoise);
 
 sensorWindow(sensorLong);
 sensorWindow(sensorLongDenoise);
 sensorWindow(sensorBurst);
 
-
-% class of volts has to match for ssim (maybe fix in ssim?)
-voltsLong = sensorGet(sensorLong,'volts');
-voltsBurst = sensorGet(sensorBurst,'volts');
+voltsLong = sensorGet(sensorLongDenoise,'volts');
+voltsBurst = sensorGet(sensorBurstDenoise,'volts');
 
 % Use ssim as a quick check 
-[ssimVal, ssimMap] = ssim(sensorLong.data.volts, sensorBurst.data.volts);
+[ssimVal, ssimMap] = ssim(voltsLong, voltsBurst);
 ieNewGraphWin; imagesc(ssimMap);
 
 % Now do the same thing for the version of the scene with camera motion
+% Currently uses sceneCompare from isetvideo
+% which denoises the sensor image
 [sensorLongCamera, sensorBurstCamera] = sceneCompare(sceneLongCamera, ...
     sceneBurstCamera, totalDuration);
 
 % class of volts has to match for ssim (maybe fix in ssim?)
-sensorLongCamera.data.volts = double(sensorLong.data.volts);
-sensorBurstCamera.data.volts = double(sensorBurst.data.volts);
+voltsLongCamera = double(sensorLong.data.volts);
+voltsBurstCamera = double(sensorBurst.data.volts);
 
-[ssimValCamera, ssimMapCamera] = ssim(sensorLongCamera.data.volts, sensorBurstCamera.data.volts);
+[ssimValCamera, ssimMapCamera] = ssim(voltsLongCamera, voltsBurstCamera);
 
 % show results:
 fprintf('SSIM Assets only: %f\n',ssimVal)
 figure;
-imshowpair(sensorLong.data.volts,sensorBurst.data.volts,'diff')
+imshowpair(voltsLong,voltsBurst,'diff')
 
 fprintf('SSIM Assets & Camera: %f\n',ssimValCamera)
 figure;
-imshowpair(sensorLongCamera.data.volts,sensorBurstCamera.data.volts,'diff')
+imshowpair(voltsLongCamera,voltsBurstCamera,'diff')
 
-%{
-max(sensorLong.data.volts,[],'all')
-max(sensorBurst.data.volts,[],'all')
-
-mean(sensorLong.data.volts,'all')
-mean(sensorBurst.data.volts,'all')
-%}
 
 %% ------------------------------------------------------------
 % END OF MAIN SCRIPT -- SUPPORT FUNCTIONS FOLLOW
@@ -338,10 +343,11 @@ end
 function thisR = resetScene()
 
 useScene = 'lettersForMotionTests.pbrt';
+useRPP = 128;
 %useScene = 'lettersAtDepth.pbrt';
 thisR = piRead(useScene);
 thisR.metadata.rendertype = {'radiance', 'depth'};
-
+recipeSet(thisR,'rays per pixel', useRPP);
 end
 
 
