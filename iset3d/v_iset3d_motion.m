@@ -33,6 +33,7 @@
 %%
 ieInit
 if ~piDockerExists, piDockerConfig; end
+dockerInUse = []; % used to switch between cpu and gpu
 
 fprintf('Testing camera and object motion\n');
 
@@ -87,7 +88,7 @@ thisR = resetScene();
 % If we set .hasActiveTransform,
 % getDocker() makes sure we have a CPU version of PBRT
 thisR.hasActiveTransform = true;
-getDocker(thisR); % Need CPU version
+dockerInUse = getDocker(thisR, dockerInUse); % Need CPU version
 
 asset = 'A_O'; % could use any of the letters
 
@@ -127,7 +128,7 @@ customWRS(thisR,'asset_and_camera');
 
 thisR = resetScene();
 thisR.hasActiveTransform = true;
-getDocker(thisR); % Need CPU version
+dockerInUse = getDocker(thisR, dockerInUse); % Need CPU version
 
 %% Add scene with camera motion
 thisRCamera = resetScene();
@@ -327,17 +328,26 @@ end
 % Set up correct docker image
 % isetdocker ignores the docker container we pass and uses presets
 % so for now we have to clear out the container
-function useDocker = getDocker(thisR)
+function useDocker = getDocker(thisR, dockerInUse)
 
-% TBD: Fix so we only reset when switching!
+% Only reset when switching!
 reset(isetdocker);
 if thisR.hasActiveTransform
-    % NOTE: Need to use a cpu version of pbrt for this case
-    dockerCPU = isetdocker('preset','orange-cpu');
-    useDocker = dockerCPU;
-else
-    dockerGPU = isetdocker('preset','remoteorange');
-    useDocker = dockerGPU;
+    % Need to use a cpu version of pbrt for this case
+    % switch if needed
+    if isempty(dockerInUse) || isequal(dockerInUse.device, 'gpu')
+        dockerCPU = isetdocker('preset','orange-cpu');
+        useDocker = dockerCPU;
+    else
+        useDocker = dockerInUse;
+    end
+else % can use GPU
+        if isempty(dockerInUse) || ~isequal(dockerInUse.device, 'gpu')
+            dockerGPU = isetdocker('preset','remoteorange');
+            useDocker = dockerGPU;
+        else % we already have a GPU version
+            useDocker = dockerInUse;
+        end
 end
 end
 
