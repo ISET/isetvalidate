@@ -263,6 +263,10 @@ sensor = sensorSet(sensor,'fov',oiGet(oiBurst,'fov'),oiBurst);
 
 % Can shorten exposure time if needed to prevent clipping
 sensor = sensorSet(sensor,'exp time',.0002);
+% Need to set the noise flag off, or sensoraddnoise also
+% crops the voltage
+sensor = sensorSet(sensor, 'noise flag', -1);
+
 sensorLong = sensorCompute(sensor,oiLong);
 sensorLongDenoise = sensorCompute(sensor,oiLongDenoise);
 sensorBurst = sensorCompute(sensor,oiBurst);
