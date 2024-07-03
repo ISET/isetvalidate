@@ -35,6 +35,9 @@ ieInit
 if ~piDockerExists, piDockerConfig; end
 dockerInUse = []; % used to switch between cpu and gpu
 
+% Threshold for deciding burst image matches long exposure
+ssimThreshold = .96; % is as high as .99 best case
+
 fprintf('Testing camera and object motion\n');
 
 %% Start with a simple scene & asset(s)
@@ -297,10 +300,12 @@ voltsBurstCamera = double(sensorBurst.data.volts);
 [ssimValCamera, ssimMapCamera] = ssim(voltsLongCamera, voltsBurstCamera);
 
 % show results:
+assert(ssimVal > ssimThreshold, 'Asset SSIM is below threshold');
 fprintf('SSIM Assets only: %f\n',ssimVal)
 figure;
 imshowpair(voltsLong,voltsBurst,'diff')
 
+assert(ssimValCamera > ssimThreshold, 'Asset & Camera SSIM is below threshold');
 fprintf('SSIM Assets & Camera: %f\n',ssimValCamera)
 figure;
 imshowpair(voltsLongCamera,voltsBurstCamera,'diff')
