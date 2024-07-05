@@ -29,7 +29,7 @@
 %  there is a rewrite of piGeometryWrite as a baseline to compare
 %
 % D. Cardinal, Stanford University, June, 2024
-
+% 
 %%
 ieInit
 if ~piDockerExists, piDockerConfig; end
@@ -336,11 +336,17 @@ end
 function useDocker = getDocker(thisR, dockerInUse)
 
 % Only reset when switching!
-reset(isetdocker);
+% Need to add code that works with both iset3D and iset3D-tiny!!
+usingTiny = contains(piRootPath,'-tiny','IgnoreCase',true);
+
+% If we have -tiny in our path, use isetdocker
+if usingTiny
+
 if thisR.hasActiveTransform
     % Need to use a cpu version of pbrt for this case
     % switch if needed
     if isempty(dockerInUse) || isequal(dockerInUse.device, 'gpu')
+        reset(isetdocker);
         dockerCPU = isetdocker('preset','orange-cpu');
         useDocker = dockerCPU;
     else
@@ -353,6 +359,17 @@ else % can use GPU
         else % we already have a GPU version
             useDocker = dockerInUse;
         end
+
+else % otherwise use dockerWrapper from ISET3d
+
+    if isempty(dockerInUse) || isequal(dockerInUse.device, 'gpu')
+        % Need CPU for object motion
+        useDocker = dockerWrapper('verbosity',2,'gpuRendering',0, ...
+            'remoteImage','digitalprodev/pbrt-v4-cpu');
+    else
+        useDocker = dockerWrapper('verbosity',2,'gpuRendering',1, ...
+            'remoteImage', 'digitalprodev/pbrt-v4-gpu-ampere-ti');
+    end
 end
 end
 
