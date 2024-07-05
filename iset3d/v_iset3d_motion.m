@@ -1,6 +1,7 @@
 %% Test camera and asset motion
 %
 %   v_iset3d_motion (currently v2, using a custom test scene)
+%                   with backport additions for ISET3d
 %
 % Tests for:
 % - Asset Rotation and Translation
@@ -18,7 +19,7 @@
 %  Currently choose scene in resetScene() but asset names
 %  are coded to the default test scene
 %
-%  Set exposure time and numframes to generat images that can 
+%  Set exposure time and numframes to generat images that can
 %  be used to make a video clip
 %
 %  There are two places in the script that are commented out
@@ -29,7 +30,7 @@
 %  there is a rewrite of piGeometryWrite as a baseline to compare
 %
 % D. Cardinal, Stanford University, June, 2024
-% 
+%
 %%
 ieInit
 if ~piDockerExists, piDockerConfig; end
@@ -56,7 +57,7 @@ thisR.set('camera motion translate end',translationEnd);
 
 % calls piWRS but with a few flags preset
 % and a custom file / scene name
-customWRS(thisR,'camera_Trans');
+customWRS(thisR,'camera_Trans', dockerInUse);
 
 % Now rotation
 thisR = resetScene();
@@ -83,15 +84,14 @@ thisR.set('camera motion rotate end',rotationMatrixEnd);
 thisR.set('camera motion translate start',[0 0 0]);
 thisR.set('camera motion translate end',[0 .07 0]);
 
-customWRS(thisR,'camera_Rot_Trans');
+customWRS(thisR,'camera_Rot_Trans', dockerInUse);
 
 %% Now test object motion
 thisR = resetScene();
 
 % If we set .hasActiveTransform,
-% getDocker() makes sure we have a CPU version of PBRT
+% customWRS makes sure we have a CPU version of PBRT
 thisR.hasActiveTransform = true;
-dockerInUse = getDocker(thisR, dockerInUse); % Need CPU version
 
 asset = 'A_O'; % could use any of the letters
 
@@ -104,7 +104,7 @@ assetRotation = [0 0 90];
 piAssetMotionAdd(thisR,asset , ...
     'rotation', assetRotation);
 
-customWRS(thisR,'asset_motion');
+customWRS(thisR,'asset_motion', dockerInUse);
 
 %% Now test object motion with standard positioning
 %%%% NOTE: Adding an AssetTranslate here
@@ -117,21 +117,20 @@ customWRS(thisR,'asset_motion');
 % What happens if we simply have a rotation
 piAssetRotate(thisR, asset, assetRotation);
 
-customWRS(thisR,'asset_motion_movement');
+customWRS(thisR,'asset_motion_movement', dockerInUse);
 
 %% Now test both camera and object motion
 %  Start with the scene we have, that has object motion
 thisR.set('camera motion translate start',[0 0 0]);
 thisR.set('camera motion translate end',translationEnd);
 
-customWRS(thisR,'asset_and_camera');
+customWRS(thisR,'asset_and_camera', dockerInUse);
 
 %% Try using shutter times to control position
 %  this is how we do burst sequences
 
 thisR = resetScene();
 thisR.hasActiveTransform = true;
-dockerInUse = getDocker(thisR, dockerInUse); % Need CPU version
 
 %% Add scene with camera motion
 thisRCamera = resetScene();
@@ -193,12 +192,12 @@ for ii = 1:numFrames
     % Now render, show, and write output file
     % customWRS calls piWRS, but sets the output file name
     %           and scene name to make tracing simpler
-    currentScene = customWRS(thisR,outputFile);
+    currentScene = customWRS(thisR,outputFile, dockerInUse);
 
     % Now do the same for the version of the scene with camera motion
     outputFile = sprintf('camera_%03d_%03d',shutterOpen*exposureMultiplier, ...
         shutterClose*exposureMultiplier);
-    currentSceneCamera = customWRS(thisRCamera, outputFile);
+    currentSceneCamera = customWRS(thisRCamera, outputFile, dockerInUse);
 
     if isempty(sceneBurst)
         sceneBurst = currentScene;
@@ -217,12 +216,12 @@ for ii = 1:numFrames
 
         outputFile = sprintf('shutter_%03d_%03d',shutterOpen*exposureMultiplier, ...
             shutterClose*exposureMultiplier);
-        sceneLongBaseline = customWRS(thisR, outputFile);
+        sceneLongBaseline = customWRS(thisR, outputFile, dockerInUse);
         sceneLong = sceneLongBaseline;
 
         outputFile = sprintf('camera_%03d_%03d',shutterOpen*exposureMultiplier, ...
-        shutterClose*exposureMultiplier);
-        sceneLongBaselineCamera = customWRS(thisRCamera, outputFile);
+            shutterClose*exposureMultiplier);
+        sceneLongBaselineCamera = customWRS(thisRCamera, outputFile, dockerInUse);
         sceneLongCamera = sceneLongBaselineCamera;
 
         % Now reset rays per pixel
@@ -237,7 +236,7 @@ for ii = 1:numFrames
 
         sceneBurstCamera = sceneAdd(sceneBurstCamera, currentSceneCamera);
         sceneLongCamera = sceneAdd(sceneLongCamera, sceneLongBaselineCamera);
-        
+
     end
 
 end
@@ -283,7 +282,7 @@ sensorWindow(sensorBurst);
 voltsLong = sensorGet(sensorLongDenoise,'volts');
 voltsBurst = sensorGet(sensorBurstDenoise,'volts');
 
-% Use ssim as a quick check 
+% Use ssim as a quick check
 [ssimVal, ssimMap] = ssim(voltsLong, voltsBurst);
 ieNewGraphWin; imagesc(ssimMap);
 
@@ -315,7 +314,7 @@ imshowpair(voltsLongCamera,voltsBurstCamera,'diff')
 % END OF MAIN SCRIPT -- SUPPORT FUNCTIONS FOLLOW
 
 %% Customize output file & scene name for easier tracing
-function scene = customWRS(thisR, outputName)
+function scene = customWRS(thisR, outputName, dockerInUse)
 
 [p, ~, e] = fileparts(thisR.outputFile);
 outFileName = ['Test_' outputName e];
@@ -323,8 +322,12 @@ thisR.outputFile = fullfile(p,outFileName);
 thisR.name = ['Test: ' outputName];
 
 % Now run the regular wrs
+% with the docker object needed
+dockerInUse = getDocker(thisR, dockerInUse);
+
 % Make sure to turn off mean luminance!!
-scene = piWRS(thisR, 'mean luminance', -1);
+scene = piWRS(thisR, 'mean luminance', -1, ...
+    'dockerWrapper', dockerInUse);
 
 end
 
@@ -333,6 +336,8 @@ end
 % Set up correct docker image
 % isetdocker ignores the docker container we pass and uses presets
 % so for now we have to clear out the container
+
+
 function useDocker = getDocker(thisR, dockerInUse)
 
 % Only reset when switching!
@@ -342,33 +347,41 @@ usingTiny = contains(piRootPath,'-tiny','IgnoreCase',true);
 % If we have -tiny in our path, use isetdocker
 if usingTiny
 
-if thisR.hasActiveTransform
-    % Need to use a cpu version of pbrt for this case
-    % switch if needed
-    if isempty(dockerInUse) || isequal(dockerInUse.device, 'gpu')
-        reset(isetdocker);
-        dockerCPU = isetdocker('preset','orange-cpu');
-        useDocker = dockerCPU;
-    else
-        useDocker = dockerInUse;
-    end
-else % can use GPU
+    if thisR.hasActiveTransform
+        % Need to use a cpu version of pbrt for this case
+        % switch if needed
+        if isempty(dockerInUse) || isequal(dockerInUse.device, 'gpu')
+            reset(isetdocker);
+            dockerCPU = isetdocker('preset','orange-cpu');
+            useDocker = dockerCPU;
+        else
+            useDocker = dockerInUse;
+        end
+    else % can use GPU
         if isempty(dockerInUse) || ~isequal(dockerInUse.device, 'gpu')
             dockerGPU = isetdocker('preset','remoteorange');
             useDocker = dockerGPU;
         else % we already have a GPU version
             useDocker = dockerInUse;
         end
-
+    end
 else % otherwise use dockerWrapper from ISET3d
 
-    if isempty(dockerInUse) || isequal(dockerInUse.device, 'gpu')
-        % Need CPU for object motion
-        useDocker = dockerWrapper('verbosity',2,'gpuRendering',0, ...
-            'remoteImage','digitalprodev/pbrt-v4-cpu');
-    else
-        useDocker = dockerWrapper('verbosity',2,'gpuRendering',1, ...
-            'remoteImage', 'digitalprodev/pbrt-v4-gpu-ampere-ti');
+    if thisR.hasActiveTransform % need CPU
+        if isempty(dockerInUse) || dockerInUse.gpuRendering
+            % Need CPU for object motion
+            useDocker = dockerWrapper('verbosity',2,'gpuRendering',0, ...
+                'remoteImage','digitalprodev/pbrt-v4-cpu');
+        else
+            useDocker = dockerInUse;
+        end
+    else % can use GPU
+        if isempty(dockerInUse) || ~dockerInUse.gpuRendering
+            useDocker = dockerWrapper('verbosity',2,'gpuRendering',1, ...
+                'remoteImage', 'digitalprodev/pbrt-v4-gpu-ampere-ti');
+        else
+            useDocker = dockerInUse;
+        end
     end
 end
 end
