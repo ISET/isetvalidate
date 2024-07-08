@@ -334,9 +334,8 @@ end
 %% Select correct version of PBRT
 
 % Set up correct docker image
-% isetdocker ignores the docker container we pass and uses presets
+% isetdocker in -tiny ignores the docker container we pass and uses presets
 % so for now we have to clear out the container
-
 
 function useDocker = getDocker(thisR, dockerInUse)
 
