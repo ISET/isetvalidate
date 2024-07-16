@@ -15,7 +15,7 @@ oi = oiCompute(oi,scene,'crop',true);
 %% Make a sensor array that can see the whole range
 
 % The sensor size is big enough to capture the whole chart
-sensorArray = sensorCreateArray('splitpixel','exp time',0.1,'size',2*[64 96],'noise flag',0);
+sensorArray = sensorCreateArray('array type','ovt','exp time',0.1,'size',2*[64 96],'noise flag',0);
 sA          = sensorComputeArray(sensorArray,oi,'method','average');
 
 % This is the combined
