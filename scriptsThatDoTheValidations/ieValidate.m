@@ -20,7 +20,7 @@ function report = ieValidate(repo,typeToRun,varargin)
 %
 % Inputs:
 %   repo - name of repository. 
-%       One of {'isetcam','isetbio','isetbiordt','csfgenerator', 'iset3d', 'psych221'}
+%       One of {'isetcam','isetbio','isetbiordt','csfgenerator', 'iset3d', 'iset3d-tiny', 'psych221'}
 %   typeToRun - One of {'tutorials', 'scripts', 'validations'}
 %       Not all combinations of repo/typeToRun are available.  The
 %       examples block in the source for this routine indicates those
@@ -89,9 +89,17 @@ repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', ...
 %%
 
 p = inputParser;
-p.addRequired('repo',@(x)(ismember(ieParamFormat(x),availRepos)));
+p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio','csfgenerator','iset3d','iset3d-tiny','psych221','isetbiordt'})));
 p.addRequired('typeToRun',@(x)(ismember(ieParamFormat(x),{'tutorials','scripts','validations','examples'})));
 p.parse(repo,typeToRun,varargin{:});
+
+% Specify repos we can test.  For each, also need to provide
+% the name of the function that gives the repository root path
+% and the path to the tutorial directory under that path.
+%
+% I took a guess at the correct root path for iset3d and psych221
+availRepos = {'isetbio' 'isetcam', 'csfgenerator','iset3d','iset3d-tiny','psych221','ptb','isetbiordt'};
+repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', 'csfGeneratorRootPath','piRootPath','piRootPath','psych221RootPath',''};
 
 % Figure out where we want to go today
 knownRepo = false;
@@ -174,9 +182,20 @@ switch (availRepos{selectedRepoNum})
         end
 
     case 'iset3d-tiny'
-        disp('NYI');
-        return;
-        
+       switch(typeToRun)
+            case 'tutorials'
+                topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                subDir = 'tutorials';
+                error('Not sure whether tutorials currently exist for iset3d-tiny');
+            case 'scripts'
+                topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                subDir = 'scripts';
+                error('Not sure whether currently exist for iset3d-tiny');
+            case 'validations'
+                topLevelDir = isetvalidateRootPath;
+                subDir = 'iset3d-tiny';
+       end
+    
     case 'psych221'
         switch (typeToRun)
             case 'tutorials'

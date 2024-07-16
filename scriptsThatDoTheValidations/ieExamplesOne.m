@@ -53,11 +53,11 @@ status = ExecuteExamplesInFunction(theFunction, ...
 
 switch status
     case -1
-        fprintf('Found examples but at least one crashed.\n')
+        fprintf('Found examples but at least one failed.\n')
     case 0
         fprintf('No examples found.\n')
     otherwise
-        fprintf('%d examples were tested. No errors reported.\n',status)
+        fprintf('%d example(s) tested. No errors reported.\n',status)
 end
 
 %% END

@@ -1,0 +1,32 @@
+# PBRT file created with piWrite on 2024/6/30 11:10:12.61 
+# PBRT version = 4 
+
+LookAt 0.000000 0.010000 0.000000 0.000000 0.010000 1.000000 0.000000 1.000000 0.000000 
+
+# camera 
+Camera "perspective" 
+  "float fov" [30.000000] 
+  "float shutteropen" [0.005000] 
+  "float shutterclose" [0.006000] 
+
+# sampler 
+Sampler "halton" 
+  "integer pixelsamples" [32] 
+
+# film 
+Film "gbuffer" 
+  "integer yresolution" [256] 
+  "integer xresolution" [256] 
+  "bool saveRadiance" true 
+  "bool saveRadianceAsBasis" false 
+  "bool saveDepth" true 
+
+# integrator 
+Integrator "path" 
+  "integer maxdepth" [2] 
+
+WorldBegin 
+Include "Test_shutter_005_006_materials.pbrt" 
+ 
+Include "Test_shutter_005_006_geometry.pbrt" 
+ 
