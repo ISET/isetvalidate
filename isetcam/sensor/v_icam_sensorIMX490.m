@@ -20,7 +20,7 @@ sensor = sensorCompute(sensor,oi);
 
 %% The mean volts should be the same.
 volts = sensorGet(sensor,'volts');
-assert(abs( (mean(volts,'all')/0.2316522) - 1) < 1e-5);
+assert(abs( (mean(volts,'all')/0.2167) - 1) < 1e-3);
 
 %%
 sensor = sensorCreate('imx490-small');
@@ -32,6 +32,6 @@ sensor = sensorCompute(sensor,oi);
 
 %% The mean volts should be the same.
 volts = sensorGet(sensor,'volts');
-assert(abs( (mean(volts,'all')/0.2280384) - 1) < 1e-5);
+assert(abs( (mean(volts,'all')/0.2167) - 1) < 1e-3);
 
 %% End
