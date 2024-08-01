@@ -1,6 +1,9 @@
 % v_icam_splitpixel
 
+% Not yet implemented
+
 ieInit;
+return;
 
 %% Here is a high dynamic range test chart
 
