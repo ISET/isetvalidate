@@ -55,12 +55,9 @@ theZernikeCoeffs = theZernikeCoeffs(:,whichSubjects);
 nRows = ceil(sqrt(nSubjects));
 nCols = ceil(nSubjects/nRows);
 
-% Stiles Crawford
-DOSCE = 0;
+% No Stiles Crawford
 sceWavelength = 550;
-if (DOSCE),  wvfP.sceParams = sceCreate(sceWavelength,'berendschot_data');
-else,        wvfP.sceParams = sceCreate(sceWavelength,'none');
-end
+wvfP.sceParams = sceCreate(sceWavelength,'none');
 
 %% Test Strehl ratios
 ratios = [0.033, 0.103];
@@ -82,14 +79,14 @@ for ii = 1:nSubjects
     wvfP = wvfSet(wvfP,'lcaMethod','human');
     wvfP = wvfCompute(wvfP);
 
-    [udataS, pData] = wvfPlot(wvfP,'1d psf angle','unit','min','wave',wList,'plotrange',maxMIN,'window',false);
+    [udataS, pData] = wvfPlot(wvfP,'1d psf angle','unit','min','wave',wList,'plotrange',maxMIN);
     set(pData,'color','b');
     hold on;
     
     strehlDirect = max(udataS.y(:))/max(udataD.y(:));
     assert(abs(ratios(ii) - strehlDirect) < 1e-3);
    
-    wvfPlot(wvfP,'image psf','unit','um','wave',wList,'plotrange',20);
+    % wvfPlot(wvfP,'image psf','unit','um','wave',wList,'plotrange',20);
     
 end
 
