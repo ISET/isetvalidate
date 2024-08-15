@@ -164,13 +164,9 @@ sceneLongCamera = [];
 assetTranslation = [.01*exposureMultiplier .01*exposureMultiplier 0];
 piAssetMotionAdd(thisR,asset, ...
     'translation', assetTranslation);
-piAssetMotionAdd(thisRCamera,asset, ...
-    'translation', assetTranslation);
 
 assetRotation = [0 0 45]; % Check if this is d/s so we need to multiply?
 piAssetMotionAdd(thisR,asset , ...
-    'rotation', assetRotation);
-piAssetMotionAdd(thisRCamera,asset , ...
     'rotation', assetRotation);
 
 for ii = 1:numFrames
