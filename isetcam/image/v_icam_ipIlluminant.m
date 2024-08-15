@@ -19,27 +19,20 @@
 %%
 ieInit
 
-%% Create the N-100 reflectance chart
+%% Create an N-100 reflectance chart
 %
 % Alternatively, you can choose the scene surface reflectances
 % here this way, if you want.
 %
 % Choose some example reflectance data
-% sFiles = cell(1,2);
-% sFiles{1} = fullfile(isetRootPath,'data','surfaces','reflectances','MunsellSamples_Vhrel.mat');
-% sFiles{2} = fullfile(isetRootPath,'data','surfaces','reflectances','Food_Vhrel.mat');
-%
-% % Row and column size for the reflectance chart
-% sSamples = [48 16];
-%
-% % Spatial samples for each square patch
-% pSize = 20;
-%
-% % Create the scene, storing the specific surface samples (sSamples)
-% [scene, sSamples] = sceneReflectanceChart(sFiles,sSamples,pSize);
-% scene = sceneSet(scene,'name','surface chart');
+sFiles = cell(1,2);
+sFiles{1} = fullfile(isetRootPath,'data','surfaces','reflectances','MunsellSamples_Vhrel.mat');
+sFiles{2} = fullfile(isetRootPath,'data','surfaces','reflectances','Food_Vhrel.mat');
+pSize = 20;
+sSamples{1} = [46 12 54 23 40 59 41 22 1 1 39 14 18 40 17 57];
+sSamples{2} = [1 10 8 23 23 25 26 22 16 2 24 25 10 4 7 22];
+scene = sceneReflectanceChart(sFiles,sSamples,pSize);
 
-scene = sceneCreate('reflectance chart');
 % ieAddObject(scene); sceneWindow;
 
 %% Create an oi and a sensor
@@ -48,6 +41,7 @@ oi = oiCreate;
 
 % Set the sensor of interest here
 nikon = sensorCreate;
+nikon = sensorSet(nikon,'noise flag',0);
 wave  = sensorGet(nikon,'wave');
 
 % Load up  Nikon color filters and an infrared
@@ -90,26 +84,24 @@ for ii=1:nIlluminant
     ieAddObject(vci{ii});
 end
 
-%% There is noise, so we relax the tolerance
-%
-% But I am surprised how much we have to relax the tolerance (BW).
-%
-ipWindow;
+%% Check the values
+
 
 m = ipGet(vci{1},'srgb');
-assert(abs(mean(double(m(:)))/0.421070790946420 - 1) < 1e-1);
+% mean(double(m(:)))
+assert(abs(mean(double(m(:)))/ 0.4768 - 1) < 1e-2);
 
 m = ipGet(vci{nIlluminant},'srgb');
-assert(abs(mean(double(m(:)))/0.434562233057239 - 1) < 1e-1);
+% mean(double(m(:)))
+assert(abs(mean(double(m(:)))/ 0.4800 - 1) < 1e-2);
 
 %% Now fix the transform and rerun.  The result should be the same.
 
 vci{1} = ipSet(vci{1},'transform method','current');
 ip = ipCompute(vci{1},nikon);
-ipWindow(ip);
+% ipWindow(ip);
 
 m2 = ipGet(ip,'srgb');
 assert(mean(m2(:))/mean(m(:)) - 1 < 1e-5);
 
-
-%%
+%% END
