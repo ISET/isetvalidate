@@ -28,8 +28,7 @@ oi = oiCreate;
 oi = oiSet(oi,'diffuser Method','blur');
 oi = oiSet(oi,'diffuser Blur',[6,2]*1e-6);  %Units are meters.
 oi = oiCompute(oi,scene);
-vcReplaceAndSelectObject(oi);
-oiWindow;
+oiWindow(oi);
 
 % Rotate the diffusing blur direction.
 oi = oiSet(oi,'diffuserBlur',[2,6]*1e-6);  %Units are meters.
