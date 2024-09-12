@@ -1,9 +1,7 @@
 %% Verify omni camera model in PBRT
 %
-% This is the most general camera model we have that also includes
-% microlens modeling at the ray level (not wave).
-%
-% D. Cardinal, Feb, 2022
+% This camera model includes microlens modeling at the ray level (not
+% wave).  Microlens not tested here.
 %
 % See also
 %   piIntro_lens
@@ -14,7 +12,7 @@ ieInit;
 if ~piDockerExists, piDockerConfig; end
 
 %%  Scene and light
-thisR = piRecipeCreate('Cornell_Box');
+thisR = piRecipeDefault('scene name','cornell-box');
 
 % There is a distant light by default.
 thisR.set('lights','all','delete');
@@ -61,12 +59,6 @@ thisR.set('object distance',10);
 thisR.camera = piCameraCreate('omni', 'lens file',lList(ll).name);
 thisR.set('skymap','sky-cathedral_interior.exr');
 oi = piWRS(thisR,'name','fisheye test');
-
-%% Denoise
-oi = piAIdenoise(oi);
-oi = oiSet(oi,'name','fisheye denoised test');
-ieReplaceObject(oi); 
-oiWindow;
 
 %% END
 

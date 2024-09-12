@@ -1,9 +1,10 @@
-%% A shorter version to test material insertion
-%
-%   v_iset3d_materials
-%
+%% v_iset3d_tiny_materials
+% 
 % See also
-%   v_iset3d_materialsAll
+%   v_iset3d_materialsAll (development)
+%
+% TODO:  
+%   We do not have textures or materials in the database.  Should we?
 
 %% 
 ieInit
