@@ -5,10 +5,11 @@
 
 thisDB = isetdb;
 
-%% Find all the available collections
+collectionName = 'PBRTResources';
 
-thisDB.collectionList;
-
+if ~ismember(collectionName,thisDB.connection.CollectionNames)
+    error("Collection %s not found/n", collectionName);
+end
 
 %% Find available categories
 
@@ -16,7 +17,6 @@ thisDB.collectionList;
 
 %% For this collection (PBRTResources) find buses and cars
 
-collectionName = 'PBRTResources';
 
 assets = thisDB.contentFind(collectionName, 'category','bus','type','asset', 'show',true);
 fprintf('Found %d bus assets.\n',numel(assets));
