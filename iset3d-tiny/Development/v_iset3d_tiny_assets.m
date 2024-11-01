@@ -19,11 +19,11 @@ if ~piDockerExists, piDockerConfig; end
 
 %% Render each asset using the Cornell box scene as the base scene
 
-parentRecipe = piRecipeDefault('scene name','cornell_box');
-lightName = 'from camera';
-ourLight = piLightCreate(lightName,...
-    'type','distant');
-recipeSet(parentRecipe,'lights', ourLight,'add');
+parentRecipe = piRecipeDefault('scene name','cornell-box');
+% lightName = 'from camera';
+% ourLight = piLightCreate(lightName,...
+%     'type','distant');
+% parentRecipe.set('lights', ourLight,'add');
 % piWRS(parentRecipe);
 
 %% The pre-computed assets
