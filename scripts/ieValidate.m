@@ -166,34 +166,33 @@ switch (availRepos{selectedRepoNum})
                 error('No validations currently exist for csfgenerator');
         end
 
-    case 'iset3d'
-        switch (typeToRun)
-            case 'tutorials'
-                topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
-                subDir = 'tutorials';
-                error('Not sure whether tutorials currently exist for iset3d');
-            case 'scripts'
-                topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
-                subDir = 'scripts';
-                error('Not sure whether currently exist for iset3d');
-            case 'validations'
-                topLevelDir = isetvalidateRootPath;
-                subDir = 'iset3d';
-        end
+        % case 'iset3d'
+        %     switch (typeToRun)
+        %         case 'tutorials'
+        %             topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+        %             subDir = 'tutorials';
+        %             error('Not sure whether tutorials currently exist for iset3d');
+        %         case 'scripts'
+        %             topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+        %             subDir = 'scripts';
+        %             error('Not sure whether currently exist for iset3d');
+        %         case 'validations'
+        %             topLevelDir = isetvalidateRootPath;
+        %             subDir = 'iset3d';
+        %     end
 
-    case 'iset3d-tiny'
+    case 'iset3d'
+        % We need to make sure iset3d-tiny is renamed to iset3d.
        switch(typeToRun)
             case 'tutorials'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'tutorials';
-                error('Not sure whether tutorials currently exist for iset3d-tiny');
-            case 'scripts'
+           case 'scripts'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
-                subDir = 'scripts';
-                error('Not sure whether currently exist for iset3d-tiny');
+                subDir = 'scripts';           
             case 'validations'
                 topLevelDir = isetvalidateRootPath;
-                subDir = 'iset3d-tiny';
+                subDir = 'iset3d';
        end
     
     case 'psych221'
@@ -272,10 +271,11 @@ p = struct(...
 
 %% List of scripts to be skipped from automatic running.
 %
-% Anything with this in its path name is skipped.
+% Anything with one of these strings in the path name is skipped.
 % library is in ISETBio/scripts.  It creates all the mosaics in a library.
 scriptsToSkip = {...
     'Contents', ...
+    'data', ...
     'deprecated', ...
     'development', ...
     'Development', ...
