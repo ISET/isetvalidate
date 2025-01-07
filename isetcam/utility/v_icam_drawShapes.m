@@ -12,7 +12,7 @@
 ieInit
 
 %% Scene
-scene = sceneCreate; ieAddObject(scene); sceneWindow;
+scene = sceneCreate; sceneWindow(scene);
 h = ieDrawShape(scene,'rectangle',[10 10 50 50]);
 pause(1); delete(h);
 
