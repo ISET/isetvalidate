@@ -31,6 +31,7 @@ function result = ieExamples(repo,varargin)
 % Examples: % ETTBSkip
 %{
     ieExamples('isetbio');
+    ieExamples('csfgenerator');
 %}
 %{
     ieExamples('isetcam','select','all','print',true);
