@@ -18,23 +18,23 @@ ieInit;
 if ~piDockerExists, piDockerConfig; end
 
 %% Render each asset using the Cornell box scene as the base scene
-  
-parentRecipe = piRecipeDefault('scene name','cornell_box');
-lightName = 'from camera';
-ourLight = piLightCreate(lightName,...
-    'type','distant');
-recipeSet(parentRecipe,'lights', ourLight,'add');
+
+parentRecipe = piRecipeDefault('scene name','cornell-box');
+% lightName = 'from camera';
+% ourLight = piLightCreate(lightName,...
+%     'type','distant');
+% parentRecipe.set('lights', ourLight,'add');
 % piWRS(parentRecipe);
 
 %% The pre-computed assets
-assetDir = piDirGet('assets');
+assetDir   = piDirGet('assets');
 assetFiles = dir([assetDir,filesep(),'*.mat']);
 
 if ~numel(assetFiles)
     assert(exist(assetDir, 'dir'), 'No directory %s', assetDir)
     cprintf('RED','No assets found in %s\n', assetDir)
     assert(true)
-else   
+else
     fprintf('Found %d assets\n',numel(assetFiles));
     for ii=1:numel(assetFiles)
         fprintf('%d %s\n',ii,assetFiles(ii).name);
@@ -49,7 +49,7 @@ else
 
         % I think we need to reload to avoid issues
         % from previous runs
-        parentRecipe = piRecipeDefault('scene name','cornell_box');
+        [parentRecipe, info] = piRecipeDefault('scene name','cornell_box');
         lightName = 'from camera';
         ourLight = piLightCreate(lightName,'type','distant');
 
@@ -73,7 +73,7 @@ else
             combinedR.show('textures');
 
             % Render it
-            piWRS(combinedR);
+            result = piWRS(combinedR);
 
             status(ii) = true;
             report = [report sprintf("Asset: %s Succeeded.\n", assetName)]; %#ok<AGROW>
