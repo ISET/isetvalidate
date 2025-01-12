@@ -195,7 +195,22 @@ switch (availRepos{selectedRepoNum})
                 subDir = 'iset3d';
        end
     
+    case 'iset3d-tiny'
+        % We need to make sure iset3d-tiny is renamed to iset3d.
+       switch(typeToRun)
+            case 'tutorials'
+                topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                subDir = 'tutorials';
+           case 'scripts'
+                topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                subDir = 'scripts';           
+            case 'validations'
+                topLevelDir = isetvalidateRootPath;
+                subDir = 'iset3d';
+       end
+
     case 'psych221'
+        % There is a validation script inside of psych221.  Run that.
         switch (typeToRun)
             case 'tutorials'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
