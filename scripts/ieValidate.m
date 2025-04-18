@@ -75,9 +75,6 @@ function report = ieValidate(repo,typeToRun,varargin)
 %   12/15/23  dhb  Integrate tutorials/scripts/validations.
 %   12/20/23  dhb  Generalized setup to handle bugs identified by BAW.
 
-%% Save the printout?
-saveprint = true;
-
 %% Specify repos we can test.  
 % 
 % For each, also need to provide the name of the function that gives the
@@ -91,18 +88,21 @@ repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', ...
     'iefundamentalsRootPath'};
 %%
 
-p = inputParser;
-p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio','csfgenerator','iset3d','iset3d-tiny','psych221','isetbiordt'})));
-p.addRequired('typeToRun',@(x)(ismember(ieParamFormat(x),{'tutorials','scripts','validations','examples'})));
-p.parse(repo,typeToRun,varargin{:});
-
 % Specify repos we can test.  For each, also need to provide
 % the name of the function that gives the repository root path
 % and the path to the tutorial directory under that path.
 %
 % I took a guess at the correct root path for iset3d and psych221
-availRepos = {'isetbio' 'isetcam', 'csfgenerator','iset3d','iset3d-tiny','psych221','ptb','isetbiordt'};
-repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', 'csfGeneratorRootPath','piRootPath','piRootPath','psych221RootPath',''};
+availRepos = {'isetbio' 'isetcam', 'csfgenerator','iset3d','iset3d-tiny','psych221','ptb','isetbiordt','isetfundamentals'};
+repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', 'csfGeneratorRootPath','piRootPath','piRootPath','psych221RootPath','',[],[]};
+
+p = inputParser;
+p.addRequired('repo',@(x)(ismember(ieParamFormat(x),availRepos)));
+p.addRequired('typeToRun',@(x)(ismember(ieParamFormat(x),{'tutorials','scripts','validations','examples'})));
+p.addParameter('saveprint',true,@islogical);
+p.parse(repo,typeToRun,varargin{:});
+
+
 
 % Figure out where we want to go today
 knownRepo = false;
@@ -231,13 +231,13 @@ switch (availRepos{selectedRepoNum})
         % There is a validation script inside of psych221.  Run that.
         switch (typeToRun)
             case 'tutorials'
+                error('Not sure whether tutorials currently exist for psych221');
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'tutorials';
-                error('Not sure whether tutorials currently exist for psych221');
             case 'scripts'
+                error('Not sure whether scripts currently exist for psych221');
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'scripts';
-                error('Not sure whether scripts currently exist for psych221');
             case 'validations'
                 topLevelDir = isetvalidateRootPath;
                 outputFileBase = 'psych221_validations';
@@ -268,9 +268,10 @@ switch (availRepos{selectedRepoNum})
                 subDir = 'scripts';
                 error('Scripts do not currently exist for ptb');
             case 'validations'
-                topLevelDir = isetvalidateRootPath;
+                topLevelDir = fullfile(isetvalidateRootPath);
                 outputFileBase = 'ptb_validations';
                 subDir = 'ptb';
+                error('PTB validations need some thinking about how to get PTB onto path for testing here.');
         end
 
     case 'isetbiordt'
@@ -301,7 +302,7 @@ switch (availRepos{selectedRepoNum})
 end
 
 % Set up preferences to work for the selected run
-p = struct(...
+pp = struct(...
     'tutorialsSourceDir',       fullfile(topLevelDir,subDir) ...
     );
 
@@ -342,7 +343,7 @@ ieSessionSet('wait bar',0);
 initClear = ieSessionGet('init clear');
 ieSessionSet('init clear',true);
 
-[~, reportTemp] = UnitTest.runProjectTutorials(p, scriptsToSkip, 'All');
+[~, reportTemp] = UnitTest.runProjectTutorials(pp, scriptsToSkip, 'All');
 
 % Restore
 ieSessionSet('init clear',initClear);
@@ -358,8 +359,17 @@ if (nargout > 0)
     report = reportTemp;
 end
 
-if (saveprint)
+% Save what happend to a file
+if (p.Results.saveprint)
+    % Make sure save directory exists and set up save filenme, if saving
+    outputDir = fullfile(isetvalidateRootPath,'outputfiles');
+    if (~exist(outputDir,'dir'))
+        mkdir(outputDir);
+    end
+    outputFile = fullfile(outputDir,[outputFileBase '_' datestr(now,'yy-mm-dd-HH-MM-SS')]);
+    outputFID = fopen(outputFile,'w');
+    fprintf(outputFID,reportTemp);
+    fclose(outputFID);
 end
-
 
 end

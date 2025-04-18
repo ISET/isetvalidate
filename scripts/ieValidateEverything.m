@@ -9,3 +9,6 @@ ieExamples('isetbio');
 ieExamples('csfgenerator');
 
 %% Validations
+ieValidate(isetcam','scripts');
+ieValidate(isetcam,'tutorials');
+ieValidate(isetcam,'validations');
