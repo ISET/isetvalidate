@@ -74,7 +74,7 @@ end
 
 if (p.Results.print)
     % Make sure save directory exists and set up save filenme, if saving
-    if (p.Results.saveprint))
+    if (p.Results.saveprint)
         outputDir = fullfile(isetvalidateRootPath,'outputfiles');
         if (~exist(outputDir,'dir'))
             mkdir(outputDir);
@@ -112,10 +112,9 @@ if (p.Results.print)
         end
     end
 
-     if (p.Results.saveprint))
-            fclose(outputFID)
-            outputFID = fopen(outputFile,'w');
-        end
+    if (p.Results.saveprint)
+        fclose(outputFID);
+    end
 end
 
 %% END
