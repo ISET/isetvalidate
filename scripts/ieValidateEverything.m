@@ -4,19 +4,19 @@
 % a file.
 
 %% Examples
-ieExamples('isetcam');
-ieExamples('isetbio');
-ieExamples('csfgenerator');
+ieExamples('isetcam'); close all; clear;
+ieExamples('isetbio'); close all; clear;
+ieExamples('csfgenerator'); close all; clear;
 
 %% Validations
-ieValidate('isetcam','scripts');
-ieValidate('isetcam,'tutorials');
-ieValidate('isetcam','validations');
+ieValidate('isetcam','scripts'); close all; clear;
+ieValidate('isetcam,'tutorials'); close all; clear;
+ieValidate('isetcam','validations'); close all; clear;
 
-ieValidate('isetbio','scripts');
-ieValidate('isetbio','tutorials');
-ieValidate('isetbio','validations');
+ieValidate('isetbio','scripts'); close all; clear;
+ieValidate('isetbio','tutorials'); close all; clear;
+ieValidate('isetbio','validations'); close all; clear;
 
-ieValidate('csfgenerator','scripts');
-ieValidate('csfgenerator','tutorials');
-ieValidate('csfgenerator','validations');
+ieValidate('csfgenerator','scripts'); close all; clear;
+ieValidate('csfgenerator','tutorials'); close all; clear;
+ieValidate('csfgenerator','validations'); close all; clear;
