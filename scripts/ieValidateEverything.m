@@ -10,7 +10,7 @@ ieExamples('csfgenerator'); close all; clear;
 
 %% Validations
 ieValidate('isetcam','scripts'); close all; clear;
-ieValidate('isetcam,'tutorials'); close all; clear;
+ieValidate('isetcam','tutorials'); close all; clear;
 ieValidate('isetcam','validations'); close all; clear;
 
 ieValidate('isetbio','scripts'); close all; clear;
