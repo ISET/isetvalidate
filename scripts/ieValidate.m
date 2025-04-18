@@ -75,6 +75,9 @@ function report = ieValidate(repo,typeToRun,varargin)
 %   12/15/23  dhb  Integrate tutorials/scripts/validations.
 %   12/20/23  dhb  Generalized setup to handle bugs identified by BAW.
 
+%% Save the printout?
+saveprint = true;
+
 %% Specify repos we can test.  
 % 
 % For each, also need to provide the name of the function that gives the
@@ -124,12 +127,15 @@ switch (availRepos{selectedRepoNum})
             case 'tutorials'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'tutorials';
+                outputFileBase = 'isetcam_tutorials';
             case 'scripts'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'scripts';
+                outputFileBase = 'isetcam_scripts';
             case 'validations'
                 topLevelDir = fullfile(isetvalidateRootPath);
                 subDir = 'isetcam';
+                outputFileBase = 'isetcam_validations';
             case 'examples'
                 ieExamples('isetcam');
                 return;
@@ -140,12 +146,15 @@ switch (availRepos{selectedRepoNum})
             case 'tutorials'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'tutorials';
+                outputFileBase = 'isetbio_tutorials';                 
             case 'scripts'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'scripts';
+                outputFileBase = 'isetbio_scripts';
             case 'validations'
                 topLevelDir = isetvalidateRootPath;
                 subDir = 'isetbio';
+                outputFileBase = 'isetbio_validations';
             case 'examples'
                 ieExamples('isetbio');
                 return;
@@ -156,13 +165,16 @@ switch (availRepos{selectedRepoNum})
             case 'tutorials'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'tutorials';
+                outputFileBase = 'csfgenerator_tutorials';
             case 'scripts'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'scripts';
+                outputFileBase = 'csfgenerator_scripts';
                 error('No scripts currently exist for csfgenerator');
             case 'validations'
                 topLevelDir = isetvalidateRootPath;
                 subDir = 'csfgenerator';
+                outputFileBase = 'csfgenerator_validations';
                 error('No validations currently exist for csfgenerator');
         end
 
@@ -186,12 +198,15 @@ switch (availRepos{selectedRepoNum})
        switch(typeToRun)
             case 'tutorials'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                outputFileBase = 'iset3d_tutorials';
                 subDir = 'tutorials';
            case 'scripts'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                outputFileBase = 'iset3d_scripts';
                 subDir = 'scripts';           
             case 'validations'
                 topLevelDir = isetvalidateRootPath;
+                outputFileBase = 'iset3d_validations';
                 subDir = 'iset3d';
        end
     
@@ -200,11 +215,14 @@ switch (availRepos{selectedRepoNum})
        switch(typeToRun)
             case 'tutorials'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                outputFileBase = 'iset3d-tiny_tutorials';
                 subDir = 'tutorials';
            case 'scripts'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                outputFileBase = 'iset3d-tiny_scripts';
                 subDir = 'scripts';           
             case 'validations'
+                outputFileBase = 'iset3d-tiny_validations';
                 topLevelDir = isetvalidateRootPath;
                 subDir = 'iset3d';
        end
@@ -222,6 +240,7 @@ switch (availRepos{selectedRepoNum})
                 error('Not sure whether scripts currently exist for psych221');
             case 'validations'
                 topLevelDir = isetvalidateRootPath;
+                outputFileBase = 'psych221_validations';
                 subDir = 'psych221';
             case 'examples'
                 ieExamples('psych221');
@@ -232,6 +251,7 @@ switch (availRepos{selectedRepoNum})
         switch typeToRun
             case 'validations'
                 topLevelDir = isetvalidateRootPath;
+                outputFileBase = 'isetfundamentals_validations';
                 subDir = 'isetfundamentals';
             otherwise
                 warning('Only validations are implemented for isetfundamentals now.')
@@ -249,6 +269,7 @@ switch (availRepos{selectedRepoNum})
                 error('Scripts do not currently exist for ptb');
             case 'validations'
                 topLevelDir = isetvalidateRootPath;
+                outputFileBase = 'ptb_validations';
                 subDir = 'ptb';
         end
 
@@ -336,5 +357,9 @@ ieSessionSet('wait bar',wbarFlag);
 if (nargout > 0)
     report = reportTemp;
 end
+
+if (saveprint)
+end
+
 
 end
