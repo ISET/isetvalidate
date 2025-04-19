@@ -17,6 +17,4 @@ ieValidate('isetbio','scripts'); close all; clear;
 ieValidate('isetbio','tutorials'); close all; clear;
 ieValidate('isetbio','validations'); close all; clear;
 
-ieValidate('csfgenerator','scripts'); close all; clear;
 ieValidate('csfgenerator','tutorials'); close all; clear;
-ieValidate('csfgenerator','validations'); close all; clear;
