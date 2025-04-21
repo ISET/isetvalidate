@@ -18,3 +18,5 @@ ieValidate('isetbio','tutorials'); close all; clear;
 ieValidate('isetbio','validations'); close all; clear;
 
 ieValidate('csfgenerator','tutorials'); close all; clear;
+
+ieValidateRDTFullAll; close all; clear;
