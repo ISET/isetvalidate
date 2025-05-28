@@ -2,7 +2,9 @@
 % 
 % Validation for inserting text into a recipe
 % 
-% Make the double character instance work
+% TODO:  Make the double character instance work
+%
+% Doesn't seem right yet in general, though it runs.
 
 %%
 ieInit;

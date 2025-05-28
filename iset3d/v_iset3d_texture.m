@@ -1,5 +1,8 @@
 % v_iset3d_texture
 %
+% *** There is an upper/lower case issue with the flatsurfacewhitetexture
+% file. ***
+%
 % Derived from t_piInto_texture
 %
 % Textures are part of the material definition.  We have routines that
@@ -17,6 +20,9 @@
 % An exploration of the other materials and textures we have defined
 % in piMaterialPresets is in v_material.m
 %
+% *** There is an upper/lower case issue with the flatsurfacewhitetexture
+% file. ***
+%
 % See also
 %  v_Materials, t_materials, t_materials*
 
@@ -25,7 +31,7 @@ ieInit;
 if ~piDockerExists, piDockerConfig; end
 
 %%
-thisR = piRecipeCreate('flatSurfaceWhiteTexture');
+thisR = piRecipeCreate('flatsurfacewhitetexture');
 
 %% Add a light and render
 

@@ -88,18 +88,21 @@ repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', ...
     'iefundamentalsRootPath'};
 %%
 
-p = inputParser;
-p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio','csfgenerator','iset3d','iset3d-tiny','psych221','isetbiordt'})));
-p.addRequired('typeToRun',@(x)(ismember(ieParamFormat(x),{'tutorials','scripts','validations','examples'})));
-p.parse(repo,typeToRun,varargin{:});
-
 % Specify repos we can test.  For each, also need to provide
 % the name of the function that gives the repository root path
 % and the path to the tutorial directory under that path.
 %
 % I took a guess at the correct root path for iset3d and psych221
-availRepos = {'isetbio' 'isetcam', 'csfgenerator','iset3d','iset3d-tiny','psych221','ptb','isetbiordt'};
-repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', 'csfGeneratorRootPath','piRootPath','piRootPath','psych221RootPath',''};
+availRepos = {'isetbio' 'isetcam', 'csfgenerator','iset3d','iset3d-tiny','psych221','ptb','isetbiordt','isetfundamentals'};
+repoRootDirFcns = {'isetbioRootPath' 'isetRootPath', 'csfGeneratorRootPath','piRootPath','piRootPath','psych221RootPath','',[],[]};
+
+p = inputParser;
+p.addRequired('repo',@(x)(ismember(ieParamFormat(x),availRepos)));
+p.addRequired('typeToRun',@(x)(ismember(ieParamFormat(x),{'tutorials','scripts','validations','examples'})));
+p.addParameter('saveprint',true,@islogical);
+p.parse(repo,typeToRun,varargin{:});
+
+
 
 % Figure out where we want to go today
 knownRepo = false;
@@ -124,12 +127,15 @@ switch (availRepos{selectedRepoNum})
             case 'tutorials'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'tutorials';
+                outputFileBase = 'isetcam_tutorials';
             case 'scripts'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'scripts';
+                outputFileBase = 'isetcam_scripts';
             case 'validations'
                 topLevelDir = fullfile(isetvalidateRootPath);
                 subDir = 'isetcam';
+                outputFileBase = 'isetcam_validations';
             case 'examples'
                 ieExamples('isetcam');
                 return;
@@ -140,12 +146,15 @@ switch (availRepos{selectedRepoNum})
             case 'tutorials'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'tutorials';
+                outputFileBase = 'isetbio_tutorials';                 
             case 'scripts'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'scripts';
+                outputFileBase = 'isetbio_scripts';
             case 'validations'
                 topLevelDir = isetvalidateRootPath;
                 subDir = 'isetbio';
+                outputFileBase = 'isetbio_validations';
             case 'examples'
                 ieExamples('isetbio');
                 return;
@@ -156,13 +165,16 @@ switch (availRepos{selectedRepoNum})
             case 'tutorials'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'tutorials';
+                outputFileBase = 'csfgenerator_tutorials';
             case 'scripts'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'scripts';
+                outputFileBase = 'csfgenerator_scripts';
                 error('No scripts currently exist for csfgenerator');
             case 'validations'
                 topLevelDir = isetvalidateRootPath;
                 subDir = 'csfgenerator';
+                outputFileBase = 'csfgenerator_validations';
                 error('No validations currently exist for csfgenerator');
         end
 
@@ -186,12 +198,15 @@ switch (availRepos{selectedRepoNum})
        switch(typeToRun)
             case 'tutorials'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                outputFileBase = 'iset3d_tutorials';
                 subDir = 'tutorials';
            case 'scripts'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                outputFileBase = 'iset3d_scripts';
                 subDir = 'scripts';           
             case 'validations'
                 topLevelDir = isetvalidateRootPath;
+                outputFileBase = 'iset3d_validations';
                 subDir = 'iset3d';
        end
     
@@ -200,11 +215,14 @@ switch (availRepos{selectedRepoNum})
        switch(typeToRun)
             case 'tutorials'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                outputFileBase = 'iset3d-tiny_tutorials';
                 subDir = 'tutorials';
            case 'scripts'
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
+                outputFileBase = 'iset3d-tiny_scripts';
                 subDir = 'scripts';           
             case 'validations'
+                outputFileBase = 'iset3d-tiny_validations';
                 topLevelDir = isetvalidateRootPath;
                 subDir = 'iset3d';
        end
@@ -213,15 +231,16 @@ switch (availRepos{selectedRepoNum})
         % There is a validation script inside of psych221.  Run that.
         switch (typeToRun)
             case 'tutorials'
+                error('Not sure whether tutorials currently exist for psych221');
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'tutorials';
-                error('Not sure whether tutorials currently exist for psych221');
             case 'scripts'
+                error('Not sure whether scripts currently exist for psych221');
                 topLevelDir = eval(repoRootDirFcns{selectedRepoNum});
                 subDir = 'scripts';
-                error('Not sure whether scripts currently exist for psych221');
             case 'validations'
                 topLevelDir = isetvalidateRootPath;
+                outputFileBase = 'psych221_validations';
                 subDir = 'psych221';
             case 'examples'
                 ieExamples('psych221');
@@ -232,6 +251,7 @@ switch (availRepos{selectedRepoNum})
         switch typeToRun
             case 'validations'
                 topLevelDir = isetvalidateRootPath;
+                outputFileBase = 'isetfundamentals_validations';
                 subDir = 'isetfundamentals';
             otherwise
                 warning('Only validations are implemented for isetfundamentals now.')
@@ -248,8 +268,10 @@ switch (availRepos{selectedRepoNum})
                 subDir = 'scripts';
                 error('Scripts do not currently exist for ptb');
             case 'validations'
-                topLevelDir = isetvalidateRootPath;
+                topLevelDir = fullfile(isetvalidateRootPath);
+                outputFileBase = 'ptb_validations';
                 subDir = 'ptb';
+                error('PTB validations need some thinking about how to get PTB onto path for testing here.');
         end
 
     case 'isetbiordt'
@@ -280,7 +302,7 @@ switch (availRepos{selectedRepoNum})
 end
 
 % Set up preferences to work for the selected run
-p = struct(...
+pp = struct(...
     'tutorialsSourceDir',       fullfile(topLevelDir,subDir) ...
     );
 
@@ -321,7 +343,7 @@ ieSessionSet('wait bar',0);
 initClear = ieSessionGet('init clear');
 ieSessionSet('init clear',true);
 
-[~, reportTemp] = UnitTest.runProjectTutorials(p, scriptsToSkip, 'All');
+[~, reportTemp] = UnitTest.runProjectTutorials(pp, scriptsToSkip, 'All');
 
 % Restore
 ieSessionSet('init clear',initClear);
@@ -335,6 +357,19 @@ ieSessionSet('wait bar',wbarFlag);
 % the screen.
 if (nargout > 0)
     report = reportTemp;
+end
+
+% Save what happend to a file
+if (p.Results.saveprint)
+    % Make sure save directory exists and set up save filenme, if saving
+    outputDir = fullfile(isetvalidateRootPath,'outputfiles');
+    if (~exist(outputDir,'dir'))
+        mkdir(outputDir);
+    end
+    outputFile = fullfile(outputDir,[outputFileBase '_' datestr(now,'yy-mm-dd-HH-MM-SS')]);
+    outputFID = fopen(outputFile,'w');
+    fprintf(outputFID,reportTemp);
+    fclose(outputFID);
 end
 
 end
