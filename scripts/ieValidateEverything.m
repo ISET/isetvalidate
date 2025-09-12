@@ -1,6 +1,6 @@
 % ieValidateEverything
 %
-% Runmany ofl our validation and regression scripts, and save output of each to
+% Run many of our validation and regression test scripts, and save output of each to
 % a file.
 
 %% Examples
