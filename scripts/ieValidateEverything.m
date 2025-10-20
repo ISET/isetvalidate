@@ -3,20 +3,23 @@
 % Run many of our validation and regression test scripts, and save output of each to
 % a file.
 
+%% Clear and close
+close all hidden; clear all;
+
 %% Examples
-ieExamples('isetcam'); close all; clear;
-ieExamples('isetbio'); close all; clear;
-ieExamples('csfgenerator'); close all; clear;
+ieExamples('isetcam'); close all; close all hidden; clear all;
+ieExamples('isetbio'); close all; close all hidden; clear all;
+ieExamples('csfgenerator'); close all; close all hidden; clear all;
 
 %% Validations
-ieValidate('isetcam','scripts'); close all; clear;
-ieValidate('isetcam','tutorials'); close all; clear;
-ieValidate('isetcam','validations'); close all; clear;
+ieValidate('isetcam','scripts'); close all; close all hidden; clear all;
+ieValidate('isetcam','tutorials'); close all; close all hidden;  clear all;
+ieValidate('isetcam','validations'); close all hidden; clear all;
 
-ieValidate('isetbio','scripts'); close all; clear;
-ieValidate('isetbio','tutorials'); close all; clear;
-ieValidate('isetbio','validations'); close all; clear;
+ieValidate('isetbio','scripts'); close all; close all hidden; clear all;
+ieValidate('isetbio','tutorials'); close all; close all hidden; clear all;
+ieValidate('isetbio','validations'); close all; close all hidden; clear all;
 
-ieValidate('csfgenerator','tutorials'); close all; clear;
+ieValidate('csfgenerator','tutorials'); close all; close all hidden; clear all;
 
-ieValidateRDTFullAll; close all; clear;
+ieValidateRDTFullAll; close all; close all hidden; clear all;
