@@ -32,7 +32,7 @@ toleranceFraction = 0.00001;
 stimWeights = ieScale(fspecial('gaussian',[1,10],3),0,1);
 weights = [zeros(1, 5), stimWeights, zeros(1, 5)];
  
-hparams(1) = harmonicP;
+hparams(1) = harmonicP('row',64,'col',64);
 hparams(2) = hparams(1); hparams(2).contrast = 0;
 sparams.fov = 0.3;
 
@@ -68,7 +68,7 @@ tolerance = 2E-2;
 totalAbsorptions = sum(cMosaic.absorptions(:));
 
 % Changed from the value 116255 when updating the eye movement model
-% to fixationalEM in emGenSequence 
+% to fixationalEM in emGenSequence %
 quantityOfInterest = (totalAbsorptions/127714) - 1;   
 UnitTest.assertIsZero(quantityOfInterest,'coneMosaic absorptions',tolerance);
 
