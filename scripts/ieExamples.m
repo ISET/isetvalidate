@@ -62,7 +62,7 @@ switch repo
     case 'csfgenerator'
         disp(select)
         [result.names, result.status ] = ExecuteExamplesInDirectory(csfGeneratorRootPath,'verbose',false);
-        outputBaseName = 'isetcamExamplesOutput';
+        outputBaseName = 'csfgeneratorExamplesOutput';
     case 'psych221'
         % No examples yet.  But some day.
         disp(select)

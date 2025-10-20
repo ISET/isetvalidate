@@ -102,8 +102,6 @@ p.addRequired('typeToRun',@(x)(ismember(ieParamFormat(x),{'tutorials','scripts',
 p.addParameter('saveprint',true,@islogical);
 p.parse(repo,typeToRun,varargin{:});
 
-
-
 % Figure out where we want to go today
 knownRepo = false;
 for rr = 1:length(availRepos)
@@ -309,7 +307,6 @@ pp = struct(...
 %% List of scripts to be skipped from automatic running.
 %
 % Anything with one of these strings in the path name is skipped.
-% library is in ISETBio/scripts.  It creates all the mosaics in a library.
 scriptsToSkip = {...
     'Contents', ...
     'data', ...
