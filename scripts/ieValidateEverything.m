@@ -22,4 +22,4 @@ ieValidate('isetbio','validations'); close all; close all hidden; clear all;
 
 ieValidate('csfgenerator','tutorials'); close all; close all hidden; clear all;
 
-ieValidateRDTFullAll; close all; close all hidden; clear all;
+ieValidateRDTFullAll; close all; close all hidden; clea
