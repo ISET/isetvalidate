@@ -32,7 +32,7 @@ toleranceFraction = 0.00001;
 stimWeights = ieScale(fspecial('gaussian',[1,10],3),0,1);
 weights = [zeros(1, 5), stimWeights, zeros(1, 5)];
  
-hparams(1) = harmonicP;
+hparams(1) = harmonicP('row',64,'col',64');
 hparams(2) = hparams(1); hparams(2).contrast = 0;
 sparams.fov = 0.3;
 
