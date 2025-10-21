@@ -312,7 +312,7 @@ plot(posRowMinutes,psfMidRow/max(psfMidRow(:)),'b<','MarkerFaceColor','b','Marke
 
 % Report on sampling and normalization
 fprintf('OI PSF RAW\n')
-if (posRowMinutes(1) == posColMinutes(1) & posRowMinutes(end) == posColMinutes(end))
+if (posRowMinutes(1) == posColMinutes(1) && posRowMinutes(end) == posColMinutes(end))
     fprintf('\tRow and column range MATCH\n');
 else
     fprintf('\tRow and column range DO NOT MATCH\n');

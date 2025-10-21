@@ -1,6 +1,6 @@
 
 
-Success cases (73)
+Success cases (76)
 2 examples suceeded for wvfLoadWavefrontOpticsData.
 1 examples suceeded for wvfSortSubjectDataJaekenArtal2012.
 1 examples suceeded for combineContainers.
@@ -74,15 +74,15 @@ Success cases (73)
 1 examples suceeded for selectPlotSupport.
 1 examples suceeded for lensTreeShrewCreate.
 1 examples suceeded for t_fixationalEyeMovementsTypes.
+1 examples suceeded for t_mRGCMosaicBasicComputation.
+1 examples suceeded for t_mRGCMosaicInspect.
+1 examples suceeded for t_mRGCMosaicVisualizeWithOptics.
 
 
-Failure cases (9)
+Failure cases (6)
 At least one example failed for oiTreeShrewCreate.
-At least one example failed for t_mRGCMosaicBasicComputation.
 At least one example failed for t_mRGCMosaicBasicValidationAgainstCronerAndKaplan.
 At least one example failed for t_mRGCMosaicEnableSurroundSconeInputs.
-At least one example failed for t_mRGCMosaicInspect.
 At least one example failed for t_mRGCMosaicSynthesizeAtStage1.
 At least one example failed for t_mRGCMosaicSynthesizeAtStage2.
 At least one example failed for t_mRGCMosaicSynthesizeAtStage3.
-At least one example failed for t_mRGCMosaicVisualizeWithOptics.

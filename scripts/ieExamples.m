@@ -75,11 +75,11 @@ end
 if (p.Results.print)
     % Make sure save directory exists and set up save filenme, if saving
     if (p.Results.saveprint)
-        outputDir = fullfile(isetvalidateRootPath,'outputfiles');
+        outputDir = fullfile(isetvalidateRootPath,'outputfiles',datestr(now,'yyyy-mm-dd'));
         if (~exist(outputDir,'dir'))
             mkdir(outputDir);
         end
-        outputFile = fullfile(outputDir,[outputBaseName '_' datestr(now,'yy-mm-dd-HH-MM-SS')]);
+        outputFile = fullfile(outputDir,[outputBaseName '_' datestr(now,'yyyy-mm-dd-HH-MM-SS')]);
         outputFID = fopen(outputFile,'w');
     end
 

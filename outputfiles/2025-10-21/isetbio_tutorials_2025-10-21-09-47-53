@@ -58,14 +58,14 @@
 /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/eyemovement/underDevelopmentReplaceConeMosaicHex/t_fixationalEMTimeSampling.m --  SKIPPED
 /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/eyemovement/underDevelopmentReplaceConeMosaicHex/t_fixationalEyeMovementsToIsomerizations.m --  SKIPPED
 /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/hyperspectral/t_hyperspectralSceneTutorial.m --  OK!
-/Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/t_mRGCMosaicBasicComputation.m --  ******** BROKEN! ***********
+/Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/t_mRGCMosaicBasicComputation.m --  OK!
 /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/t_mRGCMosaicBasicValidationAgainstCronerAndKaplan.m --  ******** BROKEN! ***********
-/Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/t_mRGCMosaicEnableSurroundSconeInputs.m --  ******** BROKEN! ***********
-/Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/t_mRGCMosaicInspect.m --  ******** BROKEN! ***********
+/Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/t_mRGCMosaicEnableSurroundSconeInputs.m --  OK!
+/Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/t_mRGCMosaicInspect.m --  OK!
 /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/t_mRGCMosaicSynthesizeAtStage1.m --  ******** BROKEN! ***********
 /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/t_mRGCMosaicSynthesizeAtStage2.m --  OK!
 /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/t_mRGCMosaicSynthesizeAtStage3.m --  OK!
-/Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/t_mRGCMosaicVisualizeWithOptics.m --  ******** BROKEN! ***********
+/Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/t_mRGCMosaicVisualizeWithOptics.m --  OK!
 /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/xOLD/t_mRGCMosaicBasic.m --  ******** BROKEN! ***********
 /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/xOLD/t_mRGCMosaicCheckerBoardStimulus.m --  ******** BROKEN! ***********
 /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/xOLD/t_mRGCMosaicDynamicStimulus.m --  ******** BROKEN! ***********

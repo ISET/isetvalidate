@@ -12,7 +12,7 @@ ieExamples('isetbio'); close all; close all hidden; clear all;
 ieExamples('csfgenerator'); close all; close all hidden; clear all;
 
 %% Validations
-ieValidate('isetcam','scripts'); close all; close all hidden; clear all;
+le('isetcam','scripts'); close all; close all hidden; clear all;
 ieValidate('isetcam','tutorials'); close all; close all hidden;  clear all;
 ieValidate('isetcam','validations'); close all hidden; clear all;
 
@@ -22,4 +22,4 @@ ieValidate('isetbio','validations'); close all; close all hidden; clear all;
 
 ieValidate('csfgenerator','tutorials'); close all; close all hidden; clear all;
 
-ieValidateRDTFullAll; close all; close all hidden; clea
+ieValidateRDTFullAll; close all; close all hidden; clear all;

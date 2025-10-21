@@ -359,11 +359,11 @@ end
 % Save what happend to a file
 if (p.Results.saveprint)
     % Make sure save directory exists and set up save filenme, if saving
-    outputDir = fullfile(isetvalidateRootPath,'outputfiles');
+    outputDir = fullfile(isetvalidateRootPath,'outputfiles',datestr(now,'yyyy-mm-dd'));
     if (~exist(outputDir,'dir'))
         mkdir(outputDir);
     end
-    outputFile = fullfile(outputDir,[outputFileBase '_' datestr(now,'yy-mm-dd-HH-MM-SS')]);
+    outputFile = fullfile(outputDir,[outputFileBase '_' datestr(now,'yyyy-mm-dd-HH-MM-SS')]);
     outputFID = fopen(outputFile,'w');
     fprintf(outputFID,reportTemp);
     fclose(outputFID);
