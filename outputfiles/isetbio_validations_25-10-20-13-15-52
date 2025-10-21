@@ -1,7 +1,0 @@
-
- ***** Summary tests *****
-/Users/dhb/Documents/MATLAB/toolboxes/isetvalidate/isetbio/calibration/v_ibio_calibrationPugh.m --  OK!
-/Users/dhb/Documents/MATLAB/toolboxes/isetvalidate/isetbio/calibration/v_ibio_calibrationRods.m --  OK!
-/Users/dhb/Documents/MATLAB/toolboxes/isetvalidate/isetbio/cones/v_ibio_coneAdaptation.m --  OK!
-/Users/dhb/Documents/MATLAB/toolboxes/isetvalidate/isetbio/cones/v_ibio_pigments.m --  OK!
-/Users/dhb/Documents/MATLAB/toolboxes/isetvalidate/isetbio/oi/v_ibio_photonNoise.m --  OK!
