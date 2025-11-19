@@ -61,7 +61,7 @@ photons = sceneGet(scene,'photons');
 assert(mean(photons(:))/3.8433e+15 - 1 < tolerance);
 
 %% Single line
-imageSize = 128;
+imageSize = [128,128];
 scene = sceneCreate('lined65',imageSize);
 photons = sceneGet(scene,'photons');
 assert(mean(photons(:))/3.8433e+15 - 1 < tolerance);
