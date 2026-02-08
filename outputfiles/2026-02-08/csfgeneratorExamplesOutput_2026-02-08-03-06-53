@@ -1,0 +1,27 @@
+
+
+Success cases (10)
+1 examples suceeded for nreNoiseFreeSceneAsResponses.
+1 examples suceeded for sceAOCircularSpot.
+1 examples suceeded for sceAOTwoSpot.
+1 examples suceeded for sceGrating.
+1 examples suceeded for sceMetaContrast.
+1 examples suceeded for sceUniformFieldTemporalModulation.
+1 examples suceeded for csfGeneratorRootPath.
+1 examples suceeded for drawTwoSpot.
+1 examples suceeded for t_WatsonTemporalFilterWithEyeMovements.
+1 examples suceeded for t_onTheFlyPhotocurrentComputationWithEyeMovements.
+
+
+Failure cases (11)
+At least one example failed for nreNoiseFreeCMosaic.
+At least one example failed for compareHumanToMRGCmosaicEllipses.
+At least one example failed for plotMultipleIsoresponseLMplaneEllipseThresholds.
+At least one example failed for t_BerkeleyAOTumblingEThreshold.
+At least one example failed for t_isoresponseLMplaneEllipses.
+At least one example failed for t_isoresponseLMplaneEllipses_mRGCpaperApplications.
+At least one example failed for t_spatialCSF.
+At least one example failed for t_spatialCSF_EMExamples.
+At least one example failed for t_spatialCSF_TemporalFilterExamples.
+At least one example failed for t_spatialCSF_mRGCExamples.
+At least one example failed for t_spatialCSF_mRGCpaperApplications.
