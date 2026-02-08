@@ -42,7 +42,7 @@ function ValidationFunction(runTimeParams)
         oi = oiSet(oi, 'optics', optics);
         
         %% Compute optical image for given scene
-        scene = sceneCreate('line d65');
+        scene = sceneCreate('line d65',[64 64]);
         
         %% Set the scene's angular size = 1 deg and it's distance to the lens = 1.0 meter
         sceneAngularSizeInDeg = 2.0;
