@@ -34,7 +34,7 @@ for pupilSizeIndex = 1:numel(pupilDiametersInMillimeters)
     oi = oiSet(oi, 'optics', optics);
 
     %% Compute optical image for given scene
-    scene = sceneCreate('line d65');
+    scene = sceneCreate('line d65',[64 64]);
     %% Make the scene angular size = 1 deg and place it at a distance = 1.0 m
     sceneAngularSizeInDeg = 2.0;
     sceneDistanceInMeters = 1.0;
