@@ -8,7 +8,7 @@ close all hidden; clear all;
 
 %% Validations
 ieValidate('isetcam','scripts'); close all; close all hidden; clear all;
-ieValidate('isetcam','tutorials'); close all; close all hidden;  clear all;
+ieValidate('isetcam','tutorials'); close all; close all hidden; clear all;
 ieValidate('isetcam','validations'); close all hidden; clear all;
 
 ieValidate('isetbio','scripts'); close all; close all hidden; clear all;
