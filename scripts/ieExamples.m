@@ -52,7 +52,7 @@ p.addParameter('saveprint',true,@islogical);
 p.parse(repo,varargin{:});
 select = p.Results.select;
 
-çççççswitch repo
+switch repo
     case 'isetbio'
         disp(select)
         [result.names, result.status] = ExecuteExamplesInDirectory(isetbioRootPath,'verbose',false);
