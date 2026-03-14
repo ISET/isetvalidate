@@ -10,7 +10,7 @@ function result = ieExamples(repo,varargin)
 %          "% ETTBSkip"
 %
 % Inputs:
-%     repo - name of repository, one of {'isetcam','isetbio', 'csfgenerator'}
+%     repo - name of repository, one of {'isetcam','isetbio', 'csfgenerator', 'ISETBerkeleyAOTumblingE'}
 %
 % Outputs:
 %    result - describing the outcome
@@ -41,8 +41,10 @@ function result = ieExamples(repo,varargin)
 %  07/25/23  dhb      Make header comment consistent with isetbio style.
 %  12/15/23  dhb, fh  Add ISETBioCSFGenerator option
 
+repo = ieParamFormat(repo);
 p = inputParser;
-p.addRequired('repo',@(x)(ismember(ieParamFormat(x),{'isetcam','isetbio','csfgenerator','psych221'})));
+p.addRequired('repo',@(x)(ismember(ieParamFormat(x), ...
+    {'isetcam','isetbio','csfgenerator','isetberkeleyaotumblinee', 'psych221'})));
 p.addParameter('select','all',@ischar);
 p.addParameter('print',true,@islogical);
 p.addParameter('saveprint',true,@islogical);
@@ -50,19 +52,27 @@ p.addParameter('saveprint',true,@islogical);
 p.parse(repo,varargin{:});
 select = p.Results.select;
 
-switch repo
+çççççswitch repo
     case 'isetbio'
         disp(select)
-        [result.names, result.status ] = ExecuteExamplesInDirectory(isetbioRootPath,'verbose',false);
+        [result.names, result.status] = ExecuteExamplesInDirectory(isetbioRootPath,'verbose',false);
         outputBaseName = 'isetbioExamplesOutput';
     case 'isetcam'
         disp(select)
-        [result.names, result.status ] = ExecuteExamplesInDirectory(isetRootPath,'verbose',false);
+        [result.names, result.status] = ExecuteExamplesInDirectory(isetRootPath,'verbose',false);
         outputBaseName = 'isetcamExamplesOutput';
     case 'csfgenerator'
         disp(select)
-        [result.names, result.status ] = ExecuteExamplesInDirectory(csfGeneratorRootPath,'verbose',false);
+        [result.names, result.status] = ExecuteExamplesInDirectory(csfGeneratorRootPath,'verbose',false);
         outputBaseName = 'csfgeneratorExamplesOutput';
+    case 'isetberkeleyaotumblinee'
+        if (exist('ISETBerkeleyAOTumblingERootPath','file'))
+            disp(select)
+            [result.names, result.status] = ExecuteExamplesInDirectory(ISETBerkeleyAOTumblingERootPath,'verbose',false);
+            outputBaseName = 'ISETBerkelyAOTumblingEExamplesOutput';
+        else
+            fprint('Need to set up for project ISETBerkeleyAOTumblingE. Do so and try again.\n');
+        end
     case 'psych221'
         % No examples yet.  But some day.
         disp(select)
