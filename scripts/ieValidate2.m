@@ -7,8 +7,8 @@ function [report, filesToTest] = ieValidate2(repo, typeToRun, varargin)
 %
 % Description:
 %   This function is a safer refactor of ieValidate. It keeps the same
-%   behavior for execution, and adds list-only mode. In list-only mode,
-%   files are discovered and filtered, but not executed.
+%   behavior for execution, and it adds list-only mode. In 'list only'
+%   mode, files are discovered and filtered, but not executed.
 %
 % Inputs:
 %   repo - repository name.
@@ -17,9 +17,9 @@ function [report, filesToTest] = ieValidate2(repo, typeToRun, varargin)
 %   typeToRun - One of {'tutorials','scripts','validations','examples'}
 %
 % Optional key/value pairs:
-%   saveprint - logical, default true.
+%   'save print' - logical, default true.
 %     Save execution report to isetvalidate/outputfiles/<date>.
-%   listonly - logical, default false.
+%   'list only' - logical, default false.
 %     If true, return the list of files that would be tested, do not run.
 %
 % Outputs:
@@ -31,6 +31,8 @@ function [report, filesToTest] = ieValidate2(repo, typeToRun, varargin)
 %   ieValidate2('isetcam','tutorials');
 %   [~, files] = ieValidate2('isetbio','scripts','listonly',true);
 %}
+
+varargin = ieParamFormat(varargin);
 
 availRepos = {'isetbio', 'isetcam', 'csfgenerator', 'iset3d', 'iset3d-tiny', ...
     'psych221', 'ptb', 'isetbiordt', 'isetfundamentals'};
