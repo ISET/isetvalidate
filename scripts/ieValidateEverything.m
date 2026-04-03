@@ -6,6 +6,14 @@
 %% Clear and close
 close all hidden; clear all;
 
+%% Figures not visible for these runs.
+% 
+% Build up and various Java heap/memory leak issues cause mysterious
+% crashes during big validate runs.
+set(groot, 'defaultFigureVisible', 'off')
+cleanup = onCleanup(@() set(groot, 'defaultFigureVisible', 'on'));
+
+
 %% Validations
 ieValidate('isetcam','scripts'); close all; close all hidden; clear all;
 ieValidate('isetcam','tutorials'); close all; close all hidden; clear all;
@@ -24,3 +32,7 @@ ieExamples('csfgenerator'); close all; close all hidden; clear all;
 
 % Old RDT validations.  Great regression checks.
 ieValidateRDTFullAll; close all; close all hidden; clear all;
+
+% Turn figures back on
+set(groot, 'defaultFigureVisible', 'on')
+
