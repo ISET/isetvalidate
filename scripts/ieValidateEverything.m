@@ -6,6 +6,11 @@
 %% Clear and close
 close all hidden; clear all;
 
+%% Some more attempts at clearing
+origVal = ieSessionGet('initClear');
+ieSessionSet('initClear',true);
+
+
 %% Figures not visible for these runs.
 % 
 % Build up and various Java heap/memory leak issues cause mysterious
@@ -36,4 +41,6 @@ ieValidateRDTFullAll; close all; close all hidden; clear all;
 
 % Turn figures back on
 set(groot, 'defaultFigureVisible', 'on')
+ieSessionSet('initClear',origVal);
+
 
