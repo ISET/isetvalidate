@@ -12,6 +12,7 @@ close all hidden; clear all;
 % crashes during big validate runs.
 set(groot, 'defaultFigureVisible', 'off')
 cleanup = onCleanup(@() set(groot, 'defaultFigureVisible', 'on'));
+get(groot, 'defaultFigureVisible')
 
 
 %% Validations
