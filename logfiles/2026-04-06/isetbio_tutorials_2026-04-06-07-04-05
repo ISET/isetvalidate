@@ -1,0 +1,60 @@
+Starting /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/adaptiveOptics/t_AOBleachingKinetics.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/adaptiveOptics/t_AODisplay.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/adaptiveOptics/t_noLcaOptics.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/adaptiveOptics/t_radianceToCornealIrradiance.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicBasic.mlx ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicPlots.mlx ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicAndOpticsGrid.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicAndOpticsOffAxis.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicArbitraryOpticalImagePositioning.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicBasic.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicCustomConeData.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicEccDependentAbsorptionEfficacy.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicEccVaryingOptics.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicFEMoptions.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicGenerate.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicHarmonic.m ...run but with error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicLetter.m ...run but with error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicModifyApertureProperties.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicMultipleEyeMovementPaths.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicOffAxis.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicOffAxisDistortion.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicRankedSubjectsOptics.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicReassignCones.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicRodIntrusion.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicSingleEyeMovementPath.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicStereoPair.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cMosaicSuperimposeArbitraryRGBimageOnTopOfConeMosaic.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_cmosaicRodIntrusion2.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_customHumanConeMosaicsBasedOnAOmeasurements.m ...run but with error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/t_eccVaryingMacularPigment.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaic/cMosaic_supportTutorials/t_cMosaicBenchMark.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaicrect/t_cmosaicRect.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaicrect/t_cmosaicRectBigArray.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaicrect/t_cmosaicRectMosaicAbsorptionNoise.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cmosaicrect/t_cmosaicRectMosaicBasic.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cones/tls_conesSizeEccentricity.mlx ...run but with error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cones/t_conesAnomalous.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cones/t_conesDensity.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cones/t_conesMacularLens.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cones/t_conesMapRF.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cones/t_conesMosaic.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cones/t_conesPerifovea.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cones/t_conesPhotoPigment.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/cones/t_conesSizeEccentricity.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/eyemovement/t_fixationalEM.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/eyemovement/t_fixationalEyeMovementsAndConeMosaicVideo.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/eyemovement/t_fixationalEyeMovementsCharacterize.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/eyemovement/t_fixationalEyeMovementsFeedbackGainAndControlGainDependence.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/eyemovement/t_fixationalEyeMovementsTypes.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/hyperspectral/t_hyperspectralSceneTutorial.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/t_mRGCMosaicBasicComputation.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/t_mRGCMosaicInspect.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/t_mRGCMosaicSynthesizeAtStage2.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/t_mRGCMosaicSynthesizeAtStage3.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/t_mRGCMosaicVisualizeWithOptics.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/mrgc/advanced/t_mRGCMosaicEnableSurroundSconeInputs.m ...run without error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/oisequences/t_oiSequence.m ...run but with error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/oisequences/t_oisCreate.m ...run but with error
+Running /Users/dhb/Documents/MATLAB/toolboxes/isetbio/tutorials/oisequences/t_oisHarmonic.m ...run without error
