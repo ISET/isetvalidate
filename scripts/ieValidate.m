@@ -333,6 +333,13 @@ scriptsToSkip = {...
 wbarFlag = ieSessionGet('wait bar');
 ieSessionSet('wait bar',0);
 
+% Set up log file
+logDir = fullfile(isetvalidateRootPath,'logfiles',datestr(now,'yyyy-mm-dd'));
+if (~exist(logDir,'dir'))
+    mkdir(logDir);
+end
+logFile = fullfile(logDir,[outputFileBase '_' datestr(now,'yyyy-mm-dd-HH-MM-SS')]);
+
 % Clear the variables when running the ieValidate.  Otherwise we accumulate
 % tons of unwanted variables. It would also be possible to place this
 % ieInit inside of the UnitTest.runXXX command, rather than expect it to be
@@ -340,7 +347,7 @@ ieSessionSet('wait bar',0);
 initClear = ieSessionGet('init clear');
 ieSessionSet('init clear',true);
 
-[~, reportTemp] = UnitTest.runProjectTutorials(pp, scriptsToSkip, 'All');
+[~, reportTemp] = UnitTest.runProjectTutorials(pp, scriptsToSkip, 'All', logFile);
 
 % Restore
 ieSessionSet('init clear',initClear);
