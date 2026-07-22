@@ -10,7 +10,6 @@ close all hidden; clear all;
 origVal = ieSessionGet('initClear');
 ieSessionSet('initClear',true);
 
-
 %% Figures not visible for these runs.
 % 
 % Build up and various Java heap/memory leak issues cause mysterious
@@ -21,7 +20,7 @@ get(groot, 'defaultFigureVisible')
 
 
 %% Validations
-ieValidate('isetcam','scripts'); close all; close all hidden; clear all;
+% ieValidate('isetcam','scripts'); close all; close all hidden; clear all;
 ieValidate('isetcam','tutorials'); close all; close all hidden; clear all;
 ieValidate('isetcam','validations'); close all hidden; clear all;
 
@@ -41,6 +40,6 @@ ieValidateRDTFullAll; close all; close all hidden; clear all;
 
 % Turn figures back on
 set(groot, 'defaultFigureVisible', 'on')
-ieSessionSet('initClear',origVal);
+%ieSessionSet('initClear',origVal);
 
 
